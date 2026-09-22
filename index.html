@@ -632,9 +632,9 @@ function pyramideZeichnen(){
   lab('Langfristig',   G.y2-16);
   lab('Kurzfristig',   G.y3-18);
 
-  const sV=mk('text',{class:'sockel-label',x:420,y:G.y3+44,'text-anchor':'middle'});
+  const sV=mk('text',{class:'sockel-label',x:400,y:G.y3+26,'text-anchor':'middle'});
   sV.textContent='Absicherung des Vermögens'; gp.appendChild(sV);
-  const sA=mk('text',{class:'sockel-label',x:830,y:G.y3+44,'text-anchor':'middle'});
+  const sA=mk('text',{class:'sockel-label',x:840,y:G.y3+26,'text-anchor':'middle'});
   sA.textContent='Absicherung der Arbeitskraft'; gp.appendChild(sA);
 
   // Girokonto links oben
@@ -733,7 +733,7 @@ function pfeileZeichnen(){
       const wert = bereichSumme(b.id)[p];
       const sockel = (b.id==='absV' || b.id==='absA');
       const z = !sockel ? {x:b.ziel.x+vs, y:b.ziel.y}
-              : S.zweiKonten ? {x:(b.id==='absV'?480:800)+vs, y:G.y3+24}   // senkrecht von oben, bis in den Sockel
+              : S.zweiKonten ? {x:(b.id==='absV'?578:662)+vs, y:G.y3+86}   // beidseits der Mittellinie, tief in den Sockel
                              : {x:(b.id==='absV'?300:648)+vs, y:G.y3+74};  // hinein in die Sockelhälfte
       let d, tp;
 
@@ -743,7 +743,7 @@ function pfeileZeichnen(){
         }else if(b.id==='lang'){
           d=`M ${start.x-30} ${start.y-10} C ${start.x+100} ${start.y-50}, ${z.x+350} ${z.y+50}, ${z.x} ${z.y}`; tp=0.40;
         }else{
-          d=`M ${z.x} ${G.y3-88} L ${z.x} ${z.y}`; tp=0.5;    // kurz und senkrecht in den Sockel
+          d=`M ${z.x} ${G.y3-40} L ${z.x} ${z.y}`; tp=0.16;   // kurz, beidseits der Mittellinie in den Sockel
         }
       }else{
         // Fächer direkt vom Girokonto weg – je Bereich eigener Austritt und eigene Höhe
@@ -899,10 +899,10 @@ function overlayZeichnen(){
   CHIPS = {};
   ['absV','absA'].forEach(id=>{
     const links = id==='absV';
-    const x = links ? pz(330) : pz(690);
+    const x = links ? pz(318) : pz(700);
 
     const box = el('div','sparten');
-    box.style.width = '20.5%'; box.style.left = x; box.style.top = py(G.y3+62);
+    box.style.width = '17%'; box.style.left = x; box.style.top = py(G.y3+44);
     SPARTEN[id].forEach(sp=>{
       const c = el('button','chip');
       c.type='button'; c.title=sp.n; c.dataset.kuerzel=sp.k;
@@ -914,7 +914,7 @@ function overlayZeichnen(){
 
     const t = el('div','abs-tab');
     t.id = 'tab_'+id;
-    t.style.width = '20.5%'; t.style.left = x; t.style.top = py(G.y3+92);
+    t.style.width = '17%'; t.style.left = x; t.style.top = py(G.y3+80);
     o.appendChild(t);
   });
   absTabellen();
