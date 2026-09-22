@@ -189,7 +189,7 @@
   .konto-kopf{display:flex; align-items:center; gap:0.3cqw; margin-bottom:0.35cqw;}
   .konto input.konto-name{
     font:900 0.95cqw 'Lato',sans-serif; color:var(--accent); border:none; border-bottom:1px dashed var(--line);
-    border-radius:0; padding:0 0 0.1cqw; background:transparent; width:auto; flex:1 1 auto;
+    border-radius:0; padding:0 0 0.1cqw; background:transparent; width:auto; flex:1 1 auto; min-width:0;
   }
   .konto input.konto-name:focus{box-shadow:none; border-bottom-color:var(--accent-light);}
   .konto .btn-weg{font-size:1.1cqw;}
@@ -631,13 +631,13 @@ function pfeileZeichnen(){
       const vonId = k.richtung==='erhaelt' ? k.partner : k.id;
       const nachId= k.richtung==='erhaelt' ? k.id : k.partner;
       const a = kontoAnker(vonId), z2 = kontoAnker(nachId);
-      const seite = Math.max(a.x, z2.x) + 34 + pi*16;
-      const d = `M ${a.x} ${a.y+pi*10} C ${seite} ${a.y+pi*10}, ${seite} ${z2.y+pi*10}, ${z2.x+6} ${z2.y+pi*10}`;
+      const seite = 30 - pi*16;                       // Bogen links neben den Kästen
+      const d = `M ${a.x} ${a.y+pi*9} C ${seite} ${a.y+pi*9}, ${seite} ${z2.y+pi*9}, ${z2.x-4} ${z2.y+pi*9}`;
       g.appendChild(pfeilEl(mk,d,p,'konto'+k.id+p));
       const wert = k.betrag[p]||0;
       if(wert>0){
         const pt = punktAufPfad(d,0.5);
-        const t = mk('text',{class:'pfeil-txt',x:pt.x+8,y:pt.y+5,fill:FARBE[p],'text-anchor':'start'});
+        const t = mk('text',{class:'pfeil-txt',x:pt.x+4,y:pt.y+5,fill:FARBE[p],'text-anchor':'middle'});
         t.textContent = eur(wert); g.appendChild(t);
       }
     });
@@ -951,20 +951,20 @@ function kastenRest(){
 /* =========================================================
    Weitere Konten links (Firmenkonto, Haushaltskonto, Rücklagen …)
    ========================================================= */
-const KONTO_Y0 = 372;
-const kontoH = () => S.personB ? 138 : 112;
+const kontoY0 = () => S.personB ? 378 : 348;   // unter den Beträgen am Girokonto
+const kontoH  = () => S.personB ? 126 : 108;
 const kontoName = id => id==='giro' ? 'Girokonto'
   : ((S.konten.find(k=>k.id===id)||{}).name || 'Konto');
 const kontoAnker = id => {
-  if(id==='giro') return {x:213, y:250};
+  if(id==='giro') return {x:97, y:246};          // linke Kante der Girokonto-Karte
   const i = S.konten.findIndex(k=>k.id===id);
-  return {x:268, y:KONTO_Y0 + i*kontoH() + 34};
+  return {x:66, y:kontoY0() + i*kontoH() + 30};   // linke Kante des Kontokastens
 };
 
 function kontenZeichnen(o){
   S.konten.forEach((k,i)=>{
     const box = el('div','konto');
-    box.style.left = pz(46); box.style.top = py(KONTO_Y0 + i*kontoH()); box.style.width = '16%';
+    box.style.left = pz(68); box.style.top = py(kontoY0() + i*kontoH()); box.style.width = '13%';
 
     const kopf = el('div','konto-kopf');
     const nm = el('input','konto-name');
@@ -1014,12 +1014,12 @@ function kontenZeichnen(o){
     o.appendChild(box);
   });
 
-  // Knopf zum Anlegen
+  // Knopf zum Anlegen – ab drei Konten ist links kein Platz mehr
+  if(S.konten.length >= 3) return;
   const plus = el('button','konto-plus','+ Konto');
   plus.type='button';
-  plus.style.left = pz(46); plus.style.top = py(KONTO_Y0 + S.konten.length*kontoH()); plus.style.width='16%';
+  plus.style.left = pz(68); plus.style.top = py(kontoY0() + S.konten.length*kontoH()); plus.style.width='13%';
   plus.addEventListener('click', ()=>{
-    if(S.konten.length>=3){ alert('Mehr als drei zusätzliche Konten haben links keinen Platz.'); return; }
     S.konten.push({id:'k'+Date.now().toString(36), name:'Neues Konto', richtung:'zahlt', partner:'giro', betrag:{A:0,B:0}});
     overlayZeichnen(); pfeileZeichnen(); sichern();
   });
@@ -1465,11 +1465,22 @@ async function uebersichtLaden(){
     z.innerHTML = '<span class="b-name"></span>'+
                   '<span class="b-datum">'+d.toLocaleDateString('de-AT')+', '+d.toLocaleTimeString('de-AT',{hour:'2-digit',minute:'2-digit'})+'</span>'+
                   '<span class="b-tools">'+
+                    '<button type="button" data-t="kopie">Duplizieren</button>'+
                     '<button type="button" data-t="um">Umbenennen</button>'+
                     '<button type="button" data-t="weg" class="weg">Löschen</button>'+
                   '</span>';
     z.querySelector('.b-name').textContent = b.kunde;
     z.addEventListener('click', e=>{ if(!e.target.closest('.b-tools')) beratungOeffnen(b.id); });
+    z.querySelector('[data-t=kopie]').addEventListener('click', async ()=>{
+      const name = prompt('Bezeichnung der Kopie:', b.kunde + ' (Kopie)');
+      if(!name || !name.trim()) return;
+      const g = await api('get', {id:b.id});
+      if(!g.ok){ alert(g.fehler||'Fehler beim Laden'); return; }
+      const r2 = await api('save', {kunde:name.trim(), daten:g.beratung.daten});
+      if(!r2.ok){ alert(r2.fehler||'Fehler beim Speichern'); return; }
+      await uebersichtLaden();
+      beratungOeffnen(r2.id);
+    });
     z.querySelector('[data-t=um]').addEventListener('click', async ()=>{
       const neu = prompt('Neue Bezeichnung:', b.kunde);
       if(!neu || !neu.trim()) return;
