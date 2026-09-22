@@ -96,7 +96,11 @@
   }
   .zh:hover{border-color:var(--f);}
   .zh.an{background:var(--f); border-color:var(--f); color:#fff;}
-  .ziel-notiz{display:flex; padding:10px 12px 10px 0;}
+  .ziel-notiz{display:flex; flex-direction:column; gap:3px; padding:10px 12px 10px 0;}
+  .ziel-kachel.notiz-zu-klein{grid-template-columns:104px minmax(0,1fr) auto;}
+  .ziel-kachel.notiz-zu-klein .ziel-notiz{justify-content:flex-start; align-items:flex-end;}
+  .ziel-notiz .notiz-kopf{display:flex; justify-content:flex-end;}
+  .ziel-notiz .notiz-auf{white-space:nowrap;}
   .ziel-notiz textarea{
     width:100%; min-height:72px; resize:vertical;
     font:400 12.5px 'Lato',sans-serif; line-height:1.45; color:var(--text);
@@ -138,7 +142,7 @@
   .buehne-notiz{display:flex; flex-direction:column;}
   .buehne-notiz label{font:700 0.8cqw 'Lato',sans-serif; letter-spacing:.06em; margin-bottom:0.3cqw;}
   .buehne-notiz textarea{
-    flex:1 1 auto; font:400 1.05cqw 'Lato',sans-serif; line-height:1.5;
+    height:8.5cqw; font:400 1.05cqw 'Lato',sans-serif; line-height:1.5;
     background:#fffdf5; border:1.5px solid #e8d9ad; border-radius:0.45cqw; padding:0.5cqw 0.6cqw; resize:none;
   }
 
@@ -178,7 +182,7 @@
   .btn-weg:hover{color:var(--warn);}
 
   /* ---------- Pyramide ---------- */
-  .pyr-card{padding:14px 18px 18px;}
+  .pyr-card{padding:14px 18px 34px;}
   .pyr-hinweis{font-size:12.5px; color:var(--muted); margin:0 0 10px; font-weight:400;}
   .buehne{position:relative; width:100%; container-type:inline-size;}
   .buehne svg.pyr{display:block; width:100%; height:auto;}
@@ -228,7 +232,7 @@
   }
   .notiz-zu:hover{color:var(--accent);}
   .notiz-auf.voll{border-style:solid; border-color:#e8d9ad; background:#fffdf5; color:#8a6d1f;}
-  .notiz-box textarea{font-size:0.93cqw; min-height:11cqw; padding:0.4cqw 0.55cqw; background:#fffdf5; border-color:#e8d9ad; border-radius:0.35cqw;}
+  .notiz-box textarea{font-size:0.93cqw; min-height:8cqw; padding:0.4cqw 0.55cqw; background:#fffdf5; border-color:#e8d9ad; border-radius:0.35cqw;}
   .notiz-auf{
     background:#fff; border:1px dashed var(--line); color:var(--muted); border-radius:0.35cqw;
     padding:0.35cqw 0.65cqw; font:700 0.8cqw 'Lato',sans-serif; cursor:pointer; white-space:nowrap;
@@ -374,6 +378,7 @@
     .zh:not(.an){display:none;}
     .ziel-notiz{padding:5px 8px 5px 0;}
     .ziel-kachel.ohne-notiz .ziel-notiz{display:none;}
+    .ziel-notiz .notiz-kopf,.ziel-notiz .notiz-auf{display:none;}
     .ziel-notiz textarea{min-height:0; border:none !important; background:transparent !important; font-size:9pt !important; padding:0 !important;}
     .ziel-frei input{font-size:10pt !important;}
     /* Stufen kompakter */
@@ -611,6 +616,7 @@ const S = {
   konten:[],
   ziele:{},                 // themaKey -> {A:true,B:true}
   zielNotiz:{},             // themaKey -> Notiztext
+  zielNotizOffen:{},        // themaKey -> true, wenn das Notizfeld offen ist
   stufe:null,               // gewählte Vermögensstufe
   notizGross:'',            // großes Notizfeld in der Bühne                // weitere Konten links: {id,name,richtung,partner,betrag:{A,B}}
   notizOffen:{},            // bereichId -> true
@@ -681,8 +687,6 @@ function pyramideZeichnen(){
   flaeche('mittel', `${G.apexX},${G.apexY} ${xR(G.y1)},${G.y1} ${xL(G.y1)},${G.y1}`);
   flaeche('lang',   `${xL(G.y1)},${G.y1} ${xR(G.y1)},${G.y1} ${xR(G.y2)},${G.y2} ${xL(G.y2)},${G.y2}`);
   flaeche('kurz',   `${xL(G.y2)},${G.y2} ${xR(G.y2)},${G.y2} ${xR(G.y3)},${G.y3} ${xL(G.y3)},${G.y3}`);
-  flaeche('absV',   `${xL(G.y3)},${G.y3} ${G.apexX},${G.y3} ${G.apexX},${G.baseY} ${G.baseL},${G.baseY}`);
-  flaeche('absA',   `${G.apexX},${G.y3} ${xR(G.y3)},${G.y3} ${G.baseR},${G.baseY} ${G.apexX},${G.baseY}`);
 
   gk.addEventListener('click', e=>{
     const b = e.target.getAttribute('data-b');
@@ -890,7 +894,7 @@ function overlayZeichnen(){
   sp.style.left = pz(G.kastenX);
   sp.style.top  = py(110);
   sp.style.width = '19%';
-  sp.style.minHeight = py(490);
+  sp.style.minHeight = py(700);
   (S.zweiKonten ? ['mittel','lang'] : ['mittel','lang','kurz']).forEach(id=>{
     if(!S.offen[id]) return;
     const b = BEREICHE.find(x=>x.id===id);
@@ -902,18 +906,18 @@ function overlayZeichnen(){
     rest.style.marginTop = 'auto';
     sp.appendChild(rest);
   }
-  o.appendChild(sp);
 
-  // --- Großes Notizfeld rechts unten, neben dem Absicherungsbereich ---
+  // Großes Notizfeld am Ende derselben Spalte – so kann es nichts überlappen
   const bn = el('div','buehne-notiz');
-  bn.style.left = pz(G.kastenX); bn.style.top = py(632); bn.style.width = '19%'; bn.style.height = py(200);
   const bnl = el('label','', 'Notizen');
   const bnt = el('textarea');
   bnt.placeholder = 'Notizen aus dem Gespräch';
   bnt.value = S.notizGross || '';
   bnt.addEventListener('input', e=>{ S.notizGross = e.target.value; });
   bn.appendChild(bnl); bn.appendChild(bnt);
-  o.appendChild(bn);
+  if(!S.zweiKonten) bn.style.marginTop = 'auto';
+  sp.appendChild(bn);
+  o.appendChild(sp);
 
   // --- Absicherung: Chips zur Auswahl + Tabelle mit den Beträgen, beides im Sockel ---
   CHIPS = {};
@@ -1093,17 +1097,35 @@ function zielRasterZeichnen(){
         '<ul>'+ z.p.map(()=>'<li></li>').join('') +'</ul>'+
         '<div class="ziel-haken"></div>'+
       '</div>'+
-      '<div class="ziel-notiz"><textarea placeholder="Notiz zu diesem Ziel"></textarea></div>';
+      '<div class="ziel-notiz"></div>';
     k.querySelector('.ziel-bild').style.backgroundImage = 'url(' + z.bild + ')';
     k.querySelector('h3').textContent = z.t;
     k.querySelectorAll('li').forEach((li,i)=>{ li.textContent = z.p[i]; });
 
-    const nt = k.querySelector('.ziel-notiz textarea');
-    nt.value = S.zielNotiz[z.k] || '';
-    nt.addEventListener('input', e=>{
-      const v = e.target.value;
-      if(v.trim()) S.zielNotiz[z.k] = v; else delete S.zielNotiz[z.k];
-    });
+    // Notiz auf- und zuklappbar, damit die Liste im Gespräch ruhig bleibt
+    const nbox = k.querySelector('.ziel-notiz');
+    const hatNotiz = !!(S.zielNotiz[z.k] || '').trim();
+    if(S.zielNotizOffen[z.k]){
+      const zu = el('button','notiz-zu','Text einklappen');
+      zu.type='button';
+      zu.addEventListener('click', ()=>{ delete S.zielNotizOffen[z.k]; zielRasterZeichnen(); sichern(); });
+      const kopf = el('div','notiz-kopf'); kopf.appendChild(zu);
+      nbox.appendChild(kopf);
+      const nt = el('textarea');
+      nt.placeholder = 'Notiz zu diesem Ziel';
+      nt.value = S.zielNotiz[z.k] || '';
+      nt.addEventListener('input', e=>{
+        const v = e.target.value;
+        if(v.trim()) S.zielNotiz[z.k] = v; else delete S.zielNotiz[z.k];
+      });
+      nbox.appendChild(nt);
+    }else{
+      k.classList.add('notiz-zu-klein');
+      const auf = el('button','notiz-auf'+(hatNotiz?' voll':''), hatNotiz ? 'Text zeigen' : '+ Text');
+      auf.type='button';
+      auf.addEventListener('click', ()=>{ S.zielNotizOffen[z.k]=true; zielRasterZeichnen(); sichern(); });
+      nbox.appendChild(auf);
+    }
 
     const haken = k.querySelector('.ziel-haken');
     (S.personB?['A','B']:['A']).forEach(p=>{
@@ -1330,26 +1352,19 @@ function pfeilSchalter(key, p, titel){
    ========================================================= */
 function bereichSchalten(id){
   if(id==='kurz' && S.zweiKonten) return;       // Konto Plus ist dann das Sammelkonto
+  if(id==='absV' || id==='absA') return;        // Absicherung wird allein über die Sparten-Chips gesteuert
   S.offen[id] = !S.offen[id];
   if(!S.offen[id]){ PFEIL_GEZEIGT.delete(id+'A'); PFEIL_GEZEIGT.delete(id+'B'); }
-  if((id==='absV'||id==='absA')){
-    if(S.offen[id]){
-      // beim Öffnen die ersten Sparten anbieten
-      absTabellen();
-    }else{
-      SPARTEN[id].forEach(sp=>{ delete S.sparte[id+'.'+sp.k]; });
-      absTabellen();
-    }
-  }
   overlayZeichnen(); pfeileZeichnen(); restAktualisieren();
 }
 
 function spartenSchalten(id,k){
-  if(!S.offen[id]) S.offen[id]=true;
-  const key=id+'.'+k;
-  if(S.sparte[key]) delete S.sparte[key];
-  else S.sparte[key]={an:true,A:0,B:0};
-  absTabellen(); overlayZeichnen(); pfeileZeichnen(); restAktualisieren();
+  const key = id+'.'+k;
+  if(S.sparte[key]) S.sparte[key].an = !S.sparte[key].an;   // eingegebene Beträge bleiben erhalten
+  else S.sparte[key] = {an:true, A:0, B:0};
+  S.offen[id] = SPARTEN[id].some(sp=>{ const st = S.sparte[id+'.'+sp.k]; return st && st.an; });
+  if(!S.offen[id]){ PFEIL_GEZEIGT.delete(id+'A'); PFEIL_GEZEIGT.delete(id+'B'); }
+  absTabellen(); overlayZeichnen(); pfeileZeichnen(); restAktualisieren(); sichern();
 }
 
 /* =========================================================
@@ -1556,7 +1571,7 @@ function zustandSammeln(){
   return {
     v:1, felder:f, personB:S.personB, zweiKonten:S.zweiKonten, offen:S.offen, pfeilAn:S.pfeilAn, betrag:S.betrag,
     notiz:S.notiz, notizOffen:S.notizOffen, sparte:S.sparte,
-    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, stufe:S.stufe, notizGross:S.notizGross,
+    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross,
     pyrMalen:{striche:S.pyrMalen.striche},
     seiten:S.seiten.map(s=>({striche:s.striche, farbe:s.farbe}))
   };
@@ -1572,7 +1587,7 @@ function zustandSetzen(d){
   S.offen = d.offen||{}; S.pfeilAn = d.pfeilAn||{};
   S.notiz = d.notiz||{}; S.notizOffen = d.notizOffen||{}; S.sparte = d.sparte||{};
   S.pyrText = d.pyrText||{}; S.konten = d.konten||[];
-  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||'';
+  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||'';
   BEREICHE.forEach(b=>{ if(d.betrag && d.betrag[b.id]) S.betrag[b.id]=d.betrag[b.id]; });
   if(d.pyrMalen && d.pyrMalen.striche) S.pyrMalen.striche = d.pyrMalen.striche;
   (d.seiten||[]).forEach(s=>{ S.seiten.push({striche:s.striche||[], farbe:s.farbe, radierer:false}); });
@@ -1587,7 +1602,7 @@ function zustandLeeren(){
   S.personB=false; $('#personB').style.display='none'; $('#btnBdazu').style.display='block';
   S.zweiKonten=true;
   S.offen={}; S.pfeilAn={}; S.notiz={}; S.notizOffen={}; S.sparte={};
-  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.stufe=null; S.notizGross='';
+  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross='';
   if($('#zielFrei')) $('#zielFrei').value='';
   BEREICHE.forEach(b=>S.betrag[b.id]={A:0,B:0});
   S.pyrMalen.striche=[];
@@ -1854,7 +1869,14 @@ window.addEventListener('beforeunload', e=>{
 /* =========================================================
    Drucken / Zurücksetzen
    ========================================================= */
+let druckVorherZu = [];
 function druckVorbereiten(){
+  // Zielnotizen mit Inhalt für den Druck aufklappen
+  druckVorherZu = ZIELE.filter(z => (S.zielNotiz[z.k]||'').trim() && !S.zielNotizOffen[z.k]).map(z=>z.k);
+  if(druckVorherZu.length){
+    druckVorherZu.forEach(k => { S.zielNotizOffen[k] = true; });
+    zielRasterZeichnen();
+  }
   // Textfelder auf ihren Inhalt aufziehen, damit nichts abgeschnitten wird
   $$('textarea').forEach(t=>{ t.dataset.h=t.style.height; t.style.height='auto'; t.style.height=(t.scrollHeight+4)+'px'; });
   // Zielkacheln ohne Notiz drucken ohne leeres Feld
@@ -1865,6 +1887,11 @@ function druckVorbereiten(){
 }
 function druckAufraeumen(){
   $$('textarea').forEach(t=>{ t.style.height=t.dataset.h||''; });
+  if(druckVorherZu.length){
+    druckVorherZu.forEach(k => { delete S.zielNotizOffen[k]; });
+    druckVorherZu = [];
+    zielRasterZeichnen();
+  }
 }
 window.addEventListener('beforeprint', druckVorbereiten);
 window.addEventListener('afterprint', druckAufraeumen);
