@@ -75,13 +75,13 @@
   .ziel-raster{display:grid; grid-template-columns:1fr 1fr; gap:12px 20px;}
   @media(max-width:820px){.ziel-raster{grid-template-columns:1fr;}}
   .ziel-kachel{
-    display:grid; grid-template-columns:104px 1fr; gap:12px;
+    display:grid; grid-template-columns:104px minmax(0,1fr) minmax(0,1.05fr); gap:12px;
     background:var(--panel2); border:1.5px solid transparent; border-radius:6px; overflow:hidden;
     transition:border-color .15s, background .15s;
   }
   .ziel-kachel.an{border-color:var(--accent); background:#e7eff8;}
   .ziel-bild{background-size:cover; background-position:center; min-height:104px;}
-  .ziel-text{padding:10px 12px 10px 0; display:flex; flex-direction:column; gap:5px;}
+  .ziel-text{padding:10px 0 10px 0; display:flex; flex-direction:column; gap:5px;}
   .ziel-text h3{margin:0; font:900 13.5px 'Lato',sans-serif; line-height:1.25; color:var(--text);}
   .ziel-text ul{margin:0; padding-left:15px; color:var(--muted); font-size:12px; line-height:1.4;}
   .ziel-haken{display:flex; gap:6px; margin-top:auto; padding-top:6px;}
@@ -91,6 +91,17 @@
   }
   .zh:hover{border-color:var(--f);}
   .zh.an{background:var(--f); border-color:var(--f); color:#fff;}
+  .ziel-notiz{display:flex; padding:10px 12px 10px 0;}
+  .ziel-notiz textarea{
+    width:100%; min-height:72px; resize:vertical;
+    font:400 12.5px 'Lato',sans-serif; line-height:1.45; color:var(--text);
+    background:#fffdf5; border:1px solid #e8d9ad; border-radius:5px; padding:6px 8px;
+  }
+  .ziel-notiz textarea:focus{border-color:var(--accent-light);}
+  @media(max-width:1100px){
+    .ziel-kachel{grid-template-columns:104px minmax(0,1fr);}
+    .ziel-notiz{grid-column:2 / -1; padding:0 12px 10px 0;}
+  }
   .ziel-frei{margin-top:14px; max-width:520px;}
 
   /* ---------- Vermögensstufen ---------- */
@@ -356,6 +367,9 @@
     .ziel-text h3{font-size:11pt;}
     .ziel-text ul{font-size:8.5pt;}
     .zh:not(.an){display:none;}
+    .ziel-notiz{padding:5px 8px 5px 0;}
+    .ziel-kachel.ohne-notiz .ziel-notiz{display:none;}
+    .ziel-notiz textarea{min-height:0; border:none !important; background:transparent !important; font-size:9pt !important; padding:0 !important;}
     .ziel-frei input{font-size:10pt !important;}
     /* Stufen kompakter */
     .balken{height:110px !important; padding-top:18px !important;}
@@ -591,6 +605,7 @@ const S = {
   pyrText:{},               // bereichId -> Text mitten im Pyramidenbereich
   konten:[],
   ziele:{},                 // themaKey -> {A:true,B:true}
+  zielNotiz:{},             // themaKey -> Notiztext
   stufe:null,               // gewählte Vermögensstufe
   notizGross:'',            // großes Notizfeld in der Bühne                // weitere Konten links: {id,name,richtung,partner,betrag:{A,B}}
   notizOffen:{},            // bereichId -> true
@@ -1072,10 +1087,18 @@ function zielRasterZeichnen(){
         '<h3></h3>'+
         '<ul>'+ z.p.map(()=>'<li></li>').join('') +'</ul>'+
         '<div class="ziel-haken"></div>'+
-      '</div>';
+      '</div>'+
+      '<div class="ziel-notiz"><textarea placeholder="Notiz zu diesem Ziel"></textarea></div>';
     k.querySelector('.ziel-bild').style.backgroundImage = 'url(' + z.bild + ')';
     k.querySelector('h3').textContent = z.t;
     k.querySelectorAll('li').forEach((li,i)=>{ li.textContent = z.p[i]; });
+
+    const nt = k.querySelector('.ziel-notiz textarea');
+    nt.value = S.zielNotiz[z.k] || '';
+    nt.addEventListener('input', e=>{
+      const v = e.target.value;
+      if(v.trim()) S.zielNotiz[z.k] = v; else delete S.zielNotiz[z.k];
+    });
 
     const haken = k.querySelector('.ziel-haken');
     (S.personB?['A','B']:['A']).forEach(p=>{
@@ -1528,7 +1551,7 @@ function zustandSammeln(){
   return {
     v:1, felder:f, personB:S.personB, zweiKonten:S.zweiKonten, offen:S.offen, pfeilAn:S.pfeilAn, betrag:S.betrag,
     notiz:S.notiz, notizOffen:S.notizOffen, sparte:S.sparte,
-    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, stufe:S.stufe, notizGross:S.notizGross,
+    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, stufe:S.stufe, notizGross:S.notizGross,
     pyrMalen:{striche:S.pyrMalen.striche},
     seiten:S.seiten.map(s=>({striche:s.striche, farbe:s.farbe}))
   };
@@ -1544,7 +1567,7 @@ function zustandSetzen(d){
   S.offen = d.offen||{}; S.pfeilAn = d.pfeilAn||{};
   S.notiz = d.notiz||{}; S.notizOffen = d.notizOffen||{}; S.sparte = d.sparte||{};
   S.pyrText = d.pyrText||{}; S.konten = d.konten||[];
-  S.ziele = d.ziele||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||'';
+  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||'';
   BEREICHE.forEach(b=>{ if(d.betrag && d.betrag[b.id]) S.betrag[b.id]=d.betrag[b.id]; });
   if(d.pyrMalen && d.pyrMalen.striche) S.pyrMalen.striche = d.pyrMalen.striche;
   (d.seiten||[]).forEach(s=>{ S.seiten.push({striche:s.striche||[], farbe:s.farbe, radierer:false}); });
@@ -1559,7 +1582,7 @@ function zustandLeeren(){
   S.personB=false; $('#personB').style.display='none'; $('#btnBdazu').style.display='block';
   S.zweiKonten=true;
   S.offen={}; S.pfeilAn={}; S.notiz={}; S.notizOffen={}; S.sparte={};
-  S.pyrText={}; S.konten=[]; S.ziele={}; S.stufe=null; S.notizGross='';
+  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.stufe=null; S.notizGross='';
   if($('#zielFrei')) $('#zielFrei').value='';
   BEREICHE.forEach(b=>S.betrag[b.id]={A:0,B:0});
   S.pyrMalen.striche=[];
@@ -1759,13 +1782,21 @@ window.addEventListener('beforeunload', e=>{
 /* =========================================================
    Drucken / Zurücksetzen
    ========================================================= */
-window.addEventListener('beforeprint', ()=>{
+function druckVorbereiten(){
+  // Textfelder auf ihren Inhalt aufziehen, damit nichts abgeschnitten wird
   $$('textarea').forEach(t=>{ t.dataset.h=t.style.height; t.style.height='auto'; t.style.height=(t.scrollHeight+4)+'px'; });
-});
-window.addEventListener('afterprint', ()=>{
+  // Zielkacheln ohne Notiz drucken ohne leeres Feld
+  $$('.ziel-kachel').forEach(k=>{
+    const t = k.querySelector('.ziel-notiz textarea');
+    k.classList.toggle('ohne-notiz', !t || !t.value.trim());
+  });
+}
+function druckAufraeumen(){
   $$('textarea').forEach(t=>{ t.style.height=t.dataset.h||''; });
-});
-$('#btnDruck').addEventListener('click', ()=>window.print());
+}
+window.addEventListener('beforeprint', druckVorbereiten);
+window.addEventListener('afterprint', druckAufraeumen);
+$('#btnDruck').addEventListener('click', ()=>{ druckVorbereiten(); window.print(); });
 
 
 /* =========================================================
