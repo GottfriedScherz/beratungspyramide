@@ -632,9 +632,9 @@ function pyramideZeichnen(){
   lab('Langfristig',   G.y2-16);
   lab('Kurzfristig',   G.y3-18);
 
-  const sV=mk('text',{class:'sockel-label',x:420,y:G.y3+26,'text-anchor':'middle'});
+  const sV=mk('text',{class:'sockel-label',x:420,y:G.y3+44,'text-anchor':'middle'});
   sV.textContent='Absicherung des Vermögens'; gp.appendChild(sV);
-  const sA=mk('text',{class:'sockel-label',x:830,y:G.y3+26,'text-anchor':'middle'});
+  const sA=mk('text',{class:'sockel-label',x:830,y:G.y3+44,'text-anchor':'middle'});
   sA.textContent='Absicherung der Arbeitskraft'; gp.appendChild(sA);
 
   // Girokonto links oben
@@ -733,7 +733,7 @@ function pfeileZeichnen(){
       const wert = bereichSumme(b.id)[p];
       const sockel = (b.id==='absV' || b.id==='absA');
       const z = !sockel ? {x:b.ziel.x+vs, y:b.ziel.y}
-              : S.zweiKonten ? {x:(b.id==='absV'?480:800)+vs, y:G.y3-6}    // senkrecht von oben
+              : S.zweiKonten ? {x:(b.id==='absV'?480:800)+vs, y:G.y3+24}   // senkrecht von oben, bis in den Sockel
                              : {x:(b.id==='absV'?300:648)+vs, y:G.y3+74};  // hinein in die Sockelhälfte
       let d, tp;
 
@@ -902,7 +902,7 @@ function overlayZeichnen(){
     const x = links ? pz(330) : pz(690);
 
     const box = el('div','sparten');
-    box.style.width = '20.5%'; box.style.left = x; box.style.top = py(G.y3+44);
+    box.style.width = '20.5%'; box.style.left = x; box.style.top = py(G.y3+62);
     SPARTEN[id].forEach(sp=>{
       const c = el('button','chip');
       c.type='button'; c.title=sp.n; c.dataset.kuerzel=sp.k;
@@ -914,7 +914,7 @@ function overlayZeichnen(){
 
     const t = el('div','abs-tab');
     t.id = 'tab_'+id;
-    t.style.width = '20.5%'; t.style.left = x; t.style.top = py(G.y3+82);
+    t.style.width = '20.5%'; t.style.left = x; t.style.top = py(G.y3+92);
     o.appendChild(t);
   });
   absTabellen();
