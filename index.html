@@ -61,6 +61,8 @@
   .b-zeile:hover{background:var(--panel2); border-color:var(--line);}
   .b-zeile .b-name{font-weight:700; font-size:15px; flex:1 1 auto;}
   .b-zeile .b-datum{font-size:12px; color:var(--muted); white-space:nowrap;}
+  .b-eintrag{border-radius:6px;}
+  .b-zeile .b-frist{font-size:11.5px; font-weight:700; color:var(--warn); background:#fdf2f2; border:1px solid #f0c7c1; border-radius:3px; padding:2px 7px; white-space:nowrap;}
   .b-zeile .b-tools{display:flex; gap:4px; opacity:0; transition:opacity .15s;}
   .b-zeile:hover .b-tools{opacity:1;}
   .b-tools button{
@@ -69,6 +71,9 @@
   }
   .b-tools button:hover{border-color:var(--accent); color:var(--accent);}
   .b-tools button.weg:hover{border-color:var(--warn); color:var(--warn);}
+  .b-merk{padding:2px 12px 12px 12px;}
+  .b-merk label{display:block; font-size:10.5px; letter-spacing:.04em; color:var(--muted); margin-bottom:4px; text-transform:none; font-weight:700;}
+  .b-merk input{font-size:14px; background:#fffdf5; border-color:#e8d9ad;}
 
 
   /* ---------- Ziele ---------- */
@@ -423,10 +428,10 @@
     <div class="card">
       <h2>Neue Beratung</h2>
       <div class="neu-zeile">
-        <input type="text" id="neuKunde" placeholder="Kundenbezeichnung, z. B. Fam. M., Ternitz" maxlength="120">
+        <input type="text" id="neuKunde" placeholder="Initialen, z. B. M.M." maxlength="10">
         <button type="button" class="btn-haupt" id="btnNeu">Beratung anlegen</button>
       </div>
-      <p class="hinweis-klein">Bitte nur Kürzel oder Ortsangabe verwenden – keine vollständigen Kundendaten.</p>
+      <p class="hinweis-klein">Nur Initialen – keine Namen, keine Orte. Wofür sie stehen, hältst du in der Übersicht im Merkfeld fest; das bleibt nur auf diesem Gerät. Beratungen werden 6 Wochen nach der letzten Änderung automatisch gelöscht.</p>
     </div>
 
     <div class="card">
@@ -1612,6 +1617,28 @@ async function api(action, extra){
   return res.json();
 }
 
+/* Nur Initialen als Kundenbezeichnung – keine Namen in der Datenbank */
+const AUFBEWAHRUNG_TAGE = 42, WARNUNG_AB_TAGE = 21;
+function initialenOk(t){
+  t = (t||'').trim();
+  if(!t || t.length > 10) return false;
+  if(!/^[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß.\-  ]*$/.test(t)) return false;
+  return !/[A-Za-zÄÖÜäöüß]{3,}/.test(t);      // drei Buchstaben am Stück = vermutlich ein Name
+}
+function initialenPruefen(t){
+  if(initialenOk(t)) return true;
+  alert('Bitte nur Initialen eingeben, z. B. „M.M." oder „MM".\n\n'+
+        'Vollständige Namen dürfen hier nicht gespeichert werden. '+
+        'Wofür die Initialen stehen, kannst du in der Übersicht im ausklappbaren Merkfeld festhalten – '+
+        'das bleibt nur auf diesem Gerät.');
+  return false;
+}
+
+/* Merkfeld: bleibt ausschließlich lokal auf diesem Gerät */
+const merkKey = id => 'bp_merk_' + id;
+const merkLesen = id => { try{ return localStorage.getItem(merkKey(id)) || ''; }catch(e){ return ''; } };
+const merkSchreiben = (id,v) => { try{ v.trim() ? localStorage.setItem(merkKey(id), v) : localStorage.removeItem(merkKey(id)); }catch(e){} };
+
 const lokalKey = () => 'beratungspyramide_' + (AKTUELL && AKTUELL.id ? AKTUELL.id : 'neu');
 
 function status(text, klasse){
@@ -1682,19 +1709,45 @@ async function uebersichtLaden(){
   ziel.innerHTML = '';
   r.beratungen.forEach(b=>{
     const d = new Date(b.geaendert_am);
+    const tage = Math.floor((Date.now() - d.getTime()) / 86400000);
+    const loeschDatum = new Date(d.getTime() + AUFBEWAHRUNG_TAGE*86400000);
+    const warnt = tage >= WARNUNG_AB_TAGE;
+
+    const box = el('div','b-eintrag');
     const z = el('div','b-zeile');
     z.innerHTML = '<span class="b-name"></span>'+
+                  (warnt ? '<span class="b-frist">wird am '+loeschDatum.toLocaleDateString('de-AT')+' gelöscht</span>' : '')+
                   '<span class="b-datum">'+d.toLocaleDateString('de-AT')+', '+d.toLocaleTimeString('de-AT',{hour:'2-digit',minute:'2-digit'})+'</span>'+
                   '<span class="b-tools">'+
+                    '<button type="button" data-t="merk" title="Merkfeld – nur auf diesem Gerät">Merkfeld</button>'+
+                    '<button type="button" data-t="druckweg">Drucken &amp; löschen</button>'+
                     '<button type="button" data-t="kopie">Duplizieren</button>'+
                     '<button type="button" data-t="um">Umbenennen</button>'+
                     '<button type="button" data-t="weg" class="weg">Löschen</button>'+
                   '</span>';
     z.querySelector('.b-name').textContent = b.kunde;
     z.addEventListener('click', e=>{ if(!e.target.closest('.b-tools')) beratungOeffnen(b.id); });
+    box.appendChild(z);
+
+    // Merkfeld, standardmäßig zugeklappt
+    const merk = el('div','b-merk');
+    merk.hidden = true;
+    merk.innerHTML = '<label>Nur auf diesem Gerät gespeichert – nicht in der Datenbank</label>'+
+                     '<input type="text" placeholder="z. B. Michael Mustermann, Ternitz – Empfehlung von …">';
+    const mi = merk.querySelector('input');
+    mi.value = merkLesen(b.id);
+    mi.addEventListener('input', e=>merkSchreiben(b.id, e.target.value));
+    box.appendChild(merk);
+    z.querySelector('[data-t=merk]').addEventListener('click', ()=>{
+      merk.hidden = !merk.hidden;
+      if(!merk.hidden) mi.focus();
+    });
+
+    z.querySelector('[data-t=druckweg]').addEventListener('click', ()=>druckenUndLoeschen(b.id, b.kunde));
     z.querySelector('[data-t=kopie]').addEventListener('click', async ()=>{
-      const name = prompt('Bezeichnung der Kopie:', b.kunde + ' (Kopie)');
+      const name = prompt('Bezeichnung der Kopie (nur Initialen, z. B. M.M.):', b.kunde);
       if(!name || !name.trim()) return;
+      if(!initialenPruefen(name)) return;
       const g = await api('get', {id:b.id});
       if(!g.ok){ alert(g.fehler||'Fehler beim Laden'); return; }
       const r2 = await api('save', {kunde:name.trim(), daten:g.beratung.daten});
@@ -1703,8 +1756,9 @@ async function uebersichtLaden(){
       beratungOeffnen(r2.id);
     });
     z.querySelector('[data-t=um]').addEventListener('click', async ()=>{
-      const neu = prompt('Neue Bezeichnung:', b.kunde);
+      const neu = prompt('Neue Bezeichnung (nur Initialen, z. B. M.M.):', b.kunde);
       if(!neu || !neu.trim()) return;
+      if(!initialenPruefen(neu)) return;
       const g = await api('get', {id:b.id});
       if(!g.ok){ alert(g.fehler||'Fehler'); return; }
       const r2 = await api('save', {id:b.id, kunde:neu.trim(), daten:g.beratung.daten});
@@ -1715,7 +1769,7 @@ async function uebersichtLaden(){
       const r2 = await api('delete', {id:b.id});
       if(r2.ok) uebersichtLaden(); else alert(r2.fehler||'Fehler');
     });
-    ziel.appendChild(z);
+    ziel.appendChild(box);
   });
 }
 
@@ -1749,9 +1803,27 @@ async function beratungOeffnen(id){
   status('Gespeichert');
 }
 
+async function druckenUndLoeschen(id, kunde){
+  await beratungOeffnen(id);
+  await new Promise(r=>setTimeout(r,400));
+  const nachher = async ()=>{
+    if(confirm('Beratung „'+kunde+'" wurde gedruckt.\n\nJetzt endgültig aus der Datenbank löschen?')){
+      const r = await api('delete', {id});
+      if(!r.ok){ alert(r.fehler||'Löschen fehlgeschlagen'); return; }
+      try{ localStorage.removeItem(merkKey(id)); localStorage.removeItem('beratungspyramide_'+id); }catch(e){}
+      AKTUELL = null; status('');
+      ansicht('uebersicht'); uebersichtLaden();
+    }
+  };
+  window.addEventListener('afterprint', nachher, {once:true});
+  druckVorbereiten();
+  window.print();
+}
+
 async function beratungNeu(){
   const kunde = $('#neuKunde').value.trim();
   if(!kunde){ $('#neuKunde').focus(); return; }
+  if(!initialenPruefen(kunde)){ $('#neuKunde').focus(); return; }
   zustandLeeren();
   AKTUELL = {id:null, kunde};
   ansicht('beratung');
