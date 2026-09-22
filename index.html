@@ -94,8 +94,8 @@
   .person-kopf{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
   .person-punkt{width:12px; height:12px; border-radius:50%; background:var(--pa); flex:0 0 auto;}
   .person.b .person-punkt{background:var(--pb);}
-  .person-name{font:700 14px 'Lato',sans-serif; border:none; border-bottom:1px dashed var(--line); border-radius:0; padding:2px 0; background:transparent; width:auto; flex:1 1 auto;}
-  .person-name:focus{box-shadow:none; border-bottom-color:var(--accent-light);}
+  .person input.person-name{font:700 14px 'Lato',sans-serif; border:none; border-bottom:1px dashed var(--line); border-radius:0; padding:2px 0; background:transparent; width:auto; flex:1 1 auto;}
+  .person input.person-name:focus{box-shadow:none; border-bottom-color:var(--accent-light);}
   .person-betraege{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
   .btn-b{
     background:var(--pb-bg); color:var(--pb); border:1px dashed var(--pb); border-radius:6px;
@@ -181,6 +181,46 @@
   .giro-zeile{display:flex; align-items:center; gap:0.45cqw;}
   .giro-wert{font:900 1.25cqw 'Lato',sans-serif; white-space:nowrap;}
 
+  /* Weitere Konten */
+  .konto{
+    background:#fff; border:1.5px solid var(--accent); border-radius:0.45cqw;
+    padding:0.45cqw 0.55cqw; box-shadow:0 1px 3px rgba(0,0,0,.06);
+  }
+  .konto-kopf{display:flex; align-items:center; gap:0.3cqw; margin-bottom:0.35cqw;}
+  .konto input.konto-name{
+    font:900 0.95cqw 'Lato',sans-serif; color:var(--accent); border:none; border-bottom:1px dashed var(--line);
+    border-radius:0; padding:0 0 0.1cqw; background:transparent; width:auto; flex:1 1 auto;
+  }
+  .konto input.konto-name:focus{box-shadow:none; border-bottom-color:var(--accent-light);}
+  .konto .btn-weg{font-size:1.1cqw;}
+  .konto-fluss{
+    width:100%; font:700 0.78cqw 'Lato',sans-serif; color:var(--muted);
+    border:1px solid var(--line); border-radius:0.3cqw; padding:0.2cqw 0.25cqw;
+    margin-bottom:0.4cqw; background:#fbfcfe;
+  }
+  .konto-plus{
+    background:#fff; border:1px dashed var(--accent-light); color:var(--accent);
+    border-radius:0.45cqw; padding:0.5cqw; font:700 0.9cqw 'Lato',sans-serif; cursor:pointer;
+  }
+  .konto-plus:hover{background:var(--pa-bg);}
+
+  /* Schreibfeld im Pyramidenbereich */
+  .pyr-text{
+    border:1px dashed transparent; background:transparent; border-radius:0.3cqw;
+    font:400 1.15cqw 'Lato',sans-serif; line-height:1.45; color:var(--text);
+    text-align:center; resize:none; padding:0.3cqw; overflow:hidden;
+  }
+  .pyr-text:hover{border-color:#d7e1ec;}
+  .pyr-text:focus{border-color:var(--accent-light); background:rgba(255,255,255,.75); box-shadow:none;}
+
+  /* Hinweise neben den Ebenen */
+  .pyr-hinweis-box{
+    font:900 1.05cqw 'Lato',sans-serif; text-align:center; border-radius:0.35cqw;
+    padding:0.4cqw 0.5cqw; line-height:1.25;
+  }
+  .pyr-hinweis-box.gut{color:#1d7a45; background:#e6f6ec; border:1.5px solid #27ae60;}
+  .pyr-hinweis-box.warn{color:#8a4b12; background:#fdf1e2; border:1.5px solid #c2680a;}
+
   /* Checkbox 2-Konten-Modell */
   .kontenmodell{
     display:flex; align-items:center; gap:0.5cqw; cursor:pointer;
@@ -259,6 +299,7 @@
     input[type=date]::-webkit-calendar-picker-indicator{display:none;}
     input::placeholder,textarea::placeholder{color:transparent !important;}
     .pf-btn:not(.an){visibility:hidden;}
+    .konto-fluss{-webkit-appearance:none; appearance:none; border-color:#e0e7ef;}
     .pf-btn{border:none;}
     .abs-zeile{padding:2px 0;}
     .abs-zeile input{width:70px;}
@@ -467,6 +508,8 @@ const S = {
   pfeilAn:{},               // 'bereichId.A' / 'zu.B' -> true (Pfeil eingeblendet)
   betrag:{},                // bereichId -> {A:zahl, B:zahl}
   notiz:{},                 // bereichId -> text
+  pyrText:{},               // bereichId -> Text mitten im Pyramidenbereich
+  konten:[],                // weitere Konten links: {id,name,richtung,partner,betrag:{A,B}}
   notizOffen:{},            // bereichId -> true
   sparte:{},                // 'absV.EH' -> {an:true, A:zahl, B:zahl}
   seiten:[]                 // Zeichenseiten
@@ -582,6 +625,23 @@ function pfeileZeichnen(){
       start = {x:giro.x, y:giro.y};              // alles geht direkt vom Girokonto weg
     }
 
+    // Geldfluss zwischen den Konten links
+    S.konten.forEach(k=>{
+      if(!S.pfeilAn['konto:'+k.id+'.'+p]) return;
+      const vonId = k.richtung==='erhaelt' ? k.partner : k.id;
+      const nachId= k.richtung==='erhaelt' ? k.id : k.partner;
+      const a = kontoAnker(vonId), z2 = kontoAnker(nachId);
+      const seite = Math.max(a.x, z2.x) + 34 + pi*16;
+      const d = `M ${a.x} ${a.y+pi*10} C ${seite} ${a.y+pi*10}, ${seite} ${z2.y+pi*10}, ${z2.x+6} ${z2.y+pi*10}`;
+      g.appendChild(pfeilEl(mk,d,p,'konto'+k.id+p));
+      const wert = k.betrag[p]||0;
+      if(wert>0){
+        const pt = punktAufPfad(d,0.5);
+        const t = mk('text',{class:'pfeil-txt',x:pt.x+8,y:pt.y+5,fill:FARBE[p],'text-anchor':'start'});
+        t.textContent = eur(wert); g.appendChild(t);
+      }
+    });
+
     BEREICHE.filter(b=>b.ziel).forEach(b=>{
       if(b.id==='kurz' && S.zweiKonten) return;  // Konto Plus ist dann das Sammelkonto
       if(!S.offen[b.id]) return;
@@ -679,6 +739,31 @@ function overlayZeichnen(){
   });
   o.appendChild(km);
 
+  // --- Schreibfelder mitten in den Pyramidenbereichen ---
+  const MITTE = {
+    mittel:{y:176, h:56,  b:9},    // klein genug, dass ringsum Platz zum Umschalten bleibt
+    lang:  {y:308, h:92,  b:16},
+    kurz:  {y:478, h:100, b:22}
+  };
+  Object.keys(MITTE).forEach(id=>{
+    const m = MITTE[id];
+    const t = el('textarea','pyr-text');
+    t.placeholder = '';
+    t.value = S.pyrText[id] || '';
+    t.style.left = pz(G.apexX - m.b*14/2); t.style.top = py(m.y);
+    t.style.width = m.b+'%'; t.style.height = py(m.h);
+    t.addEventListener('input', e=>{ S.pyrText[id]=e.target.value; });
+    o.appendChild(t);
+  });
+
+  // --- Hinweise links neben den Ebenen ---
+  const h1 = el('div','pyr-hinweis-box gut', 'KEINE KESt (!!!)');
+  h1.style.left = pz(308); h1.style.top = py(342); h1.style.width = '10%';
+  o.appendChild(h1);
+  const h2 = el('div','pyr-hinweis-box warn', '27,5&nbsp;% KESt.');
+  h2.style.left = pz(368); h2.style.top = py(186); h2.style.width = '11%';
+  o.appendChild(h2);
+
   // --- Beträge am Girokonto, je Person mit eigenem Pfeil-Schalter ---
   const gb = el('div','giro-betraege');
   gb.style.left = pz(52); gb.style.top = py(302); gb.style.width = '14.5%';
@@ -693,6 +778,9 @@ function overlayZeichnen(){
     gb.appendChild(z);
   });
   o.appendChild(gb);
+
+  // --- Weitere Konten links unter dem Girokonto ---
+  kontenZeichnen(o);
 
   // --- Rechte Spalte: Kästen, Textfelder, Restbetrag (im Fluss, damit nichts überlappt) ---
   const sp = el('div','rechts');
@@ -861,6 +949,94 @@ function kastenRest(){
 }
 
 /* =========================================================
+   Weitere Konten links (Firmenkonto, Haushaltskonto, Rücklagen …)
+   ========================================================= */
+const KONTO_Y0 = 372;
+const kontoH = () => S.personB ? 138 : 112;
+const kontoName = id => id==='giro' ? 'Girokonto'
+  : ((S.konten.find(k=>k.id===id)||{}).name || 'Konto');
+const kontoAnker = id => {
+  if(id==='giro') return {x:213, y:250};
+  const i = S.konten.findIndex(k=>k.id===id);
+  return {x:268, y:KONTO_Y0 + i*kontoH() + 34};
+};
+
+function kontenZeichnen(o){
+  S.konten.forEach((k,i)=>{
+    const box = el('div','konto');
+    box.style.left = pz(46); box.style.top = py(KONTO_Y0 + i*kontoH()); box.style.width = '16%';
+
+    const kopf = el('div','konto-kopf');
+    const nm = el('input','konto-name');
+    nm.type='text'; nm.value = k.name; nm.placeholder='Kontoname';
+    nm.addEventListener('input', e=>{ k.name = e.target.value; pfeileZeichnen(); });
+    const weg = el('button','btn-weg','×');
+    weg.type='button'; weg.title='Konto entfernen';
+    weg.addEventListener('click', ()=>{
+      S.konten.forEach(a=>{ if(a.partner===k.id){ a.partner='giro'; } });
+      S.konten.splice(i,1);
+      overlayZeichnen(); pfeileZeichnen(); restAktualisieren(); sichern();
+    });
+    kopf.appendChild(nm); kopf.appendChild(weg);
+    box.appendChild(kopf);
+
+    // Richtung + Partnerkonto in einer Auswahl
+    const sel = el('select','konto-fluss');
+    const ziele = [{id:'giro'}].concat(S.konten.filter(x=>x.id!==k.id));
+    ziele.forEach(z=>{
+      ['erhaelt','zahlt'].forEach(r=>{
+        const opt=document.createElement('option');
+        opt.value = r+'|'+z.id;
+        opt.textContent = (r==='erhaelt'?'erhält von ':'zahlt auf ') + kontoName(z.id);
+        sel.appendChild(opt);
+      });
+    });
+    sel.value = k.richtung+'|'+k.partner;
+    sel.addEventListener('change', e=>{
+      const [r,pid] = e.target.value.split('|');
+      k.richtung = r; k.partner = pid;
+      pfeileZeichnen(); restAktualisieren(); sichern();
+    });
+    box.appendChild(sel);
+
+    (S.personB?['A','B']:['A']).forEach(p=>{
+      const z = el('div','betrag-zeile');
+      z.appendChild(pfeilSchalter('konto:'+k.id+'.'+p, p, k.name));
+      const rest = el('span','bz-rest');
+      rest.innerHTML = '<input type="number" min="0" step="10" placeholder="0" value="'+(k.betrag[p]||'')+'"><span class="eur">€</span>';
+      z.appendChild(rest);
+      z.querySelector('input').addEventListener('input', e=>{
+        k.betrag[p] = +e.target.value||0;
+        restAktualisieren(); pfeileZeichnen();
+      });
+      box.appendChild(z);
+    });
+    o.appendChild(box);
+  });
+
+  // Knopf zum Anlegen
+  const plus = el('button','konto-plus','+ Konto');
+  plus.type='button';
+  plus.style.left = pz(46); plus.style.top = py(KONTO_Y0 + S.konten.length*kontoH()); plus.style.width='16%';
+  plus.addEventListener('click', ()=>{
+    if(S.konten.length>=3){ alert('Mehr als drei zusätzliche Konten haben links keinen Platz.'); return; }
+    S.konten.push({id:'k'+Date.now().toString(36), name:'Neues Konto', richtung:'zahlt', partner:'giro', betrag:{A:0,B:0}});
+    overlayZeichnen(); pfeileZeichnen(); sichern();
+  });
+  o.appendChild(plus);
+}
+
+/* Abfluss vom Girokonto auf ein anderes Konto */
+function kontenAbfluss(p){
+  let s=0;
+  S.konten.forEach(k=>{
+    const betrifftGiro = (k.richtung==='erhaelt' && k.partner==='giro');
+    if(betrifftGiro) s += k.betrag[p]||0;
+  });
+  return s;
+}
+
+/* =========================================================
    Rechnen
    ========================================================= */
 const zahl = sel => { const e=$(sel); return e ? (+e.value||0) : 0; };
@@ -880,7 +1056,7 @@ function bereichSumme(id){
 function abfluss(p){
   let s=0;
   BEREICHE.filter(b=>b.ziel).forEach(b=>{ if(S.offen[b.id]) s += bereichSumme(b.id)[p]||0; });
-  return s;
+  return s + kontenAbfluss(p);
 }
 
 
@@ -914,7 +1090,12 @@ function pfeilSchalter(key, p, titel){
   b.firstChild.style.color = an ? '#fff' : FARBE[p];
   b.title = (S.pfeilAn[key]?'Pfeil ausblenden':'Pfeil zeigen') + (titel?' – '+titel:'');
   b.addEventListener('click', ()=>{
-    if(S.pfeilAn[key]){ delete S.pfeilAn[key]; PFEIL_GEZEIGT.delete(key.split('.')[0]+p); }
+    if(S.pfeilAn[key]){
+      delete S.pfeilAn[key];
+      const basis = key.split('.')[0];
+      PFEIL_GEZEIGT.delete(basis+p);
+      PFEIL_GEZEIGT.delete(basis.replace('konto:','konto')+p);
+    }
     else S.pfeilAn[key]=true;
     overlayZeichnen(); pfeileZeichnen(); sichern();
   });
@@ -1152,6 +1333,7 @@ function zustandSammeln(){
   return {
     v:1, felder:f, personB:S.personB, zweiKonten:S.zweiKonten, offen:S.offen, pfeilAn:S.pfeilAn, betrag:S.betrag,
     notiz:S.notiz, notizOffen:S.notizOffen, sparte:S.sparte,
+    pyrText:S.pyrText, konten:S.konten,
     pyrMalen:{striche:S.pyrMalen.striche},
     seiten:S.seiten.map(s=>({striche:s.striche, farbe:s.farbe}))
   };
@@ -1166,6 +1348,7 @@ function zustandSetzen(d){
   if(typeof d.zweiKonten==='boolean') S.zweiKonten = d.zweiKonten;
   S.offen = d.offen||{}; S.pfeilAn = d.pfeilAn||{};
   S.notiz = d.notiz||{}; S.notizOffen = d.notizOffen||{}; S.sparte = d.sparte||{};
+  S.pyrText = d.pyrText||{}; S.konten = d.konten||[];
   BEREICHE.forEach(b=>{ if(d.betrag && d.betrag[b.id]) S.betrag[b.id]=d.betrag[b.id]; });
   if(d.pyrMalen && d.pyrMalen.striche) S.pyrMalen.striche = d.pyrMalen.striche;
   (d.seiten||[]).forEach(s=>{ S.seiten.push({striche:s.striche||[], farbe:s.farbe, radierer:false}); });
@@ -1180,6 +1363,7 @@ function zustandLeeren(){
   S.personB=false; $('#personB').style.display='none'; $('#btnBdazu').style.display='block';
   S.zweiKonten=true;
   S.offen={}; S.pfeilAn={}; S.notiz={}; S.notizOffen={}; S.sparte={};
+  S.pyrText={}; S.konten=[];
   BEREICHE.forEach(b=>S.betrag[b.id]={A:0,B:0});
   S.pyrMalen.striche=[];
   S.seiten.length=0; $('#seiten').innerHTML='';
