@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategie für Ihre Wünsche und Ziele</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Ccircle%20cx='12'%20cy='12'%20r='12'%20fill='%23355f8f'/%3E%3Cg%20fill='none'%20stroke='%23ffffff'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpolygon%20points='12,4%2020,19%204,19'/%3E%3Cline%20x1='7.2'%20y1='14'%20x2='16.8'%20y2='14'/%3E%3Cline%20x1='9.6'%20y1='9.4'%20x2='14.4'%20y2='9.4'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Ccircle%20cx='12'%20cy='12'%20r='12'%20fill='%23355f8f'/%3E%3Cg%20fill='none'%20stroke='%23ffffff'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpolygon%20points='12,4%2020,19%204,19'/%3E%3Cline%20x1='7.2'%20y1='14'%20x2='16.8'%20y2='14'/%3E%3Cline%20x1='9.6'%20y1='9.4'%20x2='14.4'%20y2='9.4'/%3E%3C/g%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f0f4f8; --panel:#ffffff; --panel2:#e8eef5; --line:#c8d5e3;
+    --text:#1a2a3a; --muted:#6b8099; --accent:#355f8f; --accent-light:#4a7ab5;
+    --grey:#b2b2b2; --warn:#c0392b; --good:#27ae60; --good-bg:#eefaf3;
+    --gold:#a8873f;
+    --pa:#355f8f;   /* Person A */
+    --pb:#c2680a;   /* Person B */
+    --pa-bg:#e7eff8; --pb-bg:#fdf1e2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    font-family:'Lato',Arial,sans-serif; background:var(--bg); color:var(--text);
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:1400px; margin:0 auto; padding:0 20px 90px;}
+
+  /* ---------- Kopf ---------- */
+  header{
+    background:var(--accent); color:#fff; padding:22px 24px 20px; margin:0 -20px 24px;
+    border-radius:0 0 8px 8px; display:flex; align-items:flex-end; gap:18px; flex-wrap:wrap;
+  }
+  header .htext{flex:1 1 320px;}
+  .eyebrow{font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.62); font-weight:700; margin-bottom:5px;}
+  h1{font-size:26px; margin:0; font-weight:900; color:#fff; letter-spacing:.01em;}
+  .kopf-tools{display:flex; gap:8px; flex-wrap:wrap;}
+  .kopf-tools button{
+    background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.35);
+    border-radius:5px; padding:8px 14px; font:700 12.5px 'Lato',sans-serif; cursor:pointer;
+    letter-spacing:.02em;
+  }
+  .kopf-tools button:hover{background:rgba(255,255,255,.26);}
+
+  .kopf-status{font:700 11.5px 'Lato',sans-serif; color:rgba(255,255,255,.8); align-self:center; margin-right:4px;}
+
+  /* ---------- Übersicht ---------- */
+  .neu-zeile{display:flex; gap:10px; flex-wrap:wrap;}
+  .neu-zeile input{flex:1 1 280px;}
+  .btn-haupt{
+    background:var(--accent); color:#fff; border:none; border-radius:5px; padding:10px 20px;
+    font:700 13px 'Lato',sans-serif; cursor:pointer; letter-spacing:.03em; white-space:nowrap;
+  }
+  .btn-haupt:hover{background:var(--accent-light);}
+  .hinweis-klein{font-size:12px; color:var(--muted); margin:10px 0 0;}
+  .liste{display:flex; flex-direction:column; gap:2px;}
+  .liste .leer{color:var(--muted); font-size:14px; padding:10px 0;}
+  .b-zeile{
+    display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:6px;
+    border:1px solid transparent; cursor:pointer;
+  }
+  .b-zeile:hover{background:var(--panel2); border-color:var(--line);}
+  .b-zeile .b-name{font-weight:700; font-size:15px; flex:1 1 auto;}
+  .b-zeile .b-datum{font-size:12px; color:var(--muted); white-space:nowrap;}
+  .b-zeile .b-tools{display:flex; gap:4px; opacity:0; transition:opacity .15s;}
+  .b-zeile:hover .b-tools{opacity:1;}
+  .b-tools button{
+    background:none; border:1px solid var(--line); border-radius:4px; padding:4px 9px;
+    font:700 11px 'Lato',sans-serif; color:var(--muted); cursor:pointer;
+  }
+  .b-tools button:hover{border-color:var(--accent); color:var(--accent);}
+  .b-tools button.weg:hover{border-color:var(--warn); color:var(--warn);}
+
+  /* ---------- Karten ---------- */
+  .card{background:var(--panel); border-radius:8px; padding:20px 22px; box-shadow:0 1px 4px rgba(53,95,143,.08); margin-bottom:18px;}
+  .card > h2{font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:700; margin:0 0 16px;}
+  label{font-size:11.5px; color:var(--muted); letter-spacing:.02em; font-weight:700; text-transform:uppercase; display:block; margin-bottom:4px;}
+  input[type=text],input[type=date],input[type=number],textarea{
+    width:100%; font:400 15px 'Lato',sans-serif; color:var(--text); background:#fff;
+    border:1px solid var(--line); border-radius:5px; padding:8px 10px;
+  }
+  input:focus,textarea:focus{outline:none; border-color:var(--accent-light); box-shadow:0 0 0 3px rgba(74,122,181,.15);}
+  textarea{resize:vertical; line-height:1.5;}
+
+  .kopf-grid{display:grid; grid-template-columns:1.3fr 1fr 1.6fr; gap:18px 22px; align-items:start;}
+  @media(max-width:1000px){.kopf-grid{grid-template-columns:1fr;}}
+  .ziele{display:grid; gap:8px;}
+  .ziel-zeile{display:grid; grid-template-columns:20px 1fr; align-items:center; gap:8px;}
+  .ziel-zeile span{font-weight:900; color:var(--muted); font-size:13px;}
+
+  /* Personen */
+  .personen{display:grid; gap:10px;}
+  .person{border:1px solid var(--line); border-left:5px solid var(--pa); border-radius:6px; padding:12px 14px; background:#fbfcfe;}
+  .person.b{border-left-color:var(--pb);}
+  .person-kopf{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .person-punkt{width:12px; height:12px; border-radius:50%; background:var(--pa); flex:0 0 auto;}
+  .person.b .person-punkt{background:var(--pb);}
+  .person-name{font:700 14px 'Lato',sans-serif; border:none; border-bottom:1px dashed var(--line); border-radius:0; padding:2px 0; background:transparent; width:auto; flex:1 1 auto;}
+  .person-name:focus{box-shadow:none; border-bottom-color:var(--accent-light);}
+  .person-betraege{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .btn-b{
+    background:var(--pb-bg); color:var(--pb); border:1px dashed var(--pb); border-radius:6px;
+    padding:10px 14px; font:700 13px 'Lato',sans-serif; cursor:pointer; width:100%;
+  }
+  .btn-b:hover{background:#fbe6cc;}
+  .btn-weg{background:none; border:none; color:var(--muted); font:700 18px 'Lato',sans-serif; cursor:pointer; line-height:1; padding:0 2px;}
+  .btn-weg:hover{color:var(--warn);}
+
+  /* ---------- Pyramide ---------- */
+  .pyr-card{padding:14px 18px 18px;}
+  .pyr-hinweis{font-size:12.5px; color:var(--muted); margin:0 0 10px; font-weight:400;}
+  .buehne{position:relative; width:100%; container-type:inline-size;}
+  .buehne svg.pyr{display:block; width:100%; height:auto;}
+  .ovl{position:absolute; inset:0; pointer-events:none;}
+  .ovl > *{position:absolute; pointer-events:auto;}
+
+  .buehne input[type=number]::-webkit-outer-spin-button,
+  .buehne input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+  .buehne input[type=number]{-moz-appearance:textfield;}
+
+  .klick{cursor:pointer; fill:transparent; transition:fill .15s;}
+  .klick:hover{fill:rgba(53,95,143,.07);}
+  .ebene-linie{stroke:#4a4a4a; stroke-width:1.6; fill:none;}
+  .pyr-umriss{stroke:#333; stroke-width:2.2; fill:none;}
+  .ebene-label{font:700 15px 'Lato',sans-serif; fill:#1a2a3a; letter-spacing:.02em;}
+  .sockel-label{font:700 12.5px 'Lato',sans-serif; fill:#1a2a3a;}
+  .giro-label{font:900 15px 'Lato',sans-serif; fill:#355f8f; letter-spacing:.02em;}
+  .pfeil{fill:none; stroke-width:4; stroke-linecap:round;
+         stroke-dasharray:var(--len) var(--len); stroke-dashoffset:var(--len);
+         transition:stroke-dashoffset .75s ease-out;}
+  .pfeil.an{stroke-dashoffset:0;}
+  .pfeil-txt{font:900 17px 'Lato',sans-serif; paint-order:stroke; stroke:#fff; stroke-width:5px; stroke-linejoin:round;}
+
+  /* Betragskästen – Größen in cqw, damit alles mit der Bühne skaliert (1cqw = 1% Bühnenbreite) */
+  .rechts{display:flex; flex-direction:column; gap:0.64cqw; align-items:stretch;}
+  .kasten{
+    background:#fff; border:1.5px solid var(--gold); border-radius:0.45cqw;
+    padding:0.6cqw 0.7cqw; box-shadow:0 1px 3px rgba(0,0,0,.06);
+  }
+  .kasten h3{margin:0 0 0.45cqw; font:700 0.8cqw 'Lato',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);}
+  .betrag-zeile{display:flex; align-items:center; gap:0.45cqw; margin-bottom:0.36cqw;}
+  .betrag-zeile:last-child{margin-bottom:0;}
+  .pnkt{width:0.72cqw; height:0.72cqw; border-radius:50%; flex:0 0 auto; background:var(--pa);}
+  .pnkt.b{background:var(--pb);}
+  .betrag-zeile input{padding:0.35cqw 0.5cqw; font-size:1cqw; text-align:right; font-weight:700; border-radius:0.35cqw;}
+  .betrag-zeile .eur{font-weight:900; color:var(--muted); font-size:1cqw;}
+  .pnkt-gross{width:1.7cqw; height:1.7cqw; border-radius:50%; flex:0 0 auto;}
+  .restwert{flex:1 1 auto; font:900 1cqw 'Lato',sans-serif; color:var(--text); text-align:right;}
+  .kasten .minus{font-size:0.75cqw; color:var(--muted); text-align:right; margin:-0.1cqw 0 0.36cqw; line-height:1.4;}
+
+  /* Notiz-Textfelder an den Ebenen */
+  .notiz-box{display:flex; flex-direction:column; gap:0.25cqw;}
+  .notiz-kopf{display:flex; justify-content:flex-end;}
+  .notiz-zu{
+    background:none; border:none; color:var(--muted); cursor:pointer;
+    font:700 0.72cqw 'Lato',sans-serif; padding:0 0 0.1cqw; text-decoration:underline;
+  }
+  .notiz-zu:hover{color:var(--accent);}
+  .notiz-auf.voll{border-style:solid; border-color:#e8d9ad; background:#fffdf5; color:#8a6d1f;}
+  .notiz-box textarea{font-size:0.93cqw; min-height:11cqw; padding:0.4cqw 0.55cqw; background:#fffdf5; border-color:#e8d9ad; border-radius:0.35cqw;}
+  .notiz-auf{
+    background:#fff; border:1px dashed var(--line); color:var(--muted); border-radius:0.35cqw;
+    padding:0.35cqw 0.65cqw; font:700 0.8cqw 'Lato',sans-serif; cursor:pointer; white-space:nowrap;
+  }
+  .notiz-auf:hover{border-color:var(--accent-light); color:var(--accent);}
+
+  /* Pfeil-Schalter je Person */
+  .pf-btn{
+    width:1.7cqw; height:1.7cqw; border-radius:50%; border:1.5px solid currentColor;
+    background:#fff; cursor:pointer; padding:0; flex:0 0 auto;
+    display:inline-flex; align-items:center; justify-content:center;
+    font:900 1.05cqw 'Lato',sans-serif; line-height:1;
+  }
+  .pf-btn.an{background:currentColor;}
+  .pf-btn span{pointer-events:none;}
+  .betrag-zeile .bz-rest{display:flex; align-items:center; gap:0.45cqw; flex:1 1 auto;}
+  .th-inhalt{display:inline-flex; align-items:center; gap:0.35cqw; justify-content:flex-end;}
+  .abs-tab th{padding-bottom:0.3cqw;}
+
+  /* Beträge am Girokonto */
+  .giro-betraege{display:flex; flex-direction:column; gap:0.35cqw; align-items:center;}
+  .giro-zeile{display:flex; align-items:center; gap:0.45cqw;}
+  .giro-wert{font:900 1.25cqw 'Lato',sans-serif; white-space:nowrap;}
+
+  /* Checkbox 2-Konten-Modell */
+  .kontenmodell{
+    display:flex; align-items:center; gap:0.5cqw; cursor:pointer;
+    font:900 0.95cqw 'Lato',sans-serif; color:var(--accent); text-transform:none; letter-spacing:0;
+    background:#fff; border:1.5px solid var(--accent); border-radius:0.4cqw; padding:0.4cqw 0.6cqw;
+  }
+  .kontenmodell input{width:1.1cqw; height:1.1cqw; accent-color:var(--accent); margin:0; flex:0 0 auto;}
+
+  /* Sparten-Chips im Sockel */
+  .sparten{display:flex; flex-wrap:wrap; gap:0.28cqw; align-content:flex-start;}
+  .chip{
+    display:inline-flex; align-items:center; background:#fff; border:1px solid var(--line);
+    border-radius:1.4cqw; padding:0.15cqw 0.64cqw; font:700 0.82cqw 'Lato',sans-serif; color:var(--muted); cursor:pointer;
+  }
+  .chip:hover{border-color:var(--warn);}
+  .chip.an{border-color:var(--warn); color:var(--warn); background:#fdf2f2;}
+
+  /* Betragstabelle im Sockel */
+  .abs-tab table{width:100%; border-collapse:collapse;}
+  .abs-tab th{font:700 0.68cqw 'Lato',sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); text-align:right; padding:0 0.2cqw 0.2cqw;}
+  .abs-tab th.pA{color:var(--pa);} .abs-tab th.pB{color:var(--pb);}
+  .abs-tab td{padding:0.1cqw 0.2cqw; text-align:right;}
+  .abs-tab td.sp{text-align:left; font:900 0.82cqw 'Lato',sans-serif; color:var(--warn); width:2.7cqw;}
+  .abs-tab input{width:100%; padding:0.14cqw 0.36cqw; font:700 0.82cqw 'Lato',sans-serif; text-align:right; border-radius:0.3cqw;}
+  .abs-tab tfoot td{font:900 0.86cqw 'Lato',sans-serif; color:var(--warn); border-top:1.5px solid var(--line); padding-top:0.2cqw;}
+
+  /* Stift-Ebene über der Pyramide */
+  .pyr-tools{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:8px;}
+  .pyr-tools button{
+    background:#fff; border:1px solid var(--line); border-radius:5px; padding:5px 11px;
+    font:700 11.5px 'Lato',sans-serif; color:var(--muted); cursor:pointer;
+  }
+  .pyr-tools button.an{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .malwerkzeug{display:flex; align-items:center; gap:5px;}
+  canvas.pyr-canvas{position:absolute; inset:0; width:100%; height:100%; touch-action:none; pointer-events:none; z-index:6;}
+  canvas.pyr-canvas.an{pointer-events:auto; cursor:crosshair;}
+
+  /* ---------- Notizseiten ---------- */
+  .seite{background:#fff; border:1px solid var(--line); border-radius:8px; margin-bottom:16px; overflow:hidden;}
+  .seite-kopf{display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--panel2); border-bottom:1px solid var(--line); flex-wrap:wrap;}
+  .seite-kopf .titel{font:700 12.5px 'Lato',sans-serif; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin-right:auto;}
+  .werkzeug{display:flex; gap:4px; align-items:center;}
+  .werkzeug button{
+    background:#fff; border:1px solid var(--line); border-radius:5px; padding:5px 10px;
+    font:700 11.5px 'Lato',sans-serif; color:var(--muted); cursor:pointer;
+  }
+  .werkzeug button.an{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .farbe{width:22px; height:22px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px var(--line); cursor:pointer;}
+  .farbe.an{box-shadow:0 0 0 2px var(--accent);}
+  canvas.zeichen{display:block; width:100%; aspect-ratio:1.414/1; height:auto; touch-action:none; background:#fff; cursor:crosshair;}
+  .btn-plus{
+    width:100%; background:#fff; border:1px dashed var(--line); color:var(--muted);
+    border-radius:8px; padding:14px; font:700 13px 'Lato',sans-serif; cursor:pointer;
+  }
+  .btn-plus:hover{border-color:var(--accent-light); color:var(--accent);}
+
+  /* ---------- Druck ---------- */
+  @page{size:A4 portrait; margin:10mm 10mm;}
+  .nur-druck{display:none;}
+  @media print{
+    body{background:#fff;}
+    .wrap{max-width:none; padding:0;}
+    header,.kopf-tools,.btn-plus,.btn-b,.btn-weg,.notiz-auf,.werkzeug,.pyr-hinweis,.nicht-drucken{display:none !important;}
+    .nur-druck{display:block;}
+    .card{box-shadow:none; border:none; padding:0; margin:0 0 5mm; break-inside:avoid;}
+    .seite{border:1px solid #ccc; break-before:page; margin:0;}
+    .seite-kopf{background:#fff; border-bottom:1px solid #ccc; padding:2mm 3mm;}
+    input,textarea{border:none !important; box-shadow:none !important; padding:2px 0 !important; background:transparent !important;}
+    .kasten,.chip,.person{break-inside:avoid;}
+    .kopf-grid{grid-template-columns:1.2fr 1fr 1.5fr !important; gap:10px 16px !important;}
+    .card > h2{margin-bottom:8px;}
+    .person{padding:6px 8px;}
+    .person-betraege{gap:6px;}
+    label{font-size:8pt; margin-bottom:1px;}
+    .kopf-grid input,.kopf-grid textarea{font-size:10pt !important;}
+    input[type=date]::-webkit-calendar-picker-indicator{display:none;}
+    input::placeholder,textarea::placeholder{color:transparent !important;}
+    .pf-btn:not(.an){visibility:hidden;}
+    .pf-btn{border:none;}
+    .abs-zeile{padding:2px 0;}
+    .abs-zeile input{width:70px;}
+    .notiz-box textarea{border:1px solid #e8d9ad !important; background:#fffdf5 !important; padding:3px 5px !important; min-height:0;}
+    .pyr-card{break-inside:avoid;}
+    .druck-kopf{display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid var(--accent); padding-bottom:3mm; margin-bottom:4mm;}
+    .druck-kopf h1{color:var(--accent); font-size:20pt;}
+    *{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nicht-drucken">
+  <div class="htext">
+    <div class="eyebrow">Team Neunkirchen / Rust</div>
+    <h1 id="kopfTitel">Strategie für Ihre Wünsche und Ziele</h1>
+  </div>
+  <div class="kopf-tools">
+    <span class="kopf-status" id="kopfStatus"></span>
+    <button type="button" id="btnZurueck" hidden>&#8592; Übersicht</button>
+    <button type="button" id="btnSpeichern" hidden>Speichern</button>
+    <button type="button" id="btnDruck" hidden>Drucken</button>
+  </div>
+</header>
+
+<div class="nur-druck druck-kopf">
+  <h1 style="margin:0;font-weight:900;">Strategie für Ihre Wünsche und Ziele</h1>
+  <div style="font-size:10pt;font-weight:700;color:#6b8099;">Scherz &amp; Team</div>
+</div>
+
+<div class="wrap">
+
+  <!-- ======== Übersicht der Beratungen ======== -->
+  <section id="uebersicht" hidden>
+    <div class="card">
+      <h2>Neue Beratung</h2>
+      <div class="neu-zeile">
+        <input type="text" id="neuKunde" placeholder="Kundenbezeichnung, z. B. Fam. M., Ternitz" maxlength="120">
+        <button type="button" class="btn-haupt" id="btnNeu">Beratung anlegen</button>
+      </div>
+      <p class="hinweis-klein">Bitte nur Kürzel oder Ortsangabe verwenden – keine vollständigen Kundendaten.</p>
+    </div>
+
+    <div class="card">
+      <h2>Meine Beratungen</h2>
+      <div id="liste" class="liste"><div class="leer">Wird geladen …</div></div>
+    </div>
+  </section>
+
+  <!-- ======== Eine Beratung ======== -->
+  <section id="beratung" hidden>
+  <!-- ======== Kopfdaten ======== -->
+  <div class="card">
+    <h2 class="nicht-drucken">1. Kunde, Ziele und Sparbetrag</h2>
+    <div class="kopf-grid">
+      <div>
+        <div style="margin-bottom:14px;">
+          <label for="kunde">Kunde (Kürzel)</label>
+          <input type="text" id="kunde" placeholder="z. B. Fam. M., Ternitz">
+        </div>
+        <div>
+          <label for="datum">Datum</label>
+          <input type="date" id="datum">
+        </div>
+      </div>
+
+      <div>
+        <label>Ziele</label>
+        <div class="ziele">
+          <div class="ziel-zeile"><span>1.</span><input type="text" id="ziel1" placeholder="Ziel 1"></div>
+          <div class="ziel-zeile"><span>2.</span><input type="text" id="ziel2" placeholder="Ziel 2"></div>
+          <div class="ziel-zeile"><span>3.</span><input type="text" id="ziel3" placeholder="Ziel 3"></div>
+        </div>
+      </div>
+
+      <div>
+        <label>Sparbetrag</label>
+        <div class="personen" id="personen">
+          <div class="person" data-p="A">
+            <div class="person-kopf">
+              <div class="person-punkt"></div>
+              <input type="text" class="person-name" id="nameA" value="Person A">
+            </div>
+            <div class="person-betraege">
+              <div>
+                <label for="gesamtA">Laufend p. m.</label>
+                <input type="number" id="gesamtA" class="gesamt" data-p="A" min="0" step="10" placeholder="0">
+              </div>
+              <div>
+                <label for="einmalA">Einmalig</label>
+                <input type="number" id="einmalA" min="0" step="100" placeholder="0">
+              </div>
+            </div>
+          </div>
+
+          <div class="person b" data-p="B" id="personB" style="display:none;">
+            <div class="person-kopf">
+              <div class="person-punkt"></div>
+              <input type="text" class="person-name" id="nameB" value="Person B">
+              <button type="button" class="btn-weg" id="btnBweg" title="Person B entfernen">×</button>
+            </div>
+            <div class="person-betraege">
+              <div>
+                <label for="gesamtB">Laufend p. m.</label>
+                <input type="number" id="gesamtB" class="gesamt" data-p="B" min="0" step="10" placeholder="0">
+              </div>
+              <div>
+                <label for="einmalB">Einmalig</label>
+                <input type="number" id="einmalB" min="0" step="100" placeholder="0">
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn-b" id="btnBdazu">+ Person B hinzufügen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== Pyramide ======== -->
+  <div class="card pyr-card">
+    <h2 class="nicht-drucken">2. Lösung – Weg des Geldes</h2>
+    <p class="pyr-hinweis">Auf einen Bereich der Pyramide tippen öffnet die Eingabefelder. Der Pfeil erscheint erst, wenn du beim jeweiligen Betrag auf <b>&#8594;</b> tippst &ndash; so baust du den Weg des Geldes im Gespräch Schritt für Schritt auf, für jede Person einzeln.</p>
+
+    <div class="pyr-tools nicht-drucken">
+      <button type="button" id="btnMalen">In die Pyramide zeichnen</button>
+      <span class="malwerkzeug" id="malWerkzeug" style="display:none;"></span>
+    </div>
+
+    <div class="buehne" id="buehne">
+      <svg class="pyr" id="svgPyr" viewBox="0 0 1400 880" xmlns="http://www.w3.org/2000/svg" aria-label="Beratungspyramide">
+        <defs id="pfeilDefs"></defs>
+        <g id="gPfeile"></g>
+        <g id="gPyr"></g>
+        <g id="gKlick"></g>
+      </svg>
+      <div class="ovl" id="ovl"></div>
+      <canvas class="pyr-canvas" id="pyrCanvas"></canvas>
+    </div>
+  </div>
+
+  <!-- ======== Notizseiten ======== -->
+  <div id="seiten"></div>
+  <button type="button" class="btn-plus" id="btnSeite">+ Leere Seite zum Zeichnen</button>
+  </section>
+
+
+</div>
+
+<script>
+/* =========================================================
+   Grundwerte
+   ========================================================= */
+const nf = new Intl.NumberFormat('de-AT',{minimumFractionDigits:0,maximumFractionDigits:0});
+const eur = n => nf.format(Math.round(n||0)) + ' €';
+
+const FARBE = {A:'#355f8f', B:'#c2680a'};
+
+/* Geometrie der Pyramide (SVG-Koordinaten, viewBox 1400 x 860) */
+const G = {
+  W:1400, H:880,
+  apexX:620, apexY:55,
+  baseY:830, baseL:172, baseR:1068,
+  y1:240,   // Ende mittelfristig
+  y2:425,   // Ende langfristig
+  y3:600,   // Ende kurzfristig  -> darunter der Sockel
+  kastenX:1120
+};
+const halb = y => (G.apexX - G.baseL) * (y - G.apexY) / (G.baseY - G.apexY);
+const xL = y => G.apexX - halb(y);
+const xR = y => G.apexX + halb(y);
+
+/* Bereiche der Pyramide */
+const BEREICHE = [
+  {id:'mittel',  titel:'Mittelfristig', yo:G.apexY, yu:G.y1, ziel:{x:620,y:170}, notiz:true},
+  {id:'lang',    titel:'Langfristig',   yo:G.y1,    yu:G.y2, ziel:{x:590,y:350}, notiz:true},
+  {id:'kurz',    titel:'Kurzfristig',   yo:G.y2,    yu:G.y3, ziel:{x:470,y:520}, notiz:false},
+  {id:'absV',    titel:'Absicherung des Vermögens',  sockel:'links',  ziel:{x:400,y:700}},
+  {id:'absA',    titel:'Absicherung der Arbeitskraft',sockel:'rechts', ziel:{x:840,y:700}}
+];
+
+/* Sparten im Sockel */
+const SPARTEN = {
+  absV:[
+    {k:'EH',  n:'Eigenheim'},
+    {k:'HH',  n:'Haushalt'},
+    {k:'RS',  n:'Rechtsschutz'},
+    {k:'KFZ', n:'Autoversicherung'},
+    {k:'SO',  n:'Sonstige'}
+  ],
+  absA:[
+    {k:'BU',  n:'Berufsunfähigkeit'},
+    {k:'UV',  n:'Unfallversicherung'},
+    {k:'KV',  n:'Krankenversicherung'},
+    {k:'RLV', n:'Risikoleben'},
+    {k:'SO',  n:'Sonstige'}
+  ]
+};
+
+/* Zustand */
+const S = {
+  personB:false,
+  zweiKonten:true,          // Standard: Girokonto -> Konto Plus -> Verteilung
+  offen:{},                 // bereichId -> true
+  pfeilAn:{},               // 'bereichId.A' / 'zu.B' -> true (Pfeil eingeblendet)
+  betrag:{},                // bereichId -> {A:zahl, B:zahl}
+  notiz:{},                 // bereichId -> text
+  notizOffen:{},            // bereichId -> true
+  sparte:{},                // 'absV.EH' -> {an:true, A:zahl, B:zahl}
+  seiten:[]                 // Zeichenseiten
+};
+BEREICHE.forEach(b => S.betrag[b.id] = {A:0,B:0});
+
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const el = (tag,cls,html) => { const e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; };
+const pz = v => (v/G.W*100).toFixed(3)+'%';          // x in Prozent
+const py = v => (v/G.H*100).toFixed(3)+'%';          // y in Prozent
+
+/* =========================================================
+   Pyramide zeichnen
+   ========================================================= */
+function pyramideZeichnen(){
+  const gp = $('#gPyr'), gk = $('#gKlick');
+  gp.innerHTML=''; gk.innerHTML='';
+
+  const ns='http://www.w3.org/2000/svg';
+  const mk=(t,at)=>{const e=document.createElementNS(ns,t); for(const k in at) e.setAttribute(k,at[k]); return e;};
+
+  // Umriss
+  gp.appendChild(mk('polygon',{class:'pyr-umriss',
+    points:`${G.apexX},${G.apexY} ${G.baseR},${G.baseY} ${G.baseL},${G.baseY}`}));
+
+  // Ebenenlinien
+  [G.y1,G.y2,G.y3].forEach(y=>{
+    gp.appendChild(mk('line',{class:'ebene-linie',x1:xL(y),y1:y,x2:xR(y),y2:y}));
+  });
+  // Sockel-Trennung senkrecht
+  gp.appendChild(mk('line',{class:'ebene-linie',x1:G.apexX,y1:G.y3,x2:G.apexX,y2:G.baseY}));
+
+  // Beschriftungen der Ebenen (links in der Ebene)
+  const lab=(txt,y,cls)=>{const t=mk('text',{class:cls||'ebene-label',x:xL(y)+16,y:y});t.textContent=txt;gp.appendChild(t);};
+  lab('Mittelfristig', G.y1-14);
+  lab('Langfristig',   G.y2-16);
+  lab('Kurzfristig',   G.y3-18);
+
+  const sV=mk('text',{class:'sockel-label',x:420,y:G.y3+26,'text-anchor':'middle'});
+  sV.textContent='Absicherung des Vermögens'; gp.appendChild(sV);
+  const sA=mk('text',{class:'sockel-label',x:830,y:G.y3+26,'text-anchor':'middle'});
+  sA.textContent='Absicherung der Arbeitskraft'; gp.appendChild(sA);
+
+  // Girokonto links oben
+  const giroG = mk('g',{});
+  giroG.appendChild(mk('rect',{x:95,y:196,width:116,height:74,rx:9,fill:'#fff',stroke:'#355f8f','stroke-width':2.6}));
+  giroG.appendChild(mk('rect',{x:95,y:214,width:116,height:15,fill:'#355f8f'}));
+  giroG.appendChild(mk('rect',{x:108,y:242,width:44,height:8,rx:4,fill:'#c8d5e3'}));
+  giroG.appendChild(mk('rect',{x:160,y:242,width:22,height:8,rx:4,fill:'#c8d5e3'}));
+  const gt = mk('text',{x:153,y:292,'text-anchor':'middle',class:'giro-label'});
+  gt.textContent='Girokonto'; giroG.appendChild(gt);
+  gp.appendChild(giroG);
+
+  // Schutzengel links unten
+  const eng=mk('path',{d:'M 118 745 c 0 -14 9 -24 20 -24 s 20 10 20 24 z M 138 706 a 11 11 0 1 1 0.1 0 z M 108 730 c 6 -16 18 -22 18 -22 M 168 730 c -6 -16 -18 -22 -18 -22',
+    fill:'#a8873f',stroke:'#a8873f','stroke-width':3,'stroke-linecap':'round',
+    transform:'translate(0,'+(G.baseY-775)+')'});
+  gp.appendChild(eng);
+
+  // Klickflächen
+  const flaeche=(id,pts)=>{
+    const p=mk('polygon',{class:'klick',points:pts,'data-b':id});
+    gk.appendChild(p);
+  };
+  flaeche('mittel', `${G.apexX},${G.apexY} ${xR(G.y1)},${G.y1} ${xL(G.y1)},${G.y1}`);
+  flaeche('lang',   `${xL(G.y1)},${G.y1} ${xR(G.y1)},${G.y1} ${xR(G.y2)},${G.y2} ${xL(G.y2)},${G.y2}`);
+  flaeche('kurz',   `${xL(G.y2)},${G.y2} ${xR(G.y2)},${G.y2} ${xR(G.y3)},${G.y3} ${xL(G.y3)},${G.y3}`);
+  flaeche('absV',   `${xL(G.y3)},${G.y3} ${G.apexX},${G.y3} ${G.apexX},${G.baseY} ${G.baseL},${G.baseY}`);
+  flaeche('absA',   `${G.apexX},${G.y3} ${xR(G.y3)},${G.y3} ${G.baseR},${G.baseY} ${G.apexX},${G.baseY}`);
+
+  gk.addEventListener('click', e=>{
+    const b = e.target.getAttribute('data-b');
+    if(b) bereichSchalten(b);
+  });
+}
+
+/* =========================================================
+   Pfeile
+   ========================================================= */
+function pfeileZeichnen(){
+  const g = $('#gPfeile'), defs = $('#pfeilDefs');
+  const ns='http://www.w3.org/2000/svg';
+  const mk=(t,at)=>{const e=document.createElementNS(ns,t); for(const k in at) e.setAttribute(k,at[k]); return e;};
+
+  defs.innerHTML='';
+  ['A','B'].forEach(p=>{
+    const m=mk('marker',{id:'sp'+p,viewBox:'0 0 10 10',refX:'8',refY:'5',
+      markerWidth:'5',markerHeight:'5',orient:'auto-start-reverse'});
+    m.appendChild(mk('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:FARBE[p]}));
+    defs.appendChild(m);
+  });
+
+  g.innerHTML='';
+  const personen = S.personB ? ['A','B'] : ['A'];
+
+  personen.forEach((p,pi)=>{
+    const vs   = pi*26;                          // Versatz zwischen A und B
+    const giro = {x:211, y:233+pi*16};           // rechte Kante des Girokontos
+    const ges  = zahl('#gesamt'+p);
+
+    // Ausgangspunkt der Verteilung
+    let start;
+    if(S.zweiKonten){
+      // Girokonto -> Konto Plus
+      if(ges>0 && S.pfeilAn['zu.'+p]){
+        const b={x:xL(G.y3)+75+vs, y:548};
+        const d=`M ${giro.x} ${giro.y} C ${giro.x+40} ${giro.y+150}, ${b.x-150} ${b.y-90}, ${b.x} ${b.y}`;
+        g.appendChild(pfeilEl(mk,d,p,'zu'+p));
+      }
+      start = {x:880+vs, y:552};                 // Konto Plus, rechte Seite
+    }else{
+      start = {x:giro.x, y:giro.y};              // alles geht direkt vom Girokonto weg
+    }
+
+    BEREICHE.filter(b=>b.ziel).forEach(b=>{
+      if(b.id==='kurz' && S.zweiKonten) return;  // Konto Plus ist dann das Sammelkonto
+      if(!S.offen[b.id]) return;
+      if(!S.pfeilAn[b.id+'.'+p]) return;         // Pfeil wird einzeln eingeblendet
+
+      const wert = bereichSumme(b.id)[p];
+      const sockel = (b.id==='absV' || b.id==='absA');
+      const z = !sockel ? {x:b.ziel.x+vs, y:b.ziel.y}
+              : S.zweiKonten ? {x:(b.id==='absV'?480:800)+vs, y:G.y3-6}    // senkrecht von oben
+                             : {x:(b.id==='absV'?300:648)+vs, y:G.y3+74};  // hinein in die Sockelhälfte
+      let d, tp;
+
+      if(S.zweiKonten){
+        if(b.id==='mittel'){
+          d=`M ${start.x} ${start.y} C ${start.x+170} ${start.y-30}, ${z.x+380} ${z.y+30}, ${z.x} ${z.y}`; tp=0.38;
+        }else if(b.id==='lang'){
+          d=`M ${start.x-30} ${start.y-10} C ${start.x+100} ${start.y-50}, ${z.x+350} ${z.y+50}, ${z.x} ${z.y}`; tp=0.40;
+        }else{
+          d=`M ${z.x} ${G.y3-88} L ${z.x} ${z.y}`; tp=0.5;    // kurz und senkrecht in den Sockel
+        }
+      }else{
+        // Fächer direkt vom Girokonto weg – je Bereich eigener Austritt und eigene Höhe
+        const o = pi*14;
+        if(b.id==='mittel'){
+          d=`M 211 ${205+o} C 340 ${140+o}, 450 ${160+o}, ${z.x-30} ${z.y+35}`; tp=0.55;
+        }else if(b.id==='lang'){
+          d=`M 211 ${225+o} C 330 ${250+o}, 420 ${340+o}, ${z.x-65} ${z.y+42}`; tp=0.50;
+        }else if(b.id==='kurz'){
+          d=`M 211 ${245+o} C 300 ${340+o}, 360 ${480+o}, ${z.x-15} ${z.y+28}`; tp=0.45;
+        }else if(b.id==='absV'){
+          d=`M 200 ${266+o} C 225 ${450+o}, 255 ${600+o}, ${z.x} ${z.y}`; tp=0.42;
+        }else{
+          d=`M 211 ${258+o} C 400 ${420+o}, 560 ${560+o}, ${z.x} ${z.y}`; tp=0.62;
+        }
+      }
+
+      g.appendChild(pfeilEl(mk,d,p,b.id+p));
+
+      if(wert>0){
+        const senkrecht = S.zweiKonten && sockel;      // kurzer Pfeil in den Sockel
+        const faecher   = !S.zweiKonten;               // Pfade liegen dicht beieinander
+        const pt = punktAufPfad(d, (senkrecht||faecher) ? tp : tp + pi*0.06);
+        const t=mk('text',{class:'pfeil-txt',
+          x:pt.x + (senkrecht ? (b.id==='absV' ? -12 : 14) : (faecher ? pi*48 : 0)),
+          y:pt.y + (senkrecht ? 4 + pi*24 : (faecher ? -12 + pi*27 : -12 - pi*23)),
+          fill:FARBE[p],
+          'text-anchor': senkrecht ? (b.id==='absV'?'end':'start') : 'middle'});
+        t.textContent=eur(wert); g.appendChild(t);
+      }
+    });
+  });
+}
+
+const PFEIL_GEZEIGT = new Set();
+function pfeilEl(mk,d,p,key){
+  const path=mk('path',{class:'pfeil',d:d,stroke:FARBE[p],'marker-end':'url(#sp'+p+')'});
+  const tmp=document.createElementNS('http://www.w3.org/2000/svg','path');
+  tmp.setAttribute('d',d);
+  let len=600; try{ $('#svgPyr').appendChild(tmp); len=tmp.getTotalLength()||600; tmp.remove(); }catch(e){}
+  path.style.setProperty('--len',len);
+  if(PFEIL_GEZEIGT.has(key)){
+    path.classList.add('an');           // schon sichtbar – nicht neu einfahren lassen
+  }else{
+    PFEIL_GEZEIGT.add(key);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>path.classList.add('an')));
+  }
+  return path;
+}
+
+function punktAufPfad(d,anteil){
+  const tmp=document.createElementNS('http://www.w3.org/2000/svg','path');
+  tmp.setAttribute('d',d);
+  const svg=$('#svgPyr'); svg.appendChild(tmp);
+  let pt={x:0,y:0};
+  try{ pt=tmp.getPointAtLength(tmp.getTotalLength()*(anteil==null?0.5:anteil)); }catch(e){}
+  tmp.remove();
+  return pt;
+}
+
+/* =========================================================
+   Overlay: Betragskästen, Notizfelder, Sparten-Chips
+   ========================================================= */
+function overlayZeichnen(){
+  const o=$('#ovl'); o.innerHTML='';
+
+  // --- Checkbox 2-Konten-Modell, links oben neben dem Girokonto ---
+  const km = el('label','kontenmodell');
+  km.style.left = pz(95); km.style.top = py(140);
+  km.innerHTML = '<input type="checkbox" id="chkZwei"'+(S.zweiKonten?' checked':'')+'><span>2-Konten-Modell</span>';
+  km.querySelector('input').addEventListener('change', e=>{
+    S.zweiKonten = e.target.checked;
+    if(S.zweiKonten) S.offen.kurz = false;
+    PFEIL_GEZEIGT.clear();
+    overlayZeichnen(); pfeileZeichnen(); restAktualisieren(); sichern();
+  });
+  o.appendChild(km);
+
+  // --- Beträge am Girokonto, je Person mit eigenem Pfeil-Schalter ---
+  const gb = el('div','giro-betraege');
+  gb.style.left = pz(52); gb.style.top = py(302); gb.style.width = '14.5%';
+  (S.personB?['A','B']:['A']).forEach(p=>{
+    const wert = zahl('#gesamt'+p);
+    if(!wert) return;
+    const z = el('div','giro-zeile');
+    if(S.zweiKonten) z.appendChild(pfeilSchalter('zu.'+p, p, 'Girokonto → Konto Plus'));
+    const w = el('span','giro-wert', eur(wert));
+    w.style.color = FARBE[p];
+    z.appendChild(w);
+    gb.appendChild(z);
+  });
+  o.appendChild(gb);
+
+  // --- Rechte Spalte: Kästen, Textfelder, Restbetrag (im Fluss, damit nichts überlappt) ---
+  const sp = el('div','rechts');
+  sp.style.left = pz(G.kastenX);
+  sp.style.top  = py(110);
+  sp.style.width = '19%';
+  sp.style.minHeight = py(490);
+  (S.zweiKonten ? ['mittel','lang'] : ['mittel','lang','kurz']).forEach(id=>{
+    if(!S.offen[id]) return;
+    const b = BEREICHE.find(x=>x.id===id);
+    sp.appendChild(kastenBauen(b));
+    if(b.notiz) sp.appendChild(notizBauen(b));
+  });
+  if(S.zweiKonten){
+    const rest = kastenRest();
+    rest.style.marginTop = 'auto';
+    sp.appendChild(rest);
+  }
+  o.appendChild(sp);
+
+  // --- Absicherung: Chips zur Auswahl + Tabelle mit den Beträgen, beides im Sockel ---
+  CHIPS = {};
+  ['absV','absA'].forEach(id=>{
+    const links = id==='absV';
+    const x = links ? pz(330) : pz(690);
+
+    const box = el('div','sparten');
+    box.style.width = '20.5%'; box.style.left = x; box.style.top = py(G.y3+44);
+    SPARTEN[id].forEach(sp=>{
+      const c = el('button','chip');
+      c.type='button'; c.title=sp.n; c.dataset.kuerzel=sp.k;
+      c.addEventListener('click', ()=>spartenSchalten(id,sp.k));
+      CHIPS[id+'.'+sp.k]=c;
+      box.appendChild(c);
+    });
+    o.appendChild(box);
+
+    const t = el('div','abs-tab');
+    t.id = 'tab_'+id;
+    t.style.width = '20.5%'; t.style.left = x; t.style.top = py(G.y3+82);
+    o.appendChild(t);
+  });
+  absTabellen();
+  chipWerte();
+  restAktualisieren();
+}
+
+/* Tabelle je Sockelhälfte: Sparte | Person A | Person B */
+function absTabellen(){
+  ['absV','absA'].forEach(id=>{
+    const ziel = $('#tab_'+id);
+    if(!ziel) return;
+    const aktive = SPARTEN[id].filter(sp=>{ const st=S.sparte[id+'.'+sp.k]; return st&&st.an; });
+    if(!aktive.length){ ziel.innerHTML=''; return; }
+
+    const pers = S.personB?['A','B']:['A'];
+    let html = '<table><thead><tr><th></th>';
+    pers.forEach(p=>{
+      const roh = (($('#name'+p)&&$('#name'+p).value)||'').trim();
+      const nm = (!roh || /^Person\b/i.test(roh)) ? p : roh.split(' ')[0];
+      html += '<th class="p'+p+'"><span class="th-inhalt">'+nm+'<span class="pf-platz" data-p="'+p+'"></span></span></th>';
+    });
+    html += '</tr></thead><tbody>';
+    aktive.forEach(sp=>{
+      const key=id+'.'+sp.k;
+      html += '<tr><td class="sp" title="'+sp.n+'">'+sp.k+'</td>';
+      pers.forEach(p=>{
+        html += '<td><input type="number" min="0" step="5" placeholder="0" data-key="'+key+'" data-p="'+p+'" value="'+(S.sparte[key][p]||'')+'"></td>';
+      });
+      html += '</tr>';
+    });
+    const s = bereichSumme(id);
+    html += '</tbody><tfoot><tr><td class="sp">Σ</td>';
+    pers.forEach(p=>{ html += '<td>'+(s[p]>0?eur(s[p]):'–')+'</td>'; });
+    html += '</tr></tfoot></table>';
+    ziel.innerHTML = html;
+
+    ziel.querySelectorAll('.pf-platz').forEach(sp=>{
+      const p = sp.dataset.p;
+      sp.appendChild(pfeilSchalter(id+'.'+p, p, BEREICHE.find(b=>b.id===id).titel));
+    });
+
+    ziel.querySelectorAll('input').forEach(inp=>{
+      inp.addEventListener('input', e=>{
+        const st=S.sparte[e.target.dataset.key];
+        if(!st) return;
+        st[e.target.dataset.p] = +e.target.value||0;
+        restAktualisieren(); chipWerte(); pfeileZeichnen(); summenZeile(id); sichern();
+      });
+    });
+  });
+}
+
+/* nur die Summenzeile neu schreiben – hält den Cursor im Feld */
+function summenZeile(id){
+  const f = $('#tab_'+id+' tfoot tr');
+  if(!f) return;
+  const s = bereichSumme(id);
+  const zellen = f.querySelectorAll('td');
+  (S.personB?['A','B']:['A']).forEach((p,i)=>{
+    if(zellen[i+1]) zellen[i+1].textContent = s[p]>0 ? eur(s[p]) : '–';
+  });
+}
+
+/* Nur die Beschriftung der Chips und der Sockelsummen auffrischen –
+   ohne das Overlay neu zu bauen (sonst springt der Cursor aus dem Eingabefeld). */
+let CHIPS={};
+function chipWerte(){
+  for(const key in CHIPS){
+    const c=CHIPS[key], st=S.sparte[key];
+    c.classList.toggle('an', !!(st&&st.an));
+    c.textContent = c.dataset.kuerzel;
+  }
+}
+
+function kastenBauen(b){
+  const k = el('div','kasten');
+  k.innerHTML = '<h3>'+b.titel+'</h3>';
+  (S.personB?['A','B']:['A']).forEach(p=>{
+    const z = el('div','betrag-zeile');
+    z.appendChild(pfeilSchalter(b.id+'.'+p, p, b.titel));
+    const rest = el('span','bz-rest');
+    rest.innerHTML = '<input type="number" min="0" step="10" placeholder="0" value="'+(S.betrag[b.id][p]||'')+'">'+
+                     '<span class="eur">€</span>';
+    z.appendChild(rest);
+    z.querySelector('input').addEventListener('input', e=>{
+      S.betrag[b.id][p] = +e.target.value||0;
+      restAktualisieren(); pfeileZeichnen(); chipWerte();
+    });
+    k.appendChild(z);
+  });
+  return k;
+}
+
+function notizBauen(b){
+  const n = el('div','notiz-box');
+  const hatText = !!(S.notiz[b.id]||'').trim();
+
+  if(S.notizOffen[b.id]){
+    const kopf = el('div','notiz-kopf');
+    const zu = el('button','notiz-zu','Text einklappen');
+    zu.type='button'; zu.title='Text einklappen';
+    zu.addEventListener('click', ()=>{ S.notizOffen[b.id]=false; overlayZeichnen(); sichern(); });
+    kopf.appendChild(zu);
+    n.appendChild(kopf);
+
+    const t = el('textarea');
+    t.placeholder = 'Notiz zur Vorbereitung – '+b.titel.toLowerCase();
+    t.value = S.notiz[b.id]||'';
+    t.addEventListener('input', e=>{ S.notiz[b.id]=e.target.value; });
+    n.appendChild(t);
+  }else{
+    const btn = el('button','notiz-auf'+(hatText?' voll':''), hatText ? 'Text zeigen' : '+ Text');
+    btn.type='button';
+    btn.addEventListener('click', ()=>{ S.notizOffen[b.id]=true; overlayZeichnen(); sichern(); });
+    n.appendChild(btn);
+  }
+  return n;
+}
+
+function kastenRest(){
+  const k = el('div','kasten');
+  k.id='kastenRest';
+  k.innerHTML = '<h3>'+(S.zweiKonten ? 'Kurzfristig · Konto Plus' : 'Verbleibt am Girokonto')+'</h3><div id="restInhalt"></div>';
+  return k;
+}
+
+/* =========================================================
+   Rechnen
+   ========================================================= */
+const zahl = sel => { const e=$(sel); return e ? (+e.value||0) : 0; };
+
+function bereichSumme(id){
+  if(id==='absV'||id==='absA'){
+    let a=0,b=0;
+    SPARTEN[id].forEach(sp=>{
+      const st=S.sparte[id+'.'+sp.k];
+      if(st&&st.an){ a+=st.A||0; b+=st.B||0; }
+    });
+    return {A:a,B:b};
+  }
+  return {A:S.betrag[id].A||0, B:S.betrag[id].B||0};
+}
+
+function abfluss(p){
+  let s=0;
+  BEREICHE.filter(b=>b.ziel).forEach(b=>{ if(S.offen[b.id]) s += bereichSumme(b.id)[p]||0; });
+  return s;
+}
+
+
+function restAktualisieren(){
+  const ziel = $('#restInhalt');
+  if(!ziel) return;
+  let html='';
+  (S.personB?['A','B']:['A']).forEach(p=>{
+    const ges = zahl('#gesamt'+p);
+    const ab  = abfluss(p);
+    const rest= ges-ab;
+    html += '<div class="betrag-zeile">'+
+              '<span class="pnkt-gross" style="background:'+FARBE[p]+'"></span>'+
+              '<span class="bz-rest">'+
+                '<span class="restwert"'+(rest<0?' style="color:#c0392b"':'')+'>'+nf.format(Math.round(rest))+'</span>'+
+                '<span class="eur">€</span>'+
+              '</span>'+
+            '</div>'+
+            '<div class="minus">'+eur(ges)+' − '+eur(ab)+'</div>';
+  });
+  ziel.innerHTML = html;
+}
+
+
+/* Schalter für einen einzelnen Pfeil (Bereich + Person) */
+function pfeilSchalter(key, p, titel){
+  const an = !!S.pfeilAn[key];
+  const b = el('button','pf-btn'+(an?' an':''), '<span>&#8594;</span>');
+  b.type='button';
+  b.style.color = FARBE[p];
+  b.firstChild.style.color = an ? '#fff' : FARBE[p];
+  b.title = (S.pfeilAn[key]?'Pfeil ausblenden':'Pfeil zeigen') + (titel?' – '+titel:'');
+  b.addEventListener('click', ()=>{
+    if(S.pfeilAn[key]){ delete S.pfeilAn[key]; PFEIL_GEZEIGT.delete(key.split('.')[0]+p); }
+    else S.pfeilAn[key]=true;
+    overlayZeichnen(); pfeileZeichnen(); sichern();
+  });
+  return b;
+}
+
+/* =========================================================
+   Interaktion
+   ========================================================= */
+function bereichSchalten(id){
+  if(id==='kurz' && S.zweiKonten) return;       // Konto Plus ist dann das Sammelkonto
+  S.offen[id] = !S.offen[id];
+  if(!S.offen[id]){ PFEIL_GEZEIGT.delete(id+'A'); PFEIL_GEZEIGT.delete(id+'B'); }
+  if((id==='absV'||id==='absA')){
+    if(S.offen[id]){
+      // beim Öffnen die ersten Sparten anbieten
+      absTabellen();
+    }else{
+      SPARTEN[id].forEach(sp=>{ delete S.sparte[id+'.'+sp.k]; });
+      absTabellen();
+    }
+  }
+  overlayZeichnen(); pfeileZeichnen(); restAktualisieren();
+}
+
+function spartenSchalten(id,k){
+  if(!S.offen[id]) S.offen[id]=true;
+  const key=id+'.'+k;
+  if(S.sparte[key]) delete S.sparte[key];
+  else S.sparte[key]={an:true,A:0,B:0};
+  absTabellen(); overlayZeichnen(); pfeileZeichnen(); restAktualisieren();
+}
+
+/* =========================================================
+   Person B
+   ========================================================= */
+$('#btnBdazu').addEventListener('click', ()=>{
+  S.personB=true;
+  $('#personB').style.display='block';
+  $('#btnBdazu').style.display='none';
+  absTabellen(); overlayZeichnen(); pfeileZeichnen(); restAktualisieren();
+});
+$('#btnBweg').addEventListener('click', ()=>{
+  S.personB=false;
+  $('#personB').style.display='none';
+  $('#btnBdazu').style.display='block';
+  $('#gesamtB').value=''; $('#einmalB').value='';
+  BEREICHE.forEach(b=>S.betrag[b.id].B=0);
+  Object.values(S.sparte).forEach(st=>st.B=0);
+  absTabellen(); overlayZeichnen(); pfeileZeichnen(); restAktualisieren();
+});
+
+['#gesamtA','#gesamtB','#nameA','#nameB'].forEach(sel=>{
+  const e=$(sel); if(e) e.addEventListener('input', ()=>{ overlayZeichnen(); pfeileZeichnen(); restAktualisieren(); });
+});
+
+/* =========================================================
+   Notizseiten zum Zeichnen
+   ========================================================= */
+const STIFTFARBEN = ['#1a2a3a','#355f8f','#c0392b','#27ae60'];
+
+function seiteDazu(vorhanden){
+  const nr = S.seiten.length+1;
+  const daten = vorhanden || {striche:[], farbe:STIFTFARBEN[0], radierer:false};
+  daten.farbe = daten.farbe || STIFTFARBEN[0];
+  daten.radierer = false;
+  if(!vorhanden) S.seiten.push(daten);
+
+  const box = el('div','seite');
+  box.innerHTML =
+    '<div class="seite-kopf">'+
+      '<div class="titel">Notizseite '+nr+'</div>'+
+      '<div class="werkzeug">'+
+        STIFTFARBEN.map((f,i)=>'<button type="button" class="farbe'+(i===0?' an':'')+'" data-f="'+f+'" style="background:'+f+'"></button>').join('')+
+        '<button type="button" data-w="stift" class="an">Stift</button>'+
+        '<button type="button" data-w="radierer">Radierer</button>'+
+        '<button type="button" data-w="leer">Leeren</button>'+
+        '<button type="button" data-w="weg">Seite entfernen</button>'+
+      '</div>'+
+    '</div>'+
+    '<canvas class="zeichen"></canvas>';
+  $('#seiten').appendChild(box);
+
+  const cv = box.querySelector('canvas');
+  zeichnenAktivieren(cv, daten);
+
+  box.querySelectorAll('.farbe').forEach(b=>b.addEventListener('click',()=>{
+    daten.farbe=b.dataset.f; daten.radierer=false;
+    box.querySelectorAll('.farbe').forEach(x=>x.classList.remove('an'));
+    b.classList.add('an');
+    box.querySelector('[data-w=stift]').classList.add('an');
+    box.querySelector('[data-w=radierer]').classList.remove('an');
+  }));
+  box.querySelectorAll('[data-w]').forEach(b=>b.addEventListener('click',()=>{
+    const w=b.dataset.w;
+    if(w==='stift'||w==='radierer'){
+      daten.radierer = (w==='radierer');
+      box.querySelector('[data-w=stift]').classList.toggle('an',!daten.radierer);
+      box.querySelector('[data-w=radierer]').classList.toggle('an',daten.radierer);
+    }
+    if(w==='leer'){ daten.striche=[]; neuMalen(cv,daten); sichern(); }
+    if(w==='weg'){
+      const i=S.seiten.indexOf(daten);
+      if(i>=0) S.seiten.splice(i,1);
+      box.remove(); nummernAktualisieren(); sichern();
+    }
+  }));
+}
+
+function nummernAktualisieren(){
+  $$('#seiten .seite .titel').forEach((t,i)=>{ t.textContent='Notizseite '+(i+1); });
+}
+
+function zeichnenAktivieren(cv, daten){
+  const groesse = ()=>{
+    const r = cv.getBoundingClientRect();
+    if(!r.width) return;
+    const dpr = window.devicePixelRatio||1;
+    cv.width = Math.round(r.width*dpr); cv.height = Math.round(r.height*dpr);
+    const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+    neuMalen(cv,daten);
+  };
+  groesse();
+  window.addEventListener('resize', groesse);
+
+  let aktiv=null;
+  const pos = e => {
+    const r=cv.getBoundingClientRect();
+    return {x:(e.clientX-r.left)/r.width, y:(e.clientY-r.top)/r.height,
+            d: e.pressure && e.pressure>0 ? e.pressure : 0.5};
+  };
+  cv.addEventListener('pointerdown', e=>{
+    cv.setPointerCapture(e.pointerId);
+    aktiv = {c: daten.farbe, w: daten.radierer?18:2.2, p:[pos(e)]};
+    if(daten.radierer) aktiv.r = true;
+    daten.striche.push(aktiv);
+    e.preventDefault();
+  });
+  cv.addEventListener('pointermove', e=>{
+    if(!aktiv) return;
+    aktiv.p.push(pos(e));
+    neuMalen(cv,daten);
+    e.preventDefault();
+  });
+  const ende = ()=>{ if(aktiv){ aktiv=null; sichern(); } };
+  cv.addEventListener('pointerup', ende);
+  cv.addEventListener('pointercancel', ende);
+  cv.addEventListener('pointerleave', ende);
+}
+
+function neuMalen(cv, daten){
+  const ctx=cv.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const w=cv.width/dpr, h=cv.height/dpr;
+  ctx.clearRect(0,0,w,h);
+  if(!daten.durchsichtig){ ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h); }
+  ctx.lineCap='round'; ctx.lineJoin='round';
+  daten.striche.forEach(s=>{
+    ctx.globalCompositeOperation = s.r ? 'destination-out' : 'source-over';
+    if(s.p.length<2){
+      if(s.p.length===1){
+        ctx.beginPath(); ctx.fillStyle=s.c;
+        ctx.arc(s.p[0].x*w, s.p[0].y*h, s.w*(s.p[0].d+0.4), 0, Math.PI*2); ctx.fill();
+      }
+      return;
+    }
+    ctx.strokeStyle=s.c;
+    for(let i=1;i<s.p.length;i++){
+      const a=s.p[i-1], b=s.p[i];
+      ctx.beginPath();
+      ctx.lineWidth = s.w*(b.d*1.6+0.4);
+      ctx.moveTo(a.x*w, a.y*h); ctx.lineTo(b.x*w, b.y*h);
+      ctx.stroke();
+    }
+  });
+  ctx.globalCompositeOperation='source-over';
+}
+
+$('#btnSeite').addEventListener('click', ()=>seiteDazu());
+
+/* =========================================================
+   Stift-Ebene über der Pyramide
+   ========================================================= */
+S.pyrMalen = {striche:[], farbe:STIFTFARBEN[1], radierer:false, durchsichtig:true};
+
+(function pyramideMalen(){
+  const cv = $('#pyrCanvas'), btn = $('#btnMalen'), wz = $('#malWerkzeug');
+  const daten = S.pyrMalen;
+
+  wz.innerHTML =
+    STIFTFARBEN.map((f,i)=>'<button type="button" class="farbe'+(i===1?' an':'')+'" data-f="'+f+'" style="background:'+f+'"></button>').join('')+
+    '<button type="button" data-w="stift" class="an">Stift</button>'+
+    '<button type="button" data-w="radierer">Radierer</button>'+
+    '<button type="button" data-w="leer">Zeichnung löschen</button>';
+
+  zeichnenAktivieren(cv, daten);
+
+  btn.addEventListener('click', ()=>{
+    const an = !cv.classList.contains('an');
+    cv.classList.toggle('an', an);
+    btn.classList.toggle('an', an);
+    btn.textContent = an ? 'Zeichnen beenden' : 'In die Pyramide zeichnen';
+    wz.style.display = an ? 'flex' : 'none';
+  });
+
+  wz.querySelectorAll('.farbe').forEach(b=>b.addEventListener('click',()=>{
+    daten.farbe=b.dataset.f; daten.radierer=false;
+    wz.querySelectorAll('.farbe').forEach(x=>x.classList.remove('an'));
+    b.classList.add('an');
+    wz.querySelector('[data-w=stift]').classList.add('an');
+    wz.querySelector('[data-w=radierer]').classList.remove('an');
+  }));
+  wz.querySelectorAll('[data-w]').forEach(b=>b.addEventListener('click',()=>{
+    const w=b.dataset.w;
+    if(w==='stift'||w==='radierer'){
+      daten.radierer = (w==='radierer');
+      wz.querySelector('[data-w=stift]').classList.toggle('an',!daten.radierer);
+      wz.querySelector('[data-w=radierer]').classList.toggle('an',daten.radierer);
+    }
+    if(w==='leer'){ daten.striche=[]; neuMalen(cv,daten); sichern(); }
+  }));
+
+  window.pyrNeuMalen = ()=>neuMalen(cv,daten);
+})();
+
+/* =========================================================
+   Zwischenspeicher im Browser
+   (dieselbe Struktur wandert in Stufe 2 nach Supabase)
+   ========================================================= */
+const FELDER = ['kunde','datum','ziel1','ziel2','ziel3','nameA','gesamtA','einmalA','nameB','gesamtB','einmalB'];
+
+function zustandSammeln(){
+  const f={};
+  FELDER.forEach(id=>{ const e=$('#'+id); if(e) f[id]=e.value; });
+  return {
+    v:1, felder:f, personB:S.personB, zweiKonten:S.zweiKonten, offen:S.offen, pfeilAn:S.pfeilAn, betrag:S.betrag,
+    notiz:S.notiz, notizOffen:S.notizOffen, sparte:S.sparte,
+    pyrMalen:{striche:S.pyrMalen.striche},
+    seiten:S.seiten.map(s=>({striche:s.striche, farbe:s.farbe}))
+  };
+}
+
+function zustandSetzen(d){
+  if(!d || d.v!==1) return false;
+  FELDER.forEach(id=>{ const e=$('#'+id); if(e && d.felder && d.felder[id]!=null) e.value=d.felder[id]; });
+  if(d.personB){
+    S.personB=true; $('#personB').style.display='block'; $('#btnBdazu').style.display='none';
+  }
+  if(typeof d.zweiKonten==='boolean') S.zweiKonten = d.zweiKonten;
+  S.offen = d.offen||{}; S.pfeilAn = d.pfeilAn||{};
+  S.notiz = d.notiz||{}; S.notizOffen = d.notizOffen||{}; S.sparte = d.sparte||{};
+  BEREICHE.forEach(b=>{ if(d.betrag && d.betrag[b.id]) S.betrag[b.id]=d.betrag[b.id]; });
+  if(d.pyrMalen && d.pyrMalen.striche) S.pyrMalen.striche = d.pyrMalen.striche;
+  (d.seiten||[]).forEach(s=>{ S.seiten.push({striche:s.striche||[], farbe:s.farbe, radierer:false}); });
+  return true;
+}
+
+/* Alles auf Anfang – beim Wechsel zwischen Beratungen */
+function zustandLeeren(){
+  FELDER.forEach(id=>{ const e=$('#'+id); if(e) e.value=''; });
+  $('#datum').value = new Date().toISOString().slice(0,10);
+  $('#nameA').value = 'Person A'; $('#nameB').value = 'Person B';
+  S.personB=false; $('#personB').style.display='none'; $('#btnBdazu').style.display='block';
+  S.zweiKonten=true;
+  S.offen={}; S.pfeilAn={}; S.notiz={}; S.notizOffen={}; S.sparte={};
+  BEREICHE.forEach(b=>S.betrag[b.id]={A:0,B:0});
+  S.pyrMalen.striche=[];
+  S.seiten.length=0; $('#seiten').innerHTML='';
+  PFEIL_GEZEIGT.clear();
+}
+
+function allesZeichnen(){
+  overlayZeichnen(); pfeileZeichnen(); absTabellen(); restAktualisieren();
+  if(window.pyrNeuMalen) pyrNeuMalen();
+  window.dispatchEvent(new Event('resize'));
+}
+
+/* =========================================================
+   Backend
+   ========================================================= */
+const API  = 'https://ncudchhyfpokanjtsmpf.supabase.co/functions/v1/beratungen';
+let CODE = null;            // Zugangscode des Beraters
+let AKTUELL = null;         // {id, kunde} der geöffneten Beratung
+
+async function api(action, extra){
+  const res = await fetch(API, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(Object.assign({action, code:CODE}, extra||{}))
+  });
+  return res.json();
+}
+
+const lokalKey = () => 'beratungspyramide_' + (AKTUELL && AKTUELL.id ? AKTUELL.id : 'neu');
+
+function status(text, klasse){
+  const e = $('#kopfStatus');
+  if(e){ e.textContent = text||''; e.style.color = klasse==='fehler' ? '#ffd2cc' : 'rgba(255,255,255,.8)'; }
+}
+
+let sichernTimer=null, serverTimer=null;
+function sichern(){
+  if(!AKTUELL) return;
+  clearTimeout(sichernTimer);
+  sichernTimer=setTimeout(()=>{
+    try{ localStorage.setItem(lokalKey(), JSON.stringify({zeit:Date.now(), stand:zustandSammeln()})); }catch(e){}
+  },400);
+  clearTimeout(serverTimer);
+  status('Ungespeicherte Änderungen');
+  serverTimer=setTimeout(()=>serverSpeichern(), 2500);
+}
+
+async function serverSpeichern(still){
+  if(!AKTUELL) return false;
+  clearTimeout(serverTimer);
+  if(!still) status('Speichert …');
+  try{
+    const r = await api('save', {id:AKTUELL.id||undefined, kunde:AKTUELL.kunde, daten:zustandSammeln()});
+    if(r.ok){
+      AKTUELL.id = r.id;
+      try{ localStorage.removeItem('beratungspyramide_neu'); localStorage.removeItem(lokalKey()); }catch(e){}
+      const t = new Date().toLocaleTimeString('de-AT',{hour:'2-digit',minute:'2-digit'});
+      status('Gespeichert ' + t);
+      return true;
+    }
+    status('Nicht gespeichert: ' + (r.fehler||'unbekannter Fehler'), 'fehler');
+  }catch(e){
+    status('Nicht gespeichert – keine Verbindung. Der Stand liegt lokal bereit.', 'fehler');
+  }
+  return false;
+}
+
+/* =========================================================
+   Ansichten
+   ========================================================= */
+function ansicht(welche){
+  const u = $('#uebersicht'), b = $('#beratung');
+  const inBeratung = (welche==='beratung');
+  u.hidden = inBeratung; b.hidden = !inBeratung;
+  $('#btnZurueck').hidden = !inBeratung;
+  $('#btnSpeichern').hidden = !inBeratung;
+  $('#btnDruck').hidden = !inBeratung;
+  $('#kopfTitel').textContent = inBeratung
+    ? (AKTUELL ? AKTUELL.kunde : 'Beratung')
+    : 'Strategie für Ihre Wünsche und Ziele';
+  window.scrollTo(0,0);
+}
+
+async function uebersichtLaden(){
+  const ziel = $('#liste');
+  ziel.innerHTML = '<div class="leer">Wird geladen …</div>';
+  let r;
+  try{ r = await api('list'); }
+  catch(e){ ziel.innerHTML = '<div class="leer">Keine Verbindung zum Server.</div>'; return; }
+  if(!r.ok){ ziel.innerHTML = '<div class="leer">'+(r.fehler||'Fehler beim Laden')+'</div>'; return; }
+
+  if(!r.beratungen.length){
+    ziel.innerHTML = '<div class="leer">Noch keine Beratung angelegt.</div>';
+    return;
+  }
+  ziel.innerHTML = '';
+  r.beratungen.forEach(b=>{
+    const d = new Date(b.geaendert_am);
+    const z = el('div','b-zeile');
+    z.innerHTML = '<span class="b-name"></span>'+
+                  '<span class="b-datum">'+d.toLocaleDateString('de-AT')+', '+d.toLocaleTimeString('de-AT',{hour:'2-digit',minute:'2-digit'})+'</span>'+
+                  '<span class="b-tools">'+
+                    '<button type="button" data-t="um">Umbenennen</button>'+
+                    '<button type="button" data-t="weg" class="weg">Löschen</button>'+
+                  '</span>';
+    z.querySelector('.b-name').textContent = b.kunde;
+    z.addEventListener('click', e=>{ if(!e.target.closest('.b-tools')) beratungOeffnen(b.id); });
+    z.querySelector('[data-t=um]').addEventListener('click', async ()=>{
+      const neu = prompt('Neue Bezeichnung:', b.kunde);
+      if(!neu || !neu.trim()) return;
+      const g = await api('get', {id:b.id});
+      if(!g.ok){ alert(g.fehler||'Fehler'); return; }
+      const r2 = await api('save', {id:b.id, kunde:neu.trim(), daten:g.beratung.daten});
+      if(r2.ok) uebersichtLaden(); else alert(r2.fehler||'Fehler');
+    });
+    z.querySelector('[data-t=weg]').addEventListener('click', async ()=>{
+      if(!confirm('Beratung „'+b.kunde+'" endgültig löschen?')) return;
+      const r2 = await api('delete', {id:b.id});
+      if(r2.ok) uebersichtLaden(); else alert(r2.fehler||'Fehler');
+    });
+    ziel.appendChild(z);
+  });
+}
+
+async function beratungOeffnen(id){
+  status('Wird geladen …');
+  const r = await api('get', {id});
+  if(!r.ok){ alert(r.fehler||'Beratung konnte nicht geladen werden'); status(''); return; }
+  zustandLeeren();
+  AKTUELL = {id:r.beratung.id, kunde:r.beratung.kunde};
+
+  let stand = r.beratung.daten;
+  try{
+    const roh = localStorage.getItem(lokalKey());
+    if(roh){
+      const lokal = JSON.parse(roh);
+      const serverZeit = new Date(r.beratung.geaendert_am).getTime();
+      if(lokal.zeit > serverZeit + 2000 &&
+         confirm('Auf diesem Gerät liegen neuere, nicht gespeicherte Änderungen. Diese verwenden?')){
+        stand = lokal.stand;
+      }else{
+        localStorage.removeItem(lokalKey());
+      }
+    }
+  }catch(e){}
+
+  zustandSetzen(stand);
+  const seiten = S.seiten.splice(0);
+  ansicht('beratung');
+  allesZeichnen();
+  seiten.forEach(x=>{ S.seiten.push(x); seiteDazu(x); });
+  status('Gespeichert');
+}
+
+async function beratungNeu(){
+  const kunde = $('#neuKunde').value.trim();
+  if(!kunde){ $('#neuKunde').focus(); return; }
+  zustandLeeren();
+  AKTUELL = {id:null, kunde};
+  ansicht('beratung');
+  allesZeichnen();
+  $('#neuKunde').value='';
+  await serverSpeichern();
+}
+
+$('#btnNeu').addEventListener('click', beratungNeu);
+$('#neuKunde').addEventListener('keydown', e=>{ if(e.key==='Enter') beratungNeu(); });
+$('#btnSpeichern').addEventListener('click', ()=>serverSpeichern());
+$('#btnZurueck').addEventListener('click', async ()=>{
+  await serverSpeichern();
+  AKTUELL = null; status('');
+  ansicht('uebersicht');
+  uebersichtLaden();
+});
+
+document.addEventListener('input', e=>{
+  if(e.target.closest('#beratung')) sichern();
+});
+window.addEventListener('beforeunload', e=>{
+  if(AKTUELL && $('#kopfStatus').textContent.startsWith('Ungespeichert')){
+    e.preventDefault(); e.returnValue='';
+  }
+});
+
+/* =========================================================
+   Drucken / Zurücksetzen
+   ========================================================= */
+window.addEventListener('beforeprint', ()=>{
+  $$('textarea').forEach(t=>{ t.dataset.h=t.style.height; t.style.height='auto'; t.style.height=(t.scrollHeight+4)+'px'; });
+});
+window.addEventListener('afterprint', ()=>{
+  $$('textarea').forEach(t=>{ t.style.height=t.dataset.h||''; });
+});
+$('#btnDruck').addEventListener('click', ()=>window.print());
+
+
+/* =========================================================
+   Start
+   ========================================================= */
+(function start(){
+  $('#datum').value = new Date().toISOString().slice(0,10);
+  pyramideZeichnen();
+  allesZeichnen();
+})();
+
+/* ==========================================================================
+   ZUGANGSSCHUTZ – zentral verwaltet über tools-admin.
+   Der Code identifiziert zugleich den Berater: jeder sieht nur seine eigenen
+   Beratungen.
+   ========================================================================== */
+(function(){
+  const overlay = document.createElement('div');
+  overlay.id = 'zugang-overlay';
+  overlay.style.cssText = 'position:fixed; inset:0; background:#f0f4f8; z-index:9999; display:flex; align-items:center; justify-content:center; padding:24px;';
+  overlay.innerHTML = `
+    <div style="background:#fff; border-radius:8px; padding:32px; max-width:400px; width:100%; box-shadow:0 1px 4px rgba(53,95,143,0.15); font-family:'Lato',Arial,sans-serif;">
+      <div style="font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:#6b8099; font-weight:700; margin-bottom:14px;">Geschützter Bereich</div>
+      <div style="font-size:15px; color:#1a2a3a; line-height:1.6; margin-bottom:18px;">Bitte geben Sie Ihren persönlichen Zugangscode ein.</div>
+      <input type="text" id="zugang-code" placeholder="Zugangscode" autocomplete="off"
+        style="width:100%; background:#e8eef5; border:1px solid #c8d5e3; border-radius:4px; padding:12px; font-size:16px; font-family:'Lato',Arial,sans-serif; box-sizing:border-box;">
+      <div id="zugang-fehler" style="color:#c0392b; font-size:13px; margin-top:10px; display:none;">Code ungültig, Zugriff gesperrt oder keine Internetverbindung.</div>
+      <button id="zugang-btn"
+        style="margin-top:16px; width:100%; background:#355f8f; color:#fff; border:none; border-radius:4px; padding:14px; font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:'Lato',Arial,sans-serif;">
+        Zugang prüfen</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.body.style.overflow = 'hidden';
+
+  async function pruefen(code){
+    try{
+      const res = await fetch(API, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ action:'list', code })
+      });
+      const data = await res.json();
+      return data.ok === true ? data : null;
+    }catch(e){ return null; }
+  }
+
+  function freigeben(code){
+    CODE = code;
+    overlay.remove();
+    document.body.style.overflow = '';
+    ansicht('uebersicht');
+    uebersichtLaden();
+  }
+
+  async function manuell(){
+    const code = document.getElementById('zugang-code').value.trim();
+    if(!code) return;
+    const btn = document.getElementById('zugang-btn');
+    btn.textContent = 'Wird geprüft...';
+    if(await pruefen(code)){
+      localStorage.setItem('toolZugangsCode', code);
+      freigeben(code);
+    }else{
+      btn.textContent = 'Zugang prüfen';
+      document.getElementById('zugang-fehler').style.display = 'block';
+    }
+  }
+
+  document.getElementById('zugang-btn').addEventListener('click', manuell);
+  document.getElementById('zugang-code').addEventListener('keydown', e => { if(e.key==='Enter') manuell(); });
+
+  const gespeichert = localStorage.getItem('toolZugangsCode');
+  if(gespeichert){
+    pruefen(gespeichert).then(ok => { if(ok) freigeben(gespeichert); });
+  }
+})();
+</script>
+</body>
+</html>
