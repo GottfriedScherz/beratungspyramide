@@ -641,29 +641,29 @@
     font:900 1.7cqw 'Lato',sans-serif; color:var(--text); text-align:center; line-height:1.1;
     display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
   }
-  .fs-ziel span{font:700 1.15cqw 'Lato',sans-serif; color:var(--gold); margin-top:0.15cqw;}
+  .fs-ziel span{font:700 1.15cqw 'Lato',sans-serif; color:var(--accent); margin-top:0.15cqw;}
   .fs-ziel.aus{color:var(--warn);}
   .fs-ziel.aus span{color:var(--warn);}
 
   .fs-betrag{
-    border:2px solid var(--gold); border-radius:8px; background:#fdfaf1; box-sizing:border-box;
+    border:2px solid var(--accent); border-radius:8px; background:#f2f6fb; box-sizing:border-box;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.2cqw;
     padding:0.45cqw 0.6cqw; text-align:center;
   }
-  .fs-betrag .lbl{font:700 0.92cqw 'Lato',sans-serif; color:#8a6e28; letter-spacing:.04em; text-transform:uppercase;}
+  .fs-betrag .lbl{font:700 0.92cqw 'Lato',sans-serif; color:var(--accent); letter-spacing:.04em; text-transform:uppercase;}
   .fs-betrag .wert{display:flex; align-items:baseline; gap:0.25cqw;}
   .fs-buehne input.fs-b{
-    width:8.2cqw; border:1px solid #ddcb9a; border-radius:4px; background:#fff;
-    padding:0.08cqw 0.25cqw; font:900 1.8cqw 'Lato',sans-serif; color:var(--gold); text-align:right;
+    width:8.2cqw; border:1px solid var(--line); border-radius:4px; background:#fff;
+    padding:0.08cqw 0.25cqw; font:900 1.8cqw 'Lato',sans-serif; color:var(--accent); text-align:right;
     font-family:'Lato',sans-serif; box-sizing:border-box;
   }
-  .fs-buehne input.fs-b:focus{outline:none; border-color:var(--gold);}
-  .fs-betrag .eur{font:900 1.6cqw 'Lato',sans-serif; color:var(--gold);}
+  .fs-buehne input.fs-b:focus{outline:none; border-color:var(--accent);}
+  .fs-betrag .eur{font:900 1.6cqw 'Lato',sans-serif; color:var(--accent);}
   .fs-betrag.weg{border-color:var(--warn); background:#fdf2f0;}
   .fs-betrag.weg .lbl{color:var(--warn);}
 
   .fs-sonder{
-    font:900 1.35cqw 'Lato',sans-serif; color:var(--gold); text-align:center; line-height:1.2;
+    font:900 1.35cqw 'Lato',sans-serif; color:var(--accent); text-align:center; line-height:1.2;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
   }
   .fs-sonder small{font:400 0.92cqw 'Lato',sans-serif; color:var(--muted); margin-top:0.25cqw; line-height:1.3;}
@@ -2953,7 +2953,7 @@ const fsx = v => (v/FSW*100).toFixed(4)+'%';
 const fsy = v => (v/FSH*100).toFixed(4)+'%';
 const fsPos = g => 'left:'+fsx(g[0])+';top:'+fsy(g[1])+';width:'+fsx(g[2])+';height:'+fsy(g[3])+';';
 
-const FS_GOLD = '#a8873f', FS_ROT = '#c0392b', FS_DUNKEL = '#1a2a3a';
+const FS_HAUPT = '#355f8f', FS_ROT = '#c0392b', FS_DUNKEL = '#1a2a3a';
 const FS_STD_BETRAG = 10000;
 
 let fsSchritt = 0, fsOffen = false, fsGebaut = false, fsDruckTemp = false, fsSchrittMerk = 0;
@@ -2976,9 +2976,9 @@ const FS_ICON = {
          '<rect x="10" y="14" width="80" height="122"/>'+
          '<rect x="0" y="136" width="100" height="14"/>'+
          fsFenster(24, 30, 3, 5, 11, 13, 22, 21),
-  fabrik:'<path d="M 10 8 L 27 8 L 31 62 L 6 62 Z"/>'+
-         '<path d="M 8 122 L 8 64 L 48 90 L 48 64 L 88 90 L 88 64 L 128 90 L 128 122 Z"/>'+
-         fsFenster(22, 98, 3, 1, 20, 15, 36, 0),
+  fabrik:'<path d="M 6 24 L 24 24 L 28 148 L 2 148 Z"/>'+
+         '<path d="M 34 148 L 34 76 L 66 100 L 66 76 L 98 100 L 98 76 L 126 100 L 126 148 Z"/>'+
+         fsFenster(44, 114, 3, 1, 18, 18, 30, 0),
   buero: '<rect x="2" y="30" width="46" height="100"/>'+
          '<rect x="52" y="56" width="32" height="74"/>'+
          '<path d="M 88 40 L 128 28 L 128 130 L 88 130 Z"/>'+
@@ -3025,26 +3025,26 @@ function fsBauen(){
   $('#fsDefs').innerHTML =
     '<marker id="fsPdick" viewBox="0 0 10 10" refX="9.4" refY="5" markerUnits="userSpaceOnUse" '+
       'markerWidth="34" markerHeight="34" orient="auto-start-reverse">'+
-      '<path d="M 0.6 1.2 L 9.8 5 L 0.6 8.8 z" fill="'+FS_GOLD+'"/></marker>'+
+      '<path d="M 0.6 1.2 L 9.8 5 L 0.6 8.8 z" fill="'+FS_HAUPT+'"/></marker>'+
     '<marker id="fsPduenn" viewBox="0 0 10 10" refX="9.4" refY="5" markerUnits="userSpaceOnUse" '+
       'markerWidth="15" markerHeight="15" orient="auto-start-reverse">'+
-      '<path d="M 0.6 1.2 L 9.8 5 L 0.6 8.8 z" fill="'+FS_GOLD+'"/></marker>';
+      '<path d="M 0.6 1.2 L 9.8 5 L 0.6 8.8 z" fill="'+FS_HAUPT+'"/></marker>';
 
   /* Fondsbalken und Icons */
   $('#fsFormen').innerHTML =
-    '<g class="fs-form" data-s="3"><rect x="420" y="290" width="680" height="88" rx="4" fill="'+FS_GOLD+'"/>'+
+    '<g class="fs-form" data-s="3"><rect x="420" y="290" width="680" height="88" rx="4" fill="'+FS_HAUPT+'"/>'+
     '<text x="760" y="350" text-anchor="middle" fill="#fff" font-family="Lato,Arial,sans-serif" '+
     'font-size="46" font-weight="400" letter-spacing="4">FONDS</text></g>'+
     fsIcon('turm',   88,  648, 1.02, 1) +
     fsIcon('turm',   350, 648, 1.02, 5) +
-    fsIcon('fabrik', 552, 668, 1.02, 5) +
-    fsIcon('buero',  774, 660, 1.02, 5) +
+    fsIcon('fabrik', 552, 650, 1.02, 5) +
+    fsIcon('buero',  774, 668, 1.02, 5) +
     fsIcon('turm',   1000, 648, 1.02, 5) +
     fsIcon('mann',   66,  52,  1.00, 1) +
     fsIcon('frau',   116, 52,  1.00, 1);
 
   const weg = w => {
-    const farbe = w.k === 'rot' ? FS_ROT : FS_GOLD;
+    const farbe = w.k === 'rot' ? FS_ROT : FS_HAUPT;
     const br    = w.k === 'dick' ? 15 : (w.k === 'rot' ? 9 : 3.4);
     const mk    = w.k === 'dick' ? ' marker-end="url(#fsPdick)"'
                 : (w.k === 'duenn' ? ' marker-end="url(#fsPduenn)"' : '');
@@ -3070,7 +3070,7 @@ function fsBauen(){
     {s:5, c:'fs-ziel',   g:[772,600,140,42], h:'C<span>1 %</span>'},
     {s:5, c:'fs-ziel',   g:[980,600,140,42], h:'D<span>2 %</span>'},
 
-    {s:6, c:'fs-quelle', g:[336,494,112,40], id:'fsXYproz', h:'<span style="color:var(--gold);font-weight:700">2 % in XY</span>'},
+    {s:6, c:'fs-quelle', g:[336,494,112,40], id:'fsXYproz', h:'<span style="color:var(--accent);font-weight:700">2 % in XY</span>'},
 
     {s:7, c:'fs-merker', g:[88,818,1064,74],
      h:'Ein Konkurs zeichnet sich lange vorher ab: Das Fondsmanagement muss das Geld der Anleger sch&uuml;tzen '+
