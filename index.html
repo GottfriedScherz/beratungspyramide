@@ -513,6 +513,14 @@
   .ec-kursfeld{display:flex; align-items:center; gap:0.3cqw; justify-content:center;}
   .ec-kursfeld .eur{font:900 1.2cqw 'Lato',sans-serif; color:var(--muted);}
   .ec-anteile{font:900 1.25cqw 'Lato',sans-serif; color:var(--accent); text-align:center;}
+  .ec-buehne input.ec-einmal{
+    border-style:dashed; border-color:#d9c48a; background:#fffdf5; color:var(--gold); font-size:1.25cqw;
+  }
+  .ec-buehne input.ec-einmal:focus{border-style:solid; border-color:var(--gold); background:#fff;}
+  .ec-buehne input.ec-einmal::placeholder{font:400 0.92cqw 'Lato',sans-serif; color:#bda86f; opacity:1;}
+  .ec-kursfeld.einmal .eur{color:var(--gold);}
+  .ec-anteile.plus{color:var(--gold); font-size:1.15cqw;}
+  .ec-zeile .w.gold{color:var(--gold);}
 
   .ec-panel{
     border:2px solid var(--accent); border-radius:7px; background:#fff; box-sizing:border-box;
@@ -1901,17 +1909,17 @@ const EB_WEGE = [
 const EB_FARBE = {blau:'#355f8f', gruen:'#27ae60', strich:'#c0392b'};
 
 const EB_REGIE = {
-  0: 'Bereit. Ein Klick ins Bild startet das Gespr&auml;ch &ndash; die Betr&auml;ge kannst du schon vorher eintragen (&bdquo;Alles zeigen&ldquo;).',
-  1: '<b>Kategorie 1:</b> Die Menschen haben ihre Arbeitskraft, gehen arbeiten, bekommen jeden Monat ihr Gehalt &ndash; und sichern damit ihren Lebensstandard: Miete, Auto, Einkauf.',
-  2: '<b>Kategorie 2:</b> So viel Kapital geerbt, gewonnen, angespart oder erwirtschaftet, dass allein die Zinsen bzw. die Rendite den Lebensstandard tragen. &mdash; <i>&bdquo;Lieber Kunde, zu welcher Kategorie geh&ouml;rst du?&ldquo;</i>',
-  3: '<b>Und was passiert, wenn dir das passiert?</b> Die Arbeitskraft f&auml;llt aus &ndash; durch Unfall, schwere Krankheit, Schlaganfall, Krebs. Dann ist auch das Gehalt weg, und der Lebensstandard ist zumindest sehr stark eingeschr&auml;nkt.',
-  4: 'Genau daf&uuml;r ist die <b>Arbeitskraftabsicherung</b> da: Tritt dieser Fall ein, wechselst du in die zweite Kategorie.',
+  0: 'Bereit. Ein Klick ins Bild startet das Gespr&auml;ch &ndash; die Betr&auml;ge lassen sich schon vorher eintragen (&bdquo;Alles zeigen&ldquo;).',
+  1: '<b>Kategorie 1:</b> Diese Menschen haben ihre Arbeitskraft, gehen arbeiten, bekommen jeden Monat ihr Gehalt &ndash; und sichern damit ihren Lebensstandard: Miete, Auto, Einkauf.',
+  2: '<b>Kategorie 2:</b> So viel Kapital geerbt, gewonnen, angespart oder erwirtschaftet, dass allein die Zinsen bzw. die Rendite den Lebensstandard tragen. &mdash; <i>&bdquo;Lieber Kunde, zu welcher Kategorie geh&ouml;ren Sie?&ldquo;</i>',
+  3: '<b>Und was passiert, wenn Ihnen das passiert?</b> Die Arbeitskraft f&auml;llt aus &ndash; durch Unfall, schwere Krankheit, Schlaganfall, Krebs. Dann ist auch das Gehalt weg, und der Lebensstandard ist zumindest sehr stark eingeschr&auml;nkt.',
+  4: 'Genau daf&uuml;r ist die <b>Arbeitskraftabsicherung</b> da: Tritt dieser Fall ein, wechseln Sie in die zweite Kategorie.',
   5: 'Nur eben nicht &uuml;ber Kapital und Zinsen &ndash; sondern &uuml;ber <b>zwei Ma&szlig;nahmen</b>.',
-  6: '<b>Erstens:</b> eine einmalige Kapitalauszahlung, eine hohe Summe aus der Unfallversicherung. Damit deckst du Kosten, die durch den Unfall entstehen &ndash; Umbauma&szlig;nahmen am Haus, barrierefreies Badezimmer, Treppenlift.',
-  7: '<b>Zweitens &ndash; fast noch wichtiger:</b> eine monatliche Auszahlung. Denn du hast nicht nur einmalige Ausgaben, sondern lebenslange: wohnen, essen, Auto, Energie &ndash; bis zum letzten Atemzug.',
-  8: '<b>Berufsunf&auml;higkeitsrente:</b> rund 60 % kommen aus der gesetzlichen Leistung, 40 % sichern wir &uuml;ber die private Berufsunf&auml;higkeitsversicherung ab &ndash; zusammen 100 % deines Einkommens.',
-  9: '<b>Dauerinvalidit&auml;tsrente:</b> f&uuml;r den schweren Unfall, bei dem du nicht als berufsunf&auml;hig eingestuft wirst. Hier ist keine gesetzliche Leistung zu ber&uuml;cksichtigen &ndash; du bekommst den Betrag fix, bis ans Lebensende.',
-  10:'<b>Egal ob</b> schwerer Unfall mit Dauerinvalidit&auml;t oder Berufsunf&auml;higkeit durch Krankheit, Krebs, Schlaganfall, Herzinfarkt: Du bist so abgesichert, dass du deinen Lebensstandard weiterhin bestreiten kannst.'
+  6: '<b>Erstens:</b> eine einmalige Kapitalauszahlung, eine hohe Summe aus der Unfallversicherung. Damit decken Sie Kosten, die durch den Unfall entstehen &ndash; Umbauma&szlig;nahmen am Haus, barrierefreies Badezimmer, Treppenlift.',
+  7: '<b>Zweitens &ndash; fast noch wichtiger:</b> eine monatliche Auszahlung. Denn Sie haben nicht nur einmalige Ausgaben, sondern lebenslange: wohnen, essen, Auto, Energie &ndash; bis zum letzten Atemzug.',
+  8: '<b>Berufsunf&auml;higkeitsrente:</b> rund 60 % kommen aus der gesetzlichen Leistung, 40 % sichern wir &uuml;ber die private Berufsunf&auml;higkeitsversicherung ab &ndash; zusammen 100 % Ihres Einkommens.',
+  9: '<b>Dauerinvalidit&auml;tsrente:</b> f&uuml;r den schweren Unfall, bei dem Sie nicht als berufsunf&auml;hig eingestuft werden. Hier ist keine gesetzliche Leistung zu ber&uuml;cksichtigen &ndash; Sie bekommen den Betrag fix, bis ans Lebensende.',
+  10:'<b>Egal ob</b> schwerer Unfall mit Dauerinvalidit&auml;t oder Berufsunf&auml;higkeit durch Krankheit, Krebs, Schlaganfall, Herzinfarkt: Sie sind so abgesichert, dass Sie Ihren Lebensstandard weiterhin bestreiten k&ouml;nnen.'
 };
 
 let ebSchritt = 0, ebOffen = false, ebGebaut = false, ebDruckTemp = false, ebSchrittMerk = 0;
@@ -2070,7 +2078,7 @@ function ebDruckNach(){
    zeigt einen weiteren Monat samt gekaufter Anteile.
    ========================================================= */
 const ECW = 1240, ECH = 780, EC_MAX = 7, EC_N = 5;
-const ECG = {x0:200, x1:900, y0:150, y1:435};
+const ECG = {x0:200, x1:900, y0:140, y1:408};
 const ecx = v => (v/ECW*100).toFixed(4)+'%';
 const ecy = v => (v/ECH*100).toFixed(4)+'%';
 const ecPos = g => 'left:'+ecx(g[0])+';top:'+ecy(g[1])+';width:'+ecx(g[2])+';height:'+ecy(g[3])+';';
@@ -2087,15 +2095,21 @@ S.ecBenutzt = false;
 
 function ecWerte(){
   const z = (v,std) => { const x = parseFloat(v); return (isFinite(x) && x > 0) ? x : std; };
-  const spar  = z(S.ec.spar, EC_STD.spar);
-  const kurse = EC_STD.kurse.map((std,i) => z((S.ec.kurse||[])[i], std));
-  const anteile = kurse.map(k => spar / k);
-  const summe = anteile.reduce((a,b)=>a+b, 0);
+  const spar   = z(S.ec.spar, EC_STD.spar);
+  const kurse  = EC_STD.kurse.map((std,i) => z((S.ec.kurse||[])[i], std));
+  const einmal = kurse.map((k,i) => z((S.ec.einmal||[])[i], 0));   // 0 = kein Einmalkauf
+  const antSpar = kurse.map(k => spar / k);
+  const antEin  = kurse.map((k,i) => einmal[i] / k);
+  const anteile = antSpar.map((a,i) => a + antEin[i]);
+  const summe   = anteile.reduce((a,b)=>a+b, 0);
   const endkurs = kurse[EC_N-1];
-  const depot = summe * endkurs;
-  const eingezahlt = spar * EC_N;
+  const depot   = summe * endkurs;
+  const einSpar   = spar * EC_N;
+  const einEinmal = einmal.reduce((a,b)=>a+b, 0);
+  const eingezahlt = einSpar + einEinmal;
   return {
-    spar, kurse, anteile, summe, endkurs, depot, eingezahlt,
+    spar, kurse, einmal, antSpar, antEin, anteile, summe, endkurs, depot,
+    einSpar, einEinmal, eingezahlt,
     diff: depot - eingezahlt,
     einstand: eingezahlt / summe,
     schnitt: kurse.reduce((a,b)=>a+b, 0) / EC_N
@@ -2114,11 +2128,13 @@ function ecSkala(kurse){
 const ecY = (p, sk) => ECG.y1 - (p - sk.lo) / (sk.hi - sk.lo) * (ECG.y1 - ECG.y0);
 
 const EC_PANEL =
+  '<div class="ec-zeile" id="ecZeileSpar"><span class="l">Sparraten</span><span class="w" id="ecEinSpar">&ndash;</span></div>'+
+  '<div class="ec-zeile" id="ecZeileEinmal"><span class="l">Einmalk&auml;ufe</span><span class="w gold" id="ecEinEinmal">&ndash;</span></div>'+
+  '<div class="ec-zeile"><span class="l" id="ecEinLabel">eingezahlt</span><span class="w" id="ecEin">&ndash;</span></div>'+
+  '<div class="ec-trenn"></div>'+
   '<div class="ec-zeile"><span class="l">Anteile gesamt</span><span class="w" id="ecSumme">&ndash;</span></div>'+
   '<div class="ec-zeile"><span class="l">Kurs am Ende</span><span class="w" id="ecEndkurs">&ndash;</span></div>'+
-  '<div class="ec-trenn"></div>'+
   '<div class="ec-zeile gross"><span class="l">Depotwert</span><span class="w" id="ecDepot">&ndash;</span></div>'+
-  '<div class="ec-zeile"><span class="l">eingezahlt</span><span class="w" id="ecEin">&ndash;</span></div>'+
   '<div class="ec-zeile"><span class="l">Ergebnis</span><span class="w" id="ecDiff">&ndash;</span></div>';
 
 const EC_BAND =
@@ -2126,8 +2142,8 @@ const EC_BAND =
     '<div>&#216; Einstandskurs<b id="ecEinstand">&ndash;</b></div>'+
     '<div>&#216; Kurs<b id="ecSchnitt">&ndash;</b></div>'+
   '</div>'+
-  '<p>Bei gleichbleibender Sparrate kaufst du bei niedrigen Kursen automatisch mehr Anteile und bei hohen weniger. '+
-  'Dein durchschnittlicher Einstandskurs liegt deshalb unter dem durchschnittlichen Kurs &ndash; das ist der Cost-Average-Effekt.</p>';
+  '<p>Bei gleichbleibender Sparrate kaufen Sie bei niedrigen Kursen automatisch mehr Anteile und bei hohen weniger. '+
+  'Ihr durchschnittlicher Einstandskurs liegt deshalb unter dem durchschnittlichen Kurs &ndash; das ist der Cost-Average-Effekt.</p>';
 
 function ecBauen(){
   if(ecGebaut) return;
@@ -2138,15 +2154,18 @@ function ecBauen(){
     {s:0, c:'ec-titel', g:[60,26,1120,50],
      h:'Beispiel: monatlicher Sparbetrag <input type="number" class="ec-spar" id="ecSpar" min="1" step="50"> &euro; '+
        'bei nachfolgend angenommener Kursentwicklung'},
-    {s:6, c:'ec-panel', g:[975,178,235,196], h:EC_PANEL},
-    {s:7, c:'ec-band',  g:[170,596,1040,138], h:EC_BAND}
+    {s:6, c:'ec-panel', g:[975,150,235,232], h:EC_PANEL},
+    {s:7, c:'ec-band',  g:[170,600,1040,146], h:EC_BAND}
   ];
   for(let i=0;i<EC_N;i++){
     const x = ecXAt(i) - 65;
-    teile.push({s:i+1, c:'ec-monat',    g:[x,466,130,24], h:'Monat '+(i+1)});
-    teile.push({s:i+1, c:'ec-kursfeld', g:[x,494,130,38],
+    teile.push({s:i+1, c:'ec-monat',    g:[x,432,130,22], h:'Monat '+(i+1)});
+    teile.push({s:i+1, c:'ec-kursfeld', g:[x,456,130,36],
                 h:'<input type="number" class="ec-kurs" id="ecK'+i+'" min="1" step="5"><span class="eur">&euro;</span>'});
-    teile.push({s:i+1, c:'ec-anteile',  g:[x,540,130,28], id:'ecA'+i, h:'&ndash;'});
+    teile.push({s:i+1, c:'ec-anteile',  g:[x,496,130,24], id:'ecA'+i, h:'&ndash;'});
+    teile.push({s:i+1, c:'ec-kursfeld einmal', g:[x,526,130,34],
+                h:'<input type="number" class="ec-kurs ec-einmal" id="ecE'+i+'" min="0" step="500" placeholder="Einmalkauf"><span class="eur">&euro;</span>'});
+    teile.push({s:i+1, c:'ec-anteile plus', g:[x,564,130,24], id:'ecB'+i, h:''});
   }
   lage.innerHTML = teile.map(t =>
     '<div class="eb-el '+t.c+'" data-s="'+t.s+'"'+(t.id?' id="'+t.id+'"':'')+' style="'+ecPos(t.g)+'">'+t.h+'</div>'
@@ -2158,7 +2177,8 @@ function ecBauen(){
   };
   melden($('#ecSpar'), v => { S.ec.spar = v; });
   for(let i=0;i<EC_N;i++){
-    melden($('#ecK'+i), (function(k){ return function(v){ S.ec.kurse = S.ec.kurse || []; S.ec.kurse[k] = v; }; })(i));
+    melden($('#ecK'+i), (function(k){ return function(v){ S.ec.kurse  = S.ec.kurse  || []; S.ec.kurse[k]  = v; }; })(i));
+    melden($('#ecE'+i), (function(k){ return function(v){ S.ec.einmal = S.ec.einmal || []; S.ec.einmal[k] = v; }; })(i));
   }
 
   ecGebaut = true;
@@ -2171,9 +2191,9 @@ function ecWerteSetzen(){
   if(sp) sp.value = (S.ec.spar==null || S.ec.spar==='') ? EC_STD.spar : S.ec.spar;
   for(let i=0;i<EC_N;i++){
     const e = $('#ecK'+i);
-    if(!e) continue;
-    const v = (S.ec.kurse||[])[i];
-    e.value = (v==null || v==='') ? EC_STD.kurse[i] : v;
+    if(e){ const v = (S.ec.kurse||[])[i]; e.value = (v==null || v==='') ? EC_STD.kurse[i] : v; }
+    const g = $('#ecE'+i);
+    if(g){ const v = (S.ec.einmal||[])[i]; g.value = (v==null) ? '' : v; }
   }
   ecZeichnen();
 }
@@ -2221,33 +2241,46 @@ function ecZeichnen(){
 
   /* Zahlen */
   for(let i=0;i<EC_N;i++){
-    const e = $('#ecA'+i);
-    if(e) e.innerHTML = '= <b>'+nfA.format(w.anteile[i])+'</b> Anteile';
+    const a = $('#ecA'+i);
+    if(a) a.innerHTML = '= <b>'+nfA.format(w.antSpar[i])+'</b> Anteile';
+    const g = $('#ecB'+i);
+    if(g) g.innerHTML = w.einmal[i] > 0 ? '+ <b>'+nfA.format(w.antEin[i])+'</b> Anteile' : '';
   }
   const setz = (id, txt) => { const e = $('#'+id); if(e) e.textContent = txt; };
-  setz('ecSumme',   nfA.format(w.summe) + ' Anteile');
-  setz('ecEndkurs', eur(w.endkurs));
-  setz('ecDepot',   eur(w.depot));
-  setz('ecEin',     eur(w.eingezahlt));
-  setz('ecDiff',    (w.diff >= 0 ? '+ ' : '− ') + eur(Math.abs(w.diff)));
-  setz('ecEinstand', eur2(w.einstand));
-  setz('ecSchnitt',  eur2(w.schnitt));
+  setz('ecEinSpar',   eur(w.einSpar));
+  setz('ecEinEinmal', eur(w.einEinmal));
+  setz('ecEin',       eur(w.eingezahlt));
+  setz('ecSumme',     nfA.format(w.summe) + ' Anteile');
+  setz('ecEndkurs',   eur(w.endkurs));
+  setz('ecDepot',     eur(w.depot));
+  setz('ecDiff',      (w.diff >= 0 ? '+ ' : '− ') + eur(Math.abs(w.diff)));
+  setz('ecEinstand',  eur2(w.einstand));
+  setz('ecSchnitt',   eur2(w.schnitt));
+  const mitEinmal = w.einEinmal > 0;
+  const zz = (id,an) => { const x = $('#'+id); if(x) x.style.display = an ? '' : 'none'; };
+  zz('ecZeileEinmal', mitEinmal); zz('ecZeileSpar', mitEinmal);
+  if($('#ecEinLabel')) $('#ecEinLabel').textContent = mitEinmal ? 'eingezahlt gesamt' : 'eingezahlt';
 
   ecStufeSetzen();
+  const rg = $('#ecRegie'); if(rg) rg.innerHTML = ecRegieText(ecSchritt);   // Regiezeile nennt die aktuellen Zahlen
 }
 
 function ecRegieText(n){
   const w = ecWerte();
-  const a = i => nfA.format(w.anteile[i]) + ' Anteile';
+  const a  = i => nfA.format(w.antSpar[i]) + ' Anteile';
+  const dz = i => w.einmal[i] > 0
+    ? ' Dazu Ihr Einmalkauf &uuml;ber '+eur(w.einmal[i])+' &ndash; das sind weitere <b>'+nfA.format(w.antEin[i])+' Anteile</b>.' : '';
   const t = {
-    0: 'Du sparst jeden Monat denselben Betrag &ndash; <b>'+eur(w.spar)+'</b>. Der Kurs schwankt. Schauen wir, was dabei herauskommt.',
-    1: '<b>Monat 1:</b> Der Kurs steht bei '+eur(w.kurse[0])+'. F&uuml;r deine '+eur(w.spar)+' bekommst du <b>'+a(0)+'</b>.',
-    2: '<b>Monat 2:</b> Der Kurs ist auf '+eur(w.kurse[1])+' gestiegen. F&uuml;r dieselben '+eur(w.spar)+' bekommst du jetzt nur <b>'+a(1)+'</b>.',
-    3: '<b>Monat 3:</b> Kurs '+eur(w.kurse[2])+' &ndash; <b>'+a(2)+'</b>.',
-    4: '<b>Monat 4:</b> Der Kurs ist auf '+eur(w.kurse[3])+' gefallen. Jetzt bekommst du f&uuml;r denselben Betrag <b>'+a(3)+'</b>. Genau hier arbeitet der Effekt f&uuml;r dich.',
-    5: '<b>Monat 5:</b> Kurs '+eur(w.kurse[4])+' &ndash; <b>'+a(4)+'</b>.',
-    6: 'Der Kurs steht am Ende bei '+eur(w.endkurs)+'. Du hast <b>'+nfA.format(w.summe)+' Anteile</b>: eingezahlt '+eur(w.eingezahlt)+', Depotwert <b>'+eur(w.depot)+'</b>.',
-    7: 'Dein durchschnittlicher Einstandskurs liegt bei <b>'+eur2(w.einstand)+'</b> &ndash; der durchschnittliche Kurs bei '+eur2(w.schnitt)+'. Du hast g&uuml;nstiger gekauft, als der Kurs im Schnitt stand.'
+    0: 'Sie sparen jeden Monat denselben Betrag &ndash; <b>'+eur(w.spar)+'</b>. Der Kurs schwankt. Schauen wir, was dabei herauskommt.',
+    1: '<b>Monat 1:</b> Der Kurs steht bei '+eur(w.kurse[0])+'. F&uuml;r Ihre '+eur(w.spar)+' bekommen Sie <b>'+a(0)+'</b>.'+dz(0),
+    2: '<b>Monat 2:</b> Der Kurs ist auf '+eur(w.kurse[1])+' gestiegen. F&uuml;r dieselben '+eur(w.spar)+' bekommen Sie jetzt nur <b>'+a(1)+'</b>.'+dz(1),
+    3: '<b>Monat 3:</b> Kurs '+eur(w.kurse[2])+' &ndash; <b>'+a(2)+'</b>.'+dz(2),
+    4: '<b>Monat 4:</b> Der Kurs ist auf '+eur(w.kurse[3])+' gefallen. Jetzt bekommen Sie f&uuml;r denselben Betrag <b>'+a(3)+'</b>. Genau hier arbeitet der Effekt f&uuml;r Sie.'+dz(3),
+    5: '<b>Monat 5:</b> Kurs '+eur(w.kurse[4])+' &ndash; <b>'+a(4)+'</b>.'+dz(4),
+    6: 'Der Kurs steht am Ende bei '+eur(w.endkurs)+'. Sie haben <b>'+nfA.format(w.summe)+' Anteile</b>: eingezahlt '+eur(w.eingezahlt)+
+       (w.einEinmal > 0 ? ' (davon '+eur(w.einEinmal)+' als Einmalkauf)' : '')+', Depotwert <b>'+eur(w.depot)+'</b>.',
+    7: 'Ihr durchschnittlicher Einstandskurs liegt bei <b>'+eur2(w.einstand)+'</b> &ndash; der durchschnittliche Kurs bei '+eur2(w.schnitt)+
+       '. Sie haben g&uuml;nstiger gekauft, als der Kurs im Schnitt stand.'
   };
   return t[n] || '';
 }
