@@ -481,7 +481,7 @@
   }
   .eb-summe .lbl{font:900 1.25cqw 'Lato',sans-serif; color:#1e7d46;}
   .eb-summe .wert{font:900 1.35cqw 'Lato',sans-serif; color:#1e7d46; white-space:nowrap;}
-  .eb-hinw{font:400 0.95cqw 'Lato',sans-serif; color:var(--muted); line-height:1.35; margin-top:0.3cqw;}
+  .eb-hinw{font:400 0.9cqw 'Lato',sans-serif; color:var(--muted); line-height:1.32; margin-top:0.3cqw; padding-bottom:0.4cqw;}
 
   .eb-regie{
     margin-top:12px; background:#fff; border:1px solid var(--line); border-left:4px solid var(--accent);
@@ -547,7 +547,8 @@
     .eb-fuss{display:none !important;}
     .eb-buehne{border:1px solid #ccc !important; break-inside:avoid;}
     .eb-buehne input{border:1px solid #d8e2ec !important; background:#fff !important; padding:0.28cqw 0.45cqw !important; text-align:right !important;}
-    .eb-regie{break-inside:avoid; font-size:10pt;}
+    .eb-regie{display:none !important;}
+    body:not(.nur-erklaer) #ebKarte{break-before:page;}
     body.nur-erklaer .wrap > *:not(#ebKarte){display:none !important;}
     body.nur-erklaer #ebKarte{display:block !important;}
     *{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
@@ -709,7 +710,7 @@
 
   <!-- ======== Erklärbild: Arbeitskraftabsicherung ======== -->
   <div class="card erklaer-karte" id="ebKarte">
-    <h2 class="nur-druck" style="margin:0 0 8px;">Arbeitskraftabsicherung</h2>
+    <h2 class="nur-druck" style="margin:0 0 8px;">5. Arbeitskraftabsicherung</h2>
     <div class="eb-kopf nicht-drucken">
       <h2>Arbeitskraftabsicherung</h2>
       <button type="button" id="ebVorn">Von vorn</button>
@@ -1772,7 +1773,7 @@ const EB_BU =
     '<div class="kopf"><b>+ <input type="number" class="eb-proz" id="ebBuPPriv" min="0" max="100" step="1"> %</b> privat</div>'+
     '<div class="eb-geld"><input type="number" id="ebBuPriv" min="0" step="50" placeholder="0"><span class="eur">&euro;</span></div>'+
   '</div>'+
-  '<div class="eb-hinw">monatlich &ndash; bei Berufsunf&auml;higkeit durch Krankheit oder Unfall</div>'+
+  '<div class="eb-hinw">monatlich &ndash; bei Berufsunf&auml;higkeit durch Krankheit oder Unfall<br>(50 % Minderung der Erwerbsf&auml;higkeit = berufsunf&auml;hig)</div>'+
   '<div class="eb-summe"><span class="lbl">= <span id="ebBuPSum">100</span> %</span><span class="wert" id="ebBuSum">&ndash;</span></div>';
 
 const EB_DI =
@@ -1781,7 +1782,7 @@ const EB_DI =
     '<div class="kopf"><b>100 %</b> privat</div>'+
     '<div class="eb-geld"><input type="number" id="ebDi" min="0" step="50" placeholder="0"><span class="eur">&euro;</span></div>'+
   '</div>'+
-  '<div class="eb-hinw">Keine gesetzliche Leistung anrechenbar. Schwerer Unfall mit Dauerinvalidit&auml;t &ndash; auch ohne Einstufung als berufsunf&auml;hig. Bis 2.000,&ndash; monatlich, bis ans Lebensende.</div>'+
+  '<div class="eb-hinw">Schwerer Unfall mit Dauerinvalidit&auml;t &ndash; auch ohne Einstufung als berufsunf&auml;hig. Bis 2.000,&ndash; monatlich, bis ans Lebensende.<br>(bereits 50 % DI l&ouml;sen die Rentenzahlung aus)</div>'+
   '<div class="eb-summe"><span class="lbl">= 100 %</span><span class="wert" id="ebDiSum">&ndash;</span></div>';
 
 const EB_HTML = [
@@ -1796,14 +1797,14 @@ const EB_HTML = [
   {s:2,  c:'eb-kasten',        g:[460,324,260,64], id:'ebLs2', h:'<b>Lebensstandard</b><span>Miete &middot; Auto &middot; Einkauf</span>'},
 
   {s:3,  c:'eb-mini',          g:[30,396,250,24],  h:'stark eingeschr&auml;nkt'},
-  {s:3,  c:'eb-merker',        g:[30,444,250,146], h:'<b>Die Arbeitskraft f&auml;llt aus</b><span>Unfall &middot; schwere Krankheit<br>Schlaganfall &middot; Krebs</span>'},
+  {s:3,  c:'eb-merker',        g:[30,444,250,146], h:'<b>Die Arbeitskraft f&auml;llt aus</b><span>Unfall &middot; schwere Krankheit<br>Schlaganfall &middot; Krebs, &hellip;</span>'},
 
   {s:4,  c:'eb-badge',         g:[290,76,160,54],  h:'Arbeitskraft&shy;absicherung'},
 
   {s:6,  c:'eb-panel mitte',   g:[800,92,410,128], h:EB_EINMAL},
-  {s:7,  c:'eb-kasten',        g:[800,286,410,76], h:'<b>Monatliche Auszahlung</b><span>lebenslang &ndash; bis zum letzten Atemzug</span>'},
-  {s:8,  c:'eb-panel',         g:[600,440,300,260],h:EB_BU},
-  {s:9,  c:'eb-panel',         g:[920,440,300,260],h:EB_DI},
+  {s:7,  c:'eb-kasten',        g:[800,286,410,76], h:'<b>Monatliche Auszahlung</b>'},
+  {s:8,  c:'eb-panel',         g:[600,430,300,278],h:EB_BU},
+  {s:9,  c:'eb-panel',         g:[920,430,300,278],h:EB_DI},
   {s:10, c:'eb-band',          g:[600,724,620,50], h:'Lebensstandard gesichert'}
 ];
 
@@ -1819,8 +1820,8 @@ const EB_WEGE = [
   {s:5,  k:'strich', d:'M 474 264 L 706 216'},
   {s:6,  k:'gruen',  d:'M 724 186 C 762 176, 768 150, 794 154'},
   {s:7,  k:'gruen',  d:'M 724 196 C 764 212, 768 312, 794 324'},
-  {s:8,  k:'blau',   d:'M 900 366 C 860 392, 790 410, 752 436'},
-  {s:9,  k:'blau',   d:'M 1080 366 C 1084 392, 1072 414, 1070 436'},
+  {s:8,  k:'blau',   d:'M 900 366 C 860 388, 790 404, 752 426'},
+  {s:9,  k:'blau',   d:'M 1080 366 C 1084 388, 1072 408, 1070 426'},
   {s:10, k:'gruen',  d:'M 596 749 C 480 749, 448 556, 584 398'}
 ];
 
@@ -1841,6 +1842,7 @@ const EB_REGIE = {
 };
 
 let ebSchritt = 0, ebOffen = false, ebGebaut = false, ebDruckTemp = false, ebSchrittMerk = 0;
+S.ebBenutzt = false;   // im Gespräch gezeigt -> wandert in den Ausdruck der Beratung
 
 function ebBauen(){
   if(ebGebaut) return;
@@ -1848,12 +1850,14 @@ function ebBauen(){
   if(!lage) return;
 
   defs.innerHTML = Object.keys(EB_FARBE).map(k=>
-    '<marker id="ebP'+k+'" viewBox="0 0 10 10" refX="8.6" refY="5" markerWidth="5.2" markerHeight="5.2" orient="auto-start-reverse">'+
-      '<path d="M 0 0.6 L 10 5 L 0 9.4 z" fill="'+EB_FARBE[k]+'"/></marker>').join('');
+    '<marker id="ebP'+k+'" viewBox="0 0 10 10" refX="9.4" refY="5" markerUnits="userSpaceOnUse" '+
+      'markerWidth="17" markerHeight="17" orient="auto-start-reverse">'+
+      '<path d="M 0.6 1.2 L 9.8 5 L 0.6 8.8 z" fill="'+EB_FARBE[k]+'"/></marker>').join('');
 
   const weg = w =>
     '<path class="eb-weg" data-s="'+w.s+'" d="'+w.d+'" pathLength="1" stroke="'+EB_FARBE[w.k]+'" '+
-    'stroke-width="'+(w.k==='strich'?7:6)+'"'+
+    'stroke-width="'+(w.k==='strich'?7:4.2)+'"'+
+    (w.k==='strich' ? '' : ' stroke-linecap="butt"')+
     (w.k==='strich' ? '' : ' marker-end="url(#ebP'+w.k+')"')+'/>';
   wege.innerHTML =
     EB_WEGE.filter(w=>w.k!=='strich').map(weg).join('')+
@@ -1899,10 +1903,13 @@ function ebRechnen(){
 function ebHatWerte(){
   return EB_GELD.some(id => (S.eb[id]||'').toString().trim() !== '' && parseFloat(S.eb[id]) > 0);
 }
+/* Im Ausdruck der Beratung erscheint das Bild, sobald es gezeigt oder befüllt wurde */
+function ebGehoertDazu(){ return !!S.ebBenutzt || ebHatWerte(); }
 
-function ebZeigen(n){
+function ebZeigen(n, vomNutzer){
   ebBauen();
   ebSchritt = Math.max(0, Math.min(EB_MAX, n));
+  if(vomNutzer && ebSchritt > 0 && !S.ebBenutzt){ S.ebBenutzt = true; sichern(); }
   $$('#ebBuehne [data-s]').forEach(e=>{
     e.classList.toggle('da', +e.dataset.s <= ebSchritt);
   });
@@ -1933,7 +1940,7 @@ function ebSchliessen(){
 
 /* Wird beim Drucken der ganzen Beratung mit ausgegeben, sobald Beträge eingetragen sind */
 function ebDruckVor(){
-  if(ebOffen || !ebGebaut || !ebHatWerte()) return;
+  if(ebOffen || !ebGebaut || !ebGehoertDazu()) return;
   ebDruckTemp = true; ebSchrittMerk = ebSchritt;
   $('#ebKarte').classList.add('sichtbar');
   ebZeigen(EB_MAX);
@@ -1953,16 +1960,16 @@ function ebDruckNach(){
 
   b.addEventListener('click', e=>{
     if(e.target.closest('input,select,textarea,button,a')) return;
-    ebZeigen(ebSchritt + 1);
+    ebZeigen(ebSchritt + 1, true);
   });
 
   $$('.eb-leiste button[data-eb]').forEach(btn=>{
     btn.addEventListener('click', ()=>{ if(btn.dataset.eb==='akw') ebOeffnen(); });
   });
-  $('#ebVor').addEventListener('click', ()=>ebZeigen(ebSchritt+1));
-  $('#ebZur').addEventListener('click', ()=>ebZeigen(ebSchritt-1));
+  $('#ebVor').addEventListener('click', ()=>ebZeigen(ebSchritt+1, true));
+  $('#ebZur').addEventListener('click', ()=>ebZeigen(ebSchritt-1, true));
   $('#ebVorn').addEventListener('click', ()=>ebZeigen(0));
-  $('#ebAlle').addEventListener('click', ()=>ebZeigen(EB_MAX));
+  $('#ebAlle').addEventListener('click', ()=>ebZeigen(EB_MAX, true));
   $('#ebZu').addEventListener('click', ebSchliessen);
   $('#ebDruck').addEventListener('click', ()=>{
     const merk = ebSchritt;
@@ -1977,8 +1984,8 @@ function ebDruckNach(){
     const imFeld = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName||'');
     if(e.key === 'Escape'){ ebSchliessen(); return; }
     if(imFeld) return;
-    if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); ebZeigen(ebSchritt+1); }
-    else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); ebZeigen(ebSchritt-1); }
+    if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); ebZeigen(ebSchritt+1, true); }
+    else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); ebZeigen(ebSchritt-1, true); }
   });
 })();
 
@@ -1995,7 +2002,7 @@ function zustandSammeln(){
   return {
     v:1, felder:f, personB:S.personB, zweiKonten:S.zweiKonten, offen:S.offen, pfeilAn:S.pfeilAn, betrag:S.betrag,
     notiz:S.notiz, notizOffen:S.notizOffen, sparte:S.sparte,
-    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross, eb:S.eb,
+    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross, eb:S.eb, ebBenutzt:S.ebBenutzt,
     pyrMalen:{striche:S.pyrMalen.striche},
     seiten:S.seiten.map(s=>({striche:s.striche, farbe:s.farbe}))
   };
@@ -2011,7 +2018,7 @@ function zustandSetzen(d){
   S.offen = d.offen||{}; S.pfeilAn = d.pfeilAn||{};
   S.notiz = d.notiz||{}; S.notizOffen = d.notizOffen||{}; S.sparte = d.sparte||{};
   S.pyrText = d.pyrText||{}; S.konten = d.konten||[];
-  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||''; S.eb = d.eb||{};
+  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||''; S.eb = d.eb||{}; S.ebBenutzt = !!d.ebBenutzt;
   BEREICHE.forEach(b=>{ if(d.betrag && d.betrag[b.id]) S.betrag[b.id]=d.betrag[b.id]; });
   if(d.pyrMalen && d.pyrMalen.striche) S.pyrMalen.striche = d.pyrMalen.striche;
   (d.seiten||[]).forEach(s=>{ S.seiten.push({striche:s.striche||[], farbe:s.farbe, radierer:false}); });
@@ -2026,7 +2033,7 @@ function zustandLeeren(){
   S.personB=false; $('#personB').style.display='none'; $('#btnBdazu').style.display='block';
   S.zweiKonten=true;
   S.offen={}; S.pfeilAn={}; S.notiz={}; S.notizOffen={}; S.sparte={};
-  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross=''; S.eb={};
+  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross=''; S.eb={}; S.ebBenutzt=false;
   if($('#zielFrei')) $('#zielFrei').value='';
   BEREICHE.forEach(b=>S.betrag[b.id]={A:0,B:0});
   S.pyrMalen.striche=[];
