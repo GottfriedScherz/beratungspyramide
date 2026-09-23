@@ -665,10 +665,7 @@
   .fs-sonder{
     font:900 1.35cqw 'Lato',sans-serif; color:var(--accent); text-align:center; line-height:1.2;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    box-sizing:border-box; border:2px solid transparent; border-radius:8px; padding:0.4cqw;
-    transition:border-color .35s ease, background-color .35s ease;
   }
-  .fs-sonder.hervor{border-color:var(--good); background:var(--good-bg); color:#1e7d46;}
   .fs-sonder small{font:400 0.92cqw 'Lato',sans-serif; color:var(--muted); margin-top:0.25cqw; line-height:1.3;}
 
   .fs-merker{
@@ -3079,7 +3076,7 @@ function fsBauen(){
      h:'Ein Konkurs zeichnet sich lange vorher ab: Das Fondsmanagement muss das Geld der Anleger sch&uuml;tzen '+
        'und schichtet rechtzeitig um &ndash; bei XY ist dann l&auml;ngst kein Geld mehr investiert.'},
 
-    {s:3, c:'fs-sonder', g:[1090,202,144,100], id:'fsSonder',
+    {s:3, c:'fs-sonder', g:[1098,210,136,88], id:'fsSonder',
      h:'Sonder-<br>verm&ouml;gen<small>geh&ouml;rt den Anlegern</small>'},
 
     {s:9, c:'fs-band',   g:[88,908,1064,92],
@@ -3139,8 +3136,6 @@ function fsZeigen(n, vomNutzer){
   const xy = $('#fsXY'), bt = $('#fsBetrag');
   if(xy) xy.classList.toggle('aus', fsSchritt >= 2);
   if(bt) bt.classList.toggle('weg', fsSchritt >= 2);
-  const sv = $('#fsSonder');
-  if(sv) sv.classList.toggle('hervor', fsSchritt >= 8);
   const z = $('#fsZaehler'); if(z) z.textContent = fsSchritt + ' / ' + FS_MAX;
   fsRegie();
   const bz = $('#fsZur'), bv = $('#fsVor');
