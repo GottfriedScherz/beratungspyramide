@@ -627,6 +627,60 @@
   .inf-tab > div.hell{background:var(--panel2);}
   .inf-tab > div.proz.letzte{color:var(--warn);}
 
+
+  /* ---------- Erklärbild 5: Fondssparen ---------- */
+  .eb-buehne.fs-buehne{aspect-ratio:1240/1020;}
+  .eb-buehne .fs-form{opacity:0; transition:opacity .45s ease;}
+  .eb-buehne .fs-form.da{opacity:1;}
+
+  .fs-quelle{
+    font:400 1.15cqw 'Lato',sans-serif; color:var(--muted); text-align:center; line-height:1.25;
+    display:flex; align-items:flex-end; justify-content:center;
+  }
+  .fs-ziel{
+    font:900 1.7cqw 'Lato',sans-serif; color:var(--text); text-align:center; line-height:1.1;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+  }
+  .fs-ziel span{font:700 1.15cqw 'Lato',sans-serif; color:var(--gold); margin-top:0.15cqw;}
+  .fs-ziel.aus{color:var(--warn);}
+  .fs-ziel.aus span{color:var(--warn);}
+
+  .fs-betrag{
+    border:2px solid var(--gold); border-radius:8px; background:#fdfaf1; box-sizing:border-box;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.2cqw;
+    padding:0.45cqw 0.6cqw; text-align:center;
+  }
+  .fs-betrag .lbl{font:700 0.92cqw 'Lato',sans-serif; color:#8a6e28; letter-spacing:.04em; text-transform:uppercase;}
+  .fs-betrag .wert{display:flex; align-items:baseline; gap:0.25cqw;}
+  .fs-buehne input.fs-b{
+    width:8.2cqw; border:1px solid #ddcb9a; border-radius:4px; background:#fff;
+    padding:0.08cqw 0.25cqw; font:900 1.8cqw 'Lato',sans-serif; color:var(--gold); text-align:right;
+    font-family:'Lato',sans-serif; box-sizing:border-box;
+  }
+  .fs-buehne input.fs-b:focus{outline:none; border-color:var(--gold);}
+  .fs-betrag .eur{font:900 1.6cqw 'Lato',sans-serif; color:var(--gold);}
+  .fs-betrag.weg{border-color:var(--warn); background:#fdf2f0;}
+  .fs-betrag.weg .lbl{color:var(--warn);}
+
+  .fs-sonder{
+    font:900 1.35cqw 'Lato',sans-serif; color:var(--gold); text-align:center; line-height:1.2;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .fs-sonder small{font:400 0.92cqw 'Lato',sans-serif; color:var(--muted); margin-top:0.25cqw; line-height:1.3;}
+
+  .fs-merker{
+    border:2px dashed var(--warn); border-radius:8px; background:#fdf2f0; box-sizing:border-box;
+    display:flex; align-items:center; justify-content:center; text-align:center; padding:0.6cqw;
+    font:700 1.02cqw 'Lato',sans-serif; color:#8c3c30; line-height:1.35;
+  }
+  .fs-band{
+    background:var(--good-bg); border:2px solid var(--good); border-radius:8px; box-sizing:border-box;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.25cqw;
+    padding:0.7cqw 1.2cqw; text-align:center;
+  }
+  .fs-band b{font:900 1.45cqw 'Lato',sans-serif; color:#1e7d46;}
+  .fs-band p{margin:0; font:400 1.08cqw 'Lato',sans-serif; color:#1a5c36; line-height:1.35;}
+
   /* ---------- Druck ---------- */
   @page{size:A4 portrait; margin:10mm 10mm;}
   .nur-druck{display:none;}
@@ -837,6 +891,7 @@
     <button type="button" data-eb="akw">Arbeitskraftabsicherung</button>
     <button type="button" data-eb="inf">Inflation</button>
     <button type="button" data-eb="wdg">Der Weg des Geldes</button>
+    <button type="button" data-eb="fos">Fondssparen</button>
     <button type="button" data-eb="cae">Cost-Average-Effekt</button>
   </div>
   </div>
@@ -947,6 +1002,35 @@
     <p class="eb-fuss nicht-drucken">Ein Klick ins Bild &ndash; oder Leertaste bzw. Pfeiltasten &ndash; blendet die n&auml;chste Darstellung ein. Esc schlie&szlig;t.</p>
   </div>
 
+
+  <!-- ======== Erklärbild: Fondssparen ======== -->
+  <div class="card erklaer-karte" id="fsKarte">
+    <h2 class="nur-druck" style="margin:0 0 8px;">9. Fondssparen</h2>
+    <div class="eb-kopf nicht-drucken">
+      <h2>Fondssparen</h2>
+      <button type="button" id="fsVorn">Von vorn</button>
+      <button type="button" id="fsZur">&#8592; Zur&uuml;ck</button>
+      <span class="eb-zaehler" id="fsZaehler">0 / 9</span>
+      <button type="button" class="haupt" id="fsVor">Weiter &#8594;</button>
+      <button type="button" id="fsAlle">Alles zeigen</button>
+      <button type="button" id="fsDruck">Drucken</button>
+      <button type="button" id="fsZu">Schlie&szlig;en</button>
+    </div>
+    <div class="eb-buehne fs-buehne" id="fsBuehne">
+      <svg viewBox="0 0 1240 1020" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs id="fsDefs"></defs>
+        <g id="fsFormen"></g>
+        <g id="fsWege"></g>
+      </svg>
+      <div class="eb-lage" id="fsLage"></div>
+      <svg viewBox="0 0 1240 1020" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g id="fsWegeOben"></g>
+      </svg>
+    </div>
+    <div class="eb-regie" id="fsRegie"></div>
+    <p class="eb-fuss nicht-drucken">Ein Klick ins Bild &ndash; oder Leertaste bzw. Pfeiltasten &ndash; zeigt den n&auml;chsten Schritt. Den Anlagebetrag kannst du frei &auml;ndern; er steht auch in der Regiezeile.</p>
+  </div>
+
 </div>
 
 <script>
@@ -1017,6 +1101,7 @@ const S = {
   ec:{},                    // Erklärbild Cost-Average: Sparbetrag und Kurse
   wg:{},                    // Erklärbild Weg des Geldes: Prozentspannen
   inf:{},                   // Erklärbild Inflation (reserviert)
+  fs:{},                    // Erklärbild Fondssparen: Anlagebetrag
   notizGross:'',            // großes Notizfeld in der Bühne                // weitere Konten links: {id,name,richtung,partner,betrag:{A,B}}
   notizOffen:{},            // bereichId -> true
   sparte:{},                // 'absV.EH' -> {an:true, A:zahl, B:zahl}
@@ -2859,6 +2944,268 @@ function infDruckNach(){
 
 
 /* =========================================================
+   Erklärbild: Fondssparen
+   Vom Direktinvestment in eine einzelne Firma zum gestreuten
+   Investmentfonds. Jeder Klick ein Schritt.
+   ========================================================= */
+const FSW = 1240, FSH = 1020, FS_MAX = 9;
+const fsx = v => (v/FSW*100).toFixed(4)+'%';
+const fsy = v => (v/FSH*100).toFixed(4)+'%';
+const fsPos = g => 'left:'+fsx(g[0])+';top:'+fsy(g[1])+';width:'+fsx(g[2])+';height:'+fsy(g[3])+';';
+
+const FS_GOLD = '#a8873f', FS_ROT = '#c0392b', FS_DUNKEL = '#1a2a3a';
+const FS_STD_BETRAG = 10000;
+
+let fsSchritt = 0, fsOffen = false, fsGebaut = false, fsDruckTemp = false, fsSchrittMerk = 0;
+S.fsBenutzt = false;
+
+/* ---- Strich-Icons ---------------------------------------------------- */
+function fsFenster(x0, y0, sp, re, bx, by, dx, dy){
+  let h = '';
+  for(let i=0;i<sp;i++) for(let j=0;j<re;j++)
+    h += '<rect x="'+(x0+i*dx)+'" y="'+(y0+j*dy)+'" width="'+bx+'" height="'+by+'" fill="'+FS_DUNKEL+'" stroke="none"/>';
+  return h;
+}
+const FS_ICON = {
+  mann:  '<circle cx="22" cy="17" r="15"/>'+
+         '<path d="M 6 42 Q 6 38 10 38 H 34 Q 38 38 38 42 V 148 H 24 V 92 H 20 V 148 H 6 Z"/>',
+  frau:  '<circle cx="23" cy="17" r="15"/>'+
+         '<path d="M 12 38 H 34 L 45 92 H 1 Z"/>'+
+         '<path d="M 11 92 V 148 H 20 V 92"/><path d="M 27 92 V 148 H 36 V 92"/>',
+  turm:  '<rect x="32" y="0" width="36" height="14"/>'+
+         '<rect x="10" y="14" width="80" height="122"/>'+
+         '<rect x="0" y="136" width="100" height="14"/>'+
+         fsFenster(24, 30, 3, 5, 11, 13, 22, 21),
+  fabrik:'<path d="M 10 8 L 27 8 L 31 62 L 6 62 Z"/>'+
+         '<path d="M 8 122 L 8 64 L 48 90 L 48 64 L 88 90 L 88 64 L 128 90 L 128 122 Z"/>'+
+         fsFenster(22, 98, 3, 1, 20, 15, 36, 0),
+  buero: '<rect x="2" y="30" width="46" height="100"/>'+
+         '<rect x="52" y="56" width="32" height="74"/>'+
+         '<path d="M 88 40 L 128 28 L 128 130 L 88 130 Z"/>'+
+         fsFenster(12, 44, 2, 3, 12, 14, 22, 24)+
+         fsFenster(61, 70, 1, 2, 13, 14, 0, 24)+
+         fsFenster(98, 52, 2, 3, 12, 14, 18, 24)
+};
+function fsIcon(art, x, y, s, step){
+  return '<g class="fs-form" data-s="'+step+'" transform="translate('+x+','+y+') scale('+s+')" '+
+         'fill="none" stroke="'+FS_DUNKEL+'" stroke-width="4" stroke-linejoin="round">'+FS_ICON[art]+'</g>';
+}
+
+/* ---- Wege ------------------------------------------------------------ */
+const FS_WEGE = [
+  /* dicke Geldwege */
+  {s:1, k:'dick', d:'M 136 216 V 592'},                               // Paar -> XY
+  {s:3, k:'dick', d:'M 216 112 H 418 Q 452 112 452 148 V 282'},       // Paar -> Fonds
+  {s:4, k:'dick', d:'M 600 216 V 282'},
+  {s:4, k:'dick', d:'M 740 216 V 282'},
+  {s:4, k:'dick', d:'M 880 216 V 282'},
+  {s:4, k:'dick', d:'M 1020 216 V 282'},
+  /* Streuung */
+  {s:5, k:'duenn', d:'M 520 386 L 404 600'},
+  {s:5, k:'duenn', d:'M 660 386 L 624 600'},
+  {s:5, k:'duenn', d:'M 840 386 L 842 600'},
+  {s:5, k:'duenn', d:'M 980 386 L 1046 600'},
+  {s:6, k:'duenn', d:'M 424 380 L 212 592'},                          // Fonds -> XY
+  /* Sondervermögen */
+  {s:8, k:'duenn', d:'M 1104 330 L 1216 374'},
+  {s:8, k:'duenn', d:'M 1104 366 L 1198 450'},
+  /* Streichungen */
+  {s:2, k:'rot', d:'M 82 662 L 200 802'},
+  {s:2, k:'rot', d:'M 200 662 L 82 802'},
+  {s:2, k:'rot', d:'M 190 358 L 406 310'},
+  {s:7, k:'rot', d:'M 248 516 L 312 580'},
+  {s:7, k:'rot', d:'M 312 516 L 248 580'}
+];
+
+function fsBauen(){
+  if(fsGebaut) return;
+  const lage = $('#fsLage');
+  if(!lage) return;
+
+  $('#fsDefs').innerHTML =
+    '<marker id="fsPdick" viewBox="0 0 10 10" refX="9.4" refY="5" markerUnits="userSpaceOnUse" '+
+      'markerWidth="34" markerHeight="34" orient="auto-start-reverse">'+
+      '<path d="M 0.6 1.2 L 9.8 5 L 0.6 8.8 z" fill="'+FS_GOLD+'"/></marker>'+
+    '<marker id="fsPduenn" viewBox="0 0 10 10" refX="9.4" refY="5" markerUnits="userSpaceOnUse" '+
+      'markerWidth="15" markerHeight="15" orient="auto-start-reverse">'+
+      '<path d="M 0.6 1.2 L 9.8 5 L 0.6 8.8 z" fill="'+FS_GOLD+'"/></marker>';
+
+  /* Fondsbalken und Icons */
+  $('#fsFormen').innerHTML =
+    '<g class="fs-form" data-s="3"><rect x="420" y="290" width="680" height="88" rx="4" fill="'+FS_GOLD+'"/>'+
+    '<text x="760" y="350" text-anchor="middle" fill="#fff" font-family="Lato,Arial,sans-serif" '+
+    'font-size="46" font-weight="400" letter-spacing="4">FONDS</text></g>'+
+    fsIcon('turm',   88,  648, 1.02, 1) +
+    fsIcon('turm',   350, 648, 1.02, 5) +
+    fsIcon('fabrik', 552, 668, 1.02, 5) +
+    fsIcon('buero',  774, 660, 1.02, 5) +
+    fsIcon('turm',   1000, 648, 1.02, 5) +
+    fsIcon('mann',   66,  52,  1.00, 1) +
+    fsIcon('frau',   116, 52,  1.00, 1);
+
+  const weg = w => {
+    const farbe = w.k === 'rot' ? FS_ROT : FS_GOLD;
+    const br    = w.k === 'dick' ? 15 : (w.k === 'rot' ? 9 : 3.4);
+    const mk    = w.k === 'dick' ? ' marker-end="url(#fsPdick)"'
+                : (w.k === 'duenn' ? ' marker-end="url(#fsPduenn)"' : '');
+    return '<path class="eb-weg" data-s="'+w.s+'" pathLength="1" d="'+w.d+'" stroke="'+farbe+'" '+
+           'stroke-width="'+br+'" fill="none"'+mk+'/>';
+  };
+  $('#fsWege').innerHTML     = FS_WEGE.filter(w=>w.k!=='rot').map(weg).join('');
+  $('#fsWegeOben').innerHTML = FS_WEGE.filter(w=>w.k==='rot').map(weg).join('');
+
+  const teile = [
+    {s:1, c:'fs-betrag', g:[198,294,200,80], id:'fsBetrag',
+     h:'<span class="lbl">Ihr Investment</span><span class="wert">'+
+       '<input type="number" class="fs-b" id="fsB" min="0" step="1000"><span class="eur">&euro;</span></span>'},
+    {s:1, c:'fs-ziel',   g:[66,598,148,44],  id:'fsXY', h:'XY<span>Einzelaktie</span>'},
+
+    {s:4, c:'fs-quelle', g:[540,140,120,62], h:'monatlich'},
+    {s:4, c:'fs-quelle', g:[680,140,120,62], h:'einmalig'},
+    {s:4, c:'fs-quelle', g:[818,120,124,82], h:'monatlich<br>und einmalig'},
+    {s:4, c:'fs-quelle', g:[950,108,150,94], h:'institutionelle Anleger,<br>z.&nbsp;B. Pensionskassen'},
+
+    {s:5, c:'fs-ziel',   g:[330,600,140,42], h:'A<span>2 %</span>'},
+    {s:5, c:'fs-ziel',   g:[550,600,140,42], h:'B<span>3 %</span>'},
+    {s:5, c:'fs-ziel',   g:[772,600,140,42], h:'C<span>1 %</span>'},
+    {s:5, c:'fs-ziel',   g:[980,600,140,42], h:'D<span>2 %</span>'},
+
+    {s:6, c:'fs-quelle', g:[336,494,112,40], id:'fsXYproz', h:'<span style="color:var(--gold);font-weight:700">2 % in XY</span>'},
+
+    {s:7, c:'fs-merker', g:[88,818,1064,74],
+     h:'Ein Konkurs zeichnet sich lange vorher ab: Das Fondsmanagement muss das Geld der Anleger sch&uuml;tzen '+
+       'und schichtet rechtzeitig um &ndash; bei XY ist dann l&auml;ngst kein Geld mehr investiert.'},
+
+    {s:8, c:'fs-sonder', g:[1104,214,132,80],
+     h:'Sonder-<br>verm&ouml;gen<small>geh&ouml;rt den Anlegern</small>'},
+
+    {s:9, c:'fs-band',   g:[88,908,1064,92],
+     h:'<b>Ertr&auml;ge wie ein Aktion&auml;r &ndash; ohne dessen Risiko.</b>'+
+       '<p>Ihr Geld ist auf viele Unternehmen gestreut, wird laufend &uuml;berwacht und bleibt als Sonderverm&ouml;gen Ihr Eigentum.</p>'}
+  ];
+
+  lage.innerHTML = teile.map(t =>
+    '<div class="eb-el '+t.c+'" data-s="'+t.s+'"'+(t.id?' id="'+t.id+'"':'')+' style="'+fsPos(t.g)+'">'+t.h+'</div>'
+  ).join('');
+
+  const e = $('#fsB');
+  if(e){
+    e.addEventListener('input', ()=>{ S.fs.betrag = e.value; fsRegie(); sichern(); });
+    e.addEventListener('click', ev=>ev.stopPropagation());
+  }
+
+  fsGebaut = true;
+  fsWerteSetzen();
+}
+
+function fsWerteSetzen(){
+  if(!fsGebaut) return;
+  const e = $('#fsB');
+  if(e) e.value = (S.fs.betrag==null || S.fs.betrag==='') ? FS_STD_BETRAG : S.fs.betrag;
+  fsRegie();
+}
+
+function fsBetrag(){
+  const x = parseFloat(S.fs.betrag);
+  return (isFinite(x) && x > 0) ? x : FS_STD_BETRAG;
+}
+
+function fsRegieText(n){
+  const b = eur(fsBetrag());
+  const t = {
+    0: 'Fondssparen &ndash; so funktioniert es. Ein Klick ins Bild startet.',
+    1: 'Angenommen, Sie m&ouml;chten <b>'+b+'</b> investieren und kaufen Aktien der Firma XY. Dann sind Sie Miteigent&uuml;mer dieser Firma &ndash; entwickelt sie sich gut, machen Sie Gewinne.',
+    2: 'Aber wenn die Firma in Konkurs geht &ndash; was passiert dann mit Ihren '+b+'? Richtig: <b>die sind weg</b>.',
+    3: 'Deswegen machen wir das anders: Wir investieren nicht direkt in eine einzelne Firma, sondern <b>&uuml;ber einen Investmentfonds</b>.',
+    4: 'Das Fondsmanagement sammelt das Geld vieler Anleger ein &ndash; die monatlich sparen, die einmalig investieren, die beides kombinieren, und gro&szlig;e institutionelle Anleger wie Pensionskassen mit mehreren Millionen.',
+    5: 'Was Sie als einzelner Anleger nicht k&ouml;nnen &ndash; 100 verschiedene Aktien kaufen &ndash; geht gemeinsam sehr wohl: 2 % in Firma A, 3 % in B, 1 % in C und so weiter.',
+    6: 'Und vielleicht sogar <b>2 % in die Firma XY</b>.',
+    7: 'Was passiert nun, wenn XY in Konkurs geht? Zum einen w&auml;ren nur diese 2 % betroffen. In Wahrheit zeichnet sich ein Konkurs aber lange vorher ab &ndash; das Fondsmanagement muss das Geld der Anleger sch&uuml;tzen und schichtet rechtzeitig um. Geht XY tats&auml;chlich in Konkurs, ist dort l&auml;ngst kein Geld mehr investiert.',
+    8: 'Und wenn der Fonds selbst in Konkurs ginge? Das Guthaben geh&ouml;rt nicht der Fondsgesellschaft, sondern den Anlegern. Es ist <b>Sonderverm&ouml;gen</b> und flie&szlig;t nicht in die Konkursmasse ein.',
+    9: 'So profitieren Sie als Fondssparer von den Ertr&auml;gen, die sonst nur Aktion&auml;re machen &ndash; <b>ohne deren hohes Risiko</b> eingehen zu m&uuml;ssen.'
+  };
+  return t[n] || '';
+}
+function fsRegie(){ const r = $('#fsRegie'); if(r) r.innerHTML = fsRegieText(fsSchritt); }
+
+function fsZeigen(n, vomNutzer){
+  fsBauen();
+  fsSchritt = Math.max(0, Math.min(FS_MAX, n));
+  if(vomNutzer && fsSchritt > 0 && !S.fsBenutzt){ S.fsBenutzt = true; sichern(); }
+  $$('#fsBuehne [data-s]').forEach(e=>{ e.classList.toggle('da', +e.dataset.s <= fsSchritt); });
+  const xy = $('#fsXY'), bt = $('#fsBetrag');
+  if(xy) xy.classList.toggle('aus', fsSchritt >= 2);
+  if(bt) bt.classList.toggle('weg', fsSchritt >= 2);
+  const z = $('#fsZaehler'); if(z) z.textContent = fsSchritt + ' / ' + FS_MAX;
+  fsRegie();
+  const bz = $('#fsZur'), bv = $('#fsVor');
+  if(bz) bz.disabled = fsSchritt === 0;
+  if(bv) bv.disabled = fsSchritt === FS_MAX;
+}
+
+function fsOeffnen(){
+  fsBauen();
+  $('#fsKarte').classList.add('sichtbar','vollbild');
+  document.body.style.overflow = 'hidden';
+  fsOffen = true;
+  fsZeigen(fsSchritt);
+  $('#fsKarte').scrollTop = 0;
+}
+function fsSchliessen(){
+  $('#fsKarte').classList.remove('sichtbar','vollbild');
+  document.body.style.overflow = '';
+  fsOffen = false;
+}
+function fsGehoertDazu(){ return !!S.fsBenutzt; }
+function fsDruckVor(){
+  if(fsOffen || !fsGebaut || !fsGehoertDazu()) return;
+  if(document.body.classList.contains('nur-erklaer')) return;
+  fsDruckTemp = true; fsSchrittMerk = fsSchritt;
+  $('#fsKarte').classList.add('sichtbar');
+  fsZeigen(FS_MAX);
+}
+function fsDruckNach(){
+  if(!fsDruckTemp) return;
+  fsDruckTemp = false;
+  $('#fsKarte').classList.remove('sichtbar');
+  fsZeigen(fsSchrittMerk);
+}
+
+(function fsStart(){
+  const b = $('#fsBuehne');
+  if(!b) return;
+  fsBauen();
+  fsZeigen(0);
+
+  b.addEventListener('click', e=>{
+    if(e.target.closest('input,select,textarea,button,a')) return;
+    fsZeigen(fsSchritt + 1, true);
+  });
+  $$('.eb-leiste button[data-eb="fos"]').forEach(btn=>btn.addEventListener('click', fsOeffnen));
+  $('#fsVor').addEventListener('click',  ()=>fsZeigen(fsSchritt+1, true));
+  $('#fsZur').addEventListener('click',  ()=>fsZeigen(fsSchritt-1, true));
+  $('#fsVorn').addEventListener('click', ()=>fsZeigen(0));
+  $('#fsAlle').addEventListener('click', ()=>fsZeigen(FS_MAX, true));
+  $('#fsZu').addEventListener('click', fsSchliessen);
+  $('#fsDruck').addEventListener('click', ()=>{
+    const merk = fsSchritt;
+    fsZeigen(FS_MAX);
+    document.body.classList.add('nur-erklaer');
+    window.print();
+    setTimeout(()=>{ document.body.classList.remove('nur-erklaer'); fsZeigen(merk); }, 500);
+  });
+
+  document.addEventListener('keydown', e=>{
+    if(!fsOffen) return;
+    if(e.key === 'Escape'){ fsSchliessen(); return; }
+    if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName||'')) return;
+    if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); fsZeigen(fsSchritt+1, true); }
+    else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); fsZeigen(fsSchritt-1, true); }
+  });
+})();
+
+
+/* =========================================================
    Zwischenspeicher im Browser
    (dieselbe Struktur wandert in Stufe 2 nach Supabase)
    ========================================================= */
@@ -2870,7 +3217,7 @@ function zustandSammeln(){
   return {
     v:1, felder:f, personB:S.personB, zweiKonten:S.zweiKonten, offen:S.offen, pfeilAn:S.pfeilAn, betrag:S.betrag,
     notiz:S.notiz, notizOffen:S.notizOffen, sparte:S.sparte,
-    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross, eb:S.eb, ebBenutzt:S.ebBenutzt, ec:S.ec, ecBenutzt:S.ecBenutzt, wg:S.wg, wgBenutzt:S.wgBenutzt, infBenutzt:S.infBenutzt,
+    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross, eb:S.eb, ebBenutzt:S.ebBenutzt, ec:S.ec, ecBenutzt:S.ecBenutzt, wg:S.wg, wgBenutzt:S.wgBenutzt, infBenutzt:S.infBenutzt, fs:S.fs, fsBenutzt:S.fsBenutzt,
     pyrMalen:{striche:S.pyrMalen.striche},
     seiten:S.seiten.map(s=>({striche:s.striche, farbe:s.farbe}))
   };
@@ -2886,7 +3233,7 @@ function zustandSetzen(d){
   S.offen = d.offen||{}; S.pfeilAn = d.pfeilAn||{};
   S.notiz = d.notiz||{}; S.notizOffen = d.notizOffen||{}; S.sparte = d.sparte||{};
   S.pyrText = d.pyrText||{}; S.konten = d.konten||[];
-  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||''; S.eb = d.eb||{}; S.ebBenutzt = !!d.ebBenutzt; S.ec = d.ec||{}; S.ecBenutzt = !!d.ecBenutzt; S.wg = d.wg||{}; S.wgBenutzt = !!d.wgBenutzt; S.infBenutzt = !!d.infBenutzt;
+  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||''; S.eb = d.eb||{}; S.ebBenutzt = !!d.ebBenutzt; S.ec = d.ec||{}; S.ecBenutzt = !!d.ecBenutzt; S.wg = d.wg||{}; S.wgBenutzt = !!d.wgBenutzt; S.infBenutzt = !!d.infBenutzt; S.fs = d.fs||{}; S.fsBenutzt = !!d.fsBenutzt;
   BEREICHE.forEach(b=>{ if(d.betrag && d.betrag[b.id]) S.betrag[b.id]=d.betrag[b.id]; });
   if(d.pyrMalen && d.pyrMalen.striche) S.pyrMalen.striche = d.pyrMalen.striche;
   (d.seiten||[]).forEach(s=>{ S.seiten.push({striche:s.striche||[], farbe:s.farbe, radierer:false}); });
@@ -2901,7 +3248,7 @@ function zustandLeeren(){
   S.personB=false; $('#personB').style.display='none'; $('#btnBdazu').style.display='block';
   S.zweiKonten=true;
   S.offen={}; S.pfeilAn={}; S.notiz={}; S.notizOffen={}; S.sparte={};
-  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross=''; S.eb={}; S.ebBenutzt=false; S.ec={}; S.ecBenutzt=false; S.wg={}; S.wgBenutzt=false; S.infBenutzt=false;
+  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross=''; S.eb={}; S.ebBenutzt=false; S.ec={}; S.ecBenutzt=false; S.wg={}; S.wgBenutzt=false; S.infBenutzt=false; S.fs={}; S.fsBenutzt=false;
   if($('#zielFrei')) $('#zielFrei').value='';
   BEREICHE.forEach(b=>S.betrag[b.id]={A:0,B:0});
   S.pyrMalen.striche=[];
@@ -2911,7 +3258,7 @@ function zustandLeeren(){
 
 function allesZeichnen(){
   overlayZeichnen(); pfeileZeichnen(); absTabellen(); restAktualisieren();
-  zielRasterZeichnen(); stufenZeichnen(); ebWerteSetzen(); ebZeigen(0); ecWerteSetzen(); ecZeigen(0); wgWerteSetzen(); wgZeigen(0); infZeigen(0);
+  zielRasterZeichnen(); stufenZeichnen(); ebWerteSetzen(); ebZeigen(0); ecWerteSetzen(); ecZeigen(0); wgWerteSetzen(); wgZeigen(0); infZeigen(0); fsWerteSetzen(); fsZeigen(0);
   if(window.pyrNeuMalen) pyrNeuMalen();
   window.dispatchEvent(new Event('resize'));
 }
@@ -3183,7 +3530,7 @@ function druckVorbereiten(){
     const t = k.querySelector('.ziel-notiz textarea');
     k.classList.toggle('ohne-notiz', !t || !t.value.trim());
   });
-  ebDruckVor(); ecDruckVor(); wgDruckVor(); infDruckVor();
+  ebDruckVor(); ecDruckVor(); wgDruckVor(); infDruckVor(); fsDruckVor();
 }
 function druckAufraeumen(){
   $$('textarea').forEach(t=>{ t.style.height=t.dataset.h||''; });
@@ -3192,7 +3539,7 @@ function druckAufraeumen(){
     druckVorherZu = [];
     zielRasterZeichnen();
   }
-  ebDruckNach(); ecDruckNach(); wgDruckNach(); infDruckNach();
+  ebDruckNach(); ecDruckNach(); wgDruckNach(); infDruckNach(); fsDruckNach();
 }
 window.addEventListener('beforeprint', druckVorbereiten);
 window.addEventListener('afterprint', druckAufraeumen);
