@@ -353,6 +353,144 @@
   }
   .btn-plus:hover{border-color:var(--accent-light); color:var(--accent);}
 
+
+  /* ---------- Erklärbilder ---------- */
+  .eb-leiste{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:18px;}
+  .eb-leiste .eb-leiste-titel{
+    font:700 10.5px 'Lato',sans-serif; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--muted); margin-right:2px;
+  }
+  .eb-leiste button{
+    background:#fff; color:var(--accent); border:1.5px solid var(--accent); border-radius:22px;
+    padding:8px 17px; font:700 13px 'Lato',sans-serif; cursor:pointer; letter-spacing:.02em;
+  }
+  .eb-leiste button:hover{background:var(--accent); color:#fff;}
+
+  .erklaer-karte{display:none;}
+  .erklaer-karte.sichtbar{display:block;}
+  .erklaer-karte.vollbild{
+    position:fixed; inset:0; z-index:9000; overflow:auto; background:var(--bg);
+    margin:0; border-radius:0; padding:14px 18px 26px; box-shadow:none; max-width:none;
+  }
+  .eb-kopf{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-bottom:11px;}
+  .eb-kopf h2{margin:0; flex:1 1 260px;}
+  .eb-kopf button{
+    background:#fff; border:1px solid var(--line); border-radius:5px; padding:7px 14px;
+    font:700 12.5px 'Lato',sans-serif; cursor:pointer; color:var(--text);
+  }
+  .eb-kopf button:hover{border-color:var(--accent); color:var(--accent);}
+  .eb-kopf button.haupt{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .eb-kopf button.haupt:hover{background:var(--accent-light);}
+  .eb-kopf button[disabled]{opacity:.32; cursor:default;}
+  .eb-kopf button.an{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .eb-zaehler{font:700 12.5px 'Lato',sans-serif; color:var(--muted); min-width:52px; text-align:center;}
+
+  .eb-buehne{
+    position:relative; width:100%; container-type:inline-size; aspect-ratio:1240/780;
+    background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden;
+    cursor:pointer; user-select:none; -webkit-user-select:none;
+  }
+  .eb-buehne > svg{position:absolute; inset:0; width:100%; height:100%; pointer-events:none;}
+  .eb-lage{position:absolute; inset:0;}
+
+  .eb-el{
+    position:absolute; opacity:0; transform:translateY(7px); pointer-events:none;
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  .eb-el.da{opacity:1; transform:none; pointer-events:auto;}
+  .eb-buehne path.eb-weg{
+    fill:none; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1;
+    transition:stroke-dashoffset .65s ease; opacity:0;
+  }
+  .eb-buehne path.eb-weg.da{stroke-dashoffset:0; opacity:1;}
+  .eb-buehne .eb-unterstrich{opacity:0; transition:opacity .4s ease .25s;}
+  .eb-buehne .eb-unterstrich.da{opacity:1;}
+
+  .eb-kat{
+    font:900 1.0cqw 'Lato',sans-serif; letter-spacing:.2em; text-transform:uppercase; color:var(--muted);
+    text-align:center; border-bottom:1px solid var(--line); padding-bottom:0.35cqw;
+  }
+  .eb-kasten{
+    border:2px solid var(--accent); border-radius:7px; background:#fff;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:0.4cqw 0.6cqw; box-sizing:border-box;
+  }
+  .eb-kasten b{font:900 1.6cqw 'Lato',sans-serif; color:var(--accent); line-height:1.1;}
+  .eb-kasten span{font:400 1.02cqw 'Lato',sans-serif; color:var(--muted); margin-top:0.22cqw; line-height:1.2;}
+  .eb-kasten.gruen{border-color:var(--good); background:var(--good-bg);}
+  .eb-kasten.gruen b{color:#1e7d46;}
+  .eb-kasten.rot{border-color:var(--warn); background:#fdf2f0;}
+  .eb-kasten.rot b{color:var(--warn);}
+
+  .eb-merker{
+    border:2px dashed var(--warn); border-radius:7px; background:#fdf2f0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:0.8cqw; box-sizing:border-box;
+  }
+  .eb-merker b{font:900 1.25cqw 'Lato',sans-serif; color:var(--warn); line-height:1.15;}
+  .eb-merker span{font:400 1.02cqw 'Lato',sans-serif; color:#8c3c30; margin-top:0.5cqw; line-height:1.45;}
+
+  .eb-mini{
+    font:900 1.0cqw 'Lato',sans-serif; color:var(--warn); text-align:center;
+    letter-spacing:.04em; text-transform:uppercase;
+  }
+  .eb-badge{
+    background:var(--good); color:#fff; border-radius:7px; box-sizing:border-box;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    font:900 1.08cqw 'Lato',sans-serif; line-height:1.2; padding:0.4cqw; hyphens:auto;
+  }
+  .eb-band{
+    background:var(--good-bg); border:2px solid var(--good); border-radius:7px; box-sizing:border-box;
+    display:flex; align-items:center; justify-content:center; gap:0.8cqw; text-align:center;
+    font:900 1.35cqw 'Lato',sans-serif; color:#1e7d46; padding:0.4cqw;
+  }
+
+  .eb-panel{
+    border:2px solid var(--accent); border-radius:7px; background:#fff; box-sizing:border-box;
+    padding:0.7cqw 0.9cqw; display:flex; flex-direction:column;
+  }
+  .eb-panel.mitte{justify-content:center;}
+  .eb-panel h4{
+    margin:0 0 0.5cqw; font:900 1.32cqw 'Lato',sans-serif; color:var(--accent); line-height:1.15;
+    text-align:center; border-bottom:1px solid var(--line); padding-bottom:0.4cqw;
+  }
+  .eb-panel .sub{font:400 1.0cqw 'Lato',sans-serif; color:var(--muted); text-align:center; margin-bottom:0.5cqw; line-height:1.3;}
+  .eb-zeile{margin-bottom:0.55cqw;}
+  .eb-zeile .kopf{display:flex; align-items:baseline; gap:0.45cqw; font:400 1.05cqw 'Lato',sans-serif; color:var(--text);}
+  .eb-zeile .kopf b{font:900 1.15cqw 'Lato',sans-serif; color:var(--accent); white-space:nowrap;}
+  .eb-geld{display:flex; align-items:center; gap:0.35cqw; margin-top:0.25cqw;}
+  .eb-geld input{
+    flex:1 1 auto; min-width:0; width:100%; border:1px solid var(--line); border-radius:4px;
+    background:#f7fafd; padding:0.28cqw 0.45cqw; font:900 1.25cqw 'Lato',sans-serif;
+    color:var(--accent); text-align:right; font-family:'Lato',sans-serif;
+  }
+  .eb-geld input:focus{outline:none; border-color:var(--accent); background:#fff;}
+  .eb-geld .eur{font:900 1.15cqw 'Lato',sans-serif; color:var(--muted);}
+  .eb-panel input.eb-proz{
+    width:3.4cqw; box-sizing:border-box; border:1px solid var(--line); border-radius:4px; background:#f7fafd;
+    padding:0.12cqw 0.2cqw; font:900 1.15cqw 'Lato',sans-serif; color:var(--accent); text-align:right;
+    font-family:'Lato',sans-serif;
+  }
+  .eb-panel input.eb-proz:focus{outline:none; border-color:var(--accent); background:#fff;}
+  .eb-buehne input[type=number]::-webkit-outer-spin-button,
+  .eb-buehne input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+  .eb-buehne input[type=number]{-moz-appearance:textfield;}
+  .eb-summe{
+    margin-top:auto; border-top:2px solid var(--good); padding-top:0.45cqw;
+    display:flex; align-items:baseline; justify-content:space-between; gap:0.5cqw;
+  }
+  .eb-summe .lbl{font:900 1.25cqw 'Lato',sans-serif; color:#1e7d46;}
+  .eb-summe .wert{font:900 1.35cqw 'Lato',sans-serif; color:#1e7d46; white-space:nowrap;}
+  .eb-hinw{font:400 0.95cqw 'Lato',sans-serif; color:var(--muted); line-height:1.35; margin-top:0.3cqw;}
+
+  .eb-regie{
+    margin-top:12px; background:#fff; border:1px solid var(--line); border-left:4px solid var(--accent);
+    border-radius:6px; padding:11px 14px; font:400 14.5px 'Lato',sans-serif; color:var(--text);
+    line-height:1.5; min-height:56px;
+  }
+  .eb-regie b{color:var(--accent);}
+  .eb-fuss{font-size:12px; color:var(--muted); margin:9px 0 0;}
+
   /* ---------- Druck ---------- */
   @page{size:A4 portrait; margin:10mm 10mm;}
   .nur-druck{display:none;}
@@ -402,6 +540,16 @@
     .pyr-card{break-inside:avoid;}
     .druck-kopf{display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid var(--accent); padding-bottom:3mm; margin-bottom:4mm;}
     .druck-kopf h1{color:var(--accent); font-size:20pt;}
+    /* Erklärbild */
+    .eb-leiste{display:none !important;}
+    .erklaer-karte.vollbild{position:static !important; overflow:visible !important; padding:0 !important;}
+    .eb-kopf{display:none !important;}
+    .eb-fuss{display:none !important;}
+    .eb-buehne{border:1px solid #ccc !important; break-inside:avoid;}
+    .eb-buehne input{border:1px solid #d8e2ec !important; background:#fff !important; padding:0.28cqw 0.45cqw !important; text-align:right !important;}
+    .eb-regie{break-inside:avoid; font-size:10pt;}
+    body.nur-erklaer .wrap > *:not(#ebKarte){display:none !important;}
+    body.nur-erklaer #ebKarte{display:block !important;}
     *{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
   }
 </style>
@@ -546,11 +694,45 @@
     </div>
   </div>
 
+  <div class="eb-leiste nicht-drucken">
+    <span class="eb-leiste-titel">Erkl&auml;rbilder</span>
+    <button type="button" data-eb="akw">Arbeitskraftabsicherung</button>
+  </div>
+  </div>
+
   <!-- ======== Notizseiten ======== -->
   <div id="seiten"></div>
   <button type="button" class="btn-plus" id="btnSeite">+ Leere Seite zum Zeichnen</button>
   </section>
 
+
+
+  <!-- ======== Erklärbild: Arbeitskraftabsicherung ======== -->
+  <div class="card erklaer-karte" id="ebKarte">
+    <h2 class="nur-druck" style="margin:0 0 8px;">Arbeitskraftabsicherung</h2>
+    <div class="eb-kopf nicht-drucken">
+      <h2>Arbeitskraftabsicherung</h2>
+      <button type="button" id="ebVorn">Von vorn</button>
+      <button type="button" id="ebZur">&#8592; Zur&uuml;ck</button>
+      <span class="eb-zaehler" id="ebZaehler">0 / 10</span>
+      <button type="button" class="haupt" id="ebVor">Weiter &#8594;</button>
+      <button type="button" id="ebAlle">Alles zeigen</button>
+      <button type="button" id="ebDruck">Drucken</button>
+      <button type="button" id="ebZu">Schlie&szlig;en</button>
+    </div>
+    <div class="eb-buehne" id="ebBuehne">
+      <svg viewBox="0 0 1240 780" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs id="ebDefs"></defs>
+        <g id="ebWege"></g>
+      </svg>
+      <div class="eb-lage" id="ebLage"></div>
+      <svg viewBox="0 0 1240 780" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g id="ebWegeOben"></g>
+      </svg>
+    </div>
+    <div class="eb-regie" id="ebRegie"></div>
+    <p class="eb-fuss nicht-drucken">Ein Klick ins Bild &ndash; oder Leertaste bzw. Pfeiltasten &ndash; blendet den n&auml;chsten Schritt ein. Esc schlie&szlig;t. Die Betr&auml;ge kannst du jederzeit eintragen; sie werden mit der Beratung gespeichert und beim Drucken mit ausgegeben.</p>
+  </div>
 
 </div>
 
@@ -618,6 +800,7 @@ const S = {
   zielNotiz:{},             // themaKey -> Notiztext
   zielNotizOffen:{},        // themaKey -> true, wenn das Notizfeld offen ist
   stufe:null,               // gewählte Vermögensstufe
+  eb:{},                    // Erklärbild Arbeitskraftabsicherung: eingetragene Leistungen
   notizGross:'',            // großes Notizfeld in der Bühne                // weitere Konten links: {id,name,richtung,partner,betrag:{A,B}}
   notizOffen:{},            // bereichId -> true
   sparte:{},                // 'absV.EH' -> {an:true, A:zahl, B:zahl}
@@ -1560,6 +1743,247 @@ S.pyrMalen = {striche:[], farbe:STIFTFARBEN[1], radierer:false, durchsichtig:tru
 })();
 
 /* =========================================================
+   Erklärbild: Arbeitskraftabsicherung
+   Die Elemente erscheinen Schritt für Schritt – ein Klick ins
+   Bild (oder Leertaste / Pfeiltaste) blendet den nächsten ein.
+   ========================================================= */
+const EBW = 1240, EBH = 780, EB_MAX = 10;
+const ebx = v => (v/EBW*100).toFixed(4)+'%';
+const eby = v => (v/EBH*100).toFixed(4)+'%';
+const ebPos = g => 'left:'+ebx(g[0])+';top:'+eby(g[1])+';width:'+ebx(g[2])+';height:'+eby(g[3])+';';
+
+const EB_STD = {ebBuPGes:'60', ebBuPPriv:'40'};
+const EB_GELD = ['ebEinmal','ebBuGes','ebBuPriv','ebDi'];
+const EB_PROZ = ['ebBuPGes','ebBuPPriv'];
+
+const EB_EINMAL =
+  '<h4>1 &times; Kapitalauszahlung</h4>'+
+  '<div class="sub">Unfallversicherung &ndash; einmalig</div>'+
+  '<div class="eb-geld"><input type="number" id="ebEinmal" min="0" step="1000" placeholder="0"><span class="eur">&euro;</span></div>'+
+  '<div class="eb-hinw">Umbau am Haus &middot; barrierefreies Bad &middot; Treppenlift &middot; Auto</div>';
+
+const EB_BU =
+  '<h4>Berufsunf&auml;higkeitsrente</h4>'+
+  '<div class="eb-zeile">'+
+    '<div class="kopf"><b>ca. <input type="number" class="eb-proz" id="ebBuPGes" min="0" max="100" step="1"> %</b> gesetzlich</div>'+
+    '<div class="eb-geld"><input type="number" id="ebBuGes" min="0" step="50" placeholder="0"><span class="eur">&euro;</span></div>'+
+  '</div>'+
+  '<div class="eb-zeile">'+
+    '<div class="kopf"><b>+ <input type="number" class="eb-proz" id="ebBuPPriv" min="0" max="100" step="1"> %</b> privat</div>'+
+    '<div class="eb-geld"><input type="number" id="ebBuPriv" min="0" step="50" placeholder="0"><span class="eur">&euro;</span></div>'+
+  '</div>'+
+  '<div class="eb-hinw">monatlich &ndash; bei Berufsunf&auml;higkeit durch Krankheit oder Unfall</div>'+
+  '<div class="eb-summe"><span class="lbl">= <span id="ebBuPSum">100</span> %</span><span class="wert" id="ebBuSum">&ndash;</span></div>';
+
+const EB_DI =
+  '<h4>Dauerinvalidit&auml;tsrente</h4>'+
+  '<div class="eb-zeile">'+
+    '<div class="kopf"><b>100 %</b> privat</div>'+
+    '<div class="eb-geld"><input type="number" id="ebDi" min="0" step="50" placeholder="0"><span class="eur">&euro;</span></div>'+
+  '</div>'+
+  '<div class="eb-hinw">Keine gesetzliche Leistung anrechenbar. Schwerer Unfall mit Dauerinvalidit&auml;t &ndash; auch ohne Einstufung als berufsunf&auml;hig. Bis 2.000,&ndash; monatlich, bis ans Lebensende.</div>'+
+  '<div class="eb-summe"><span class="lbl">= 100 %</span><span class="wert" id="ebDiSum">&ndash;</span></div>';
+
+const EB_HTML = [
+  {s:1,  c:'eb-kat',           g:[30,52,250,28],   h:'Kategorie 1'},
+  {s:1,  c:'eb-kasten',        g:[30,92,250,64],   h:'<b>Arbeitskraft</b>'},
+  {s:1,  c:'eb-kasten',        g:[30,208,250,64],  h:'<b>Gehalt</b><span>jeden Monat</span>'},
+  {s:1,  c:'eb-kasten',        g:[30,324,250,64],  id:'ebLs1', h:'<b>Lebensstandard</b><span>Miete &middot; Auto &middot; Einkauf</span>'},
+
+  {s:2,  c:'eb-kat',           g:[460,52,260,28],  h:'Kategorie 2'},
+  {s:2,  c:'eb-kasten',        g:[460,92,260,64],  h:'<b>Kapital</b><span>geerbt &middot; gewonnen &middot; erwirtschaftet</span>'},
+  {s:2,  c:'eb-kasten',        g:[460,208,260,64], h:'<b>Zinsen / Rendite</b>'},
+  {s:2,  c:'eb-kasten',        g:[460,324,260,64], id:'ebLs2', h:'<b>Lebensstandard</b><span>Miete &middot; Auto &middot; Einkauf</span>'},
+
+  {s:3,  c:'eb-mini',          g:[30,396,250,24],  h:'stark eingeschr&auml;nkt'},
+  {s:3,  c:'eb-merker',        g:[30,444,250,146], h:'<b>Die Arbeitskraft f&auml;llt aus</b><span>Unfall &middot; schwere Krankheit<br>Schlaganfall &middot; Krebs</span>'},
+
+  {s:4,  c:'eb-badge',         g:[290,76,160,54],  h:'Arbeitskraft&shy;absicherung'},
+
+  {s:6,  c:'eb-panel mitte',   g:[800,92,410,128], h:EB_EINMAL},
+  {s:7,  c:'eb-kasten',        g:[800,286,410,76], h:'<b>Monatliche Auszahlung</b><span>lebenslang &ndash; bis zum letzten Atemzug</span>'},
+  {s:8,  c:'eb-panel',         g:[600,440,300,260],h:EB_BU},
+  {s:9,  c:'eb-panel',         g:[920,440,300,260],h:EB_DI},
+  {s:10, c:'eb-band',          g:[600,724,620,50], h:'Lebensstandard gesichert'}
+];
+
+const EB_WEGE = [
+  {s:1,  k:'blau',   d:'M 155 158 L 155 204'},
+  {s:1,  k:'blau',   d:'M 155 276 L 155 320'},
+  {s:2,  k:'blau',   d:'M 590 158 L 590 204'},
+  {s:2,  k:'blau',   d:'M 590 276 L 590 320'},
+  {s:3,  k:'strich', d:'M 44 148 L 266 100'},
+  {s:3,  k:'strich', d:'M 44 264 L 266 216'},
+  {s:4,  k:'gruen',  d:'M 284 144 C 340 160, 400 160, 452 146'},
+  {s:5,  k:'strich', d:'M 474 148 L 706 100'},
+  {s:5,  k:'strich', d:'M 474 264 L 706 216'},
+  {s:6,  k:'gruen',  d:'M 724 186 C 762 176, 768 150, 794 154'},
+  {s:7,  k:'gruen',  d:'M 724 196 C 764 212, 768 312, 794 324'},
+  {s:8,  k:'blau',   d:'M 900 366 C 860 392, 790 410, 752 436'},
+  {s:9,  k:'blau',   d:'M 1080 366 C 1084 392, 1072 414, 1070 436'},
+  {s:10, k:'gruen',  d:'M 596 749 C 480 749, 448 556, 584 398'}
+];
+
+const EB_FARBE = {blau:'#355f8f', gruen:'#27ae60', strich:'#c0392b'};
+
+const EB_REGIE = {
+  0: 'Bereit. Ein Klick ins Bild startet das Gespr&auml;ch &ndash; die Betr&auml;ge kannst du schon vorher eintragen (&bdquo;Alles zeigen&ldquo;).',
+  1: '<b>Kategorie 1:</b> Die Menschen haben ihre Arbeitskraft, gehen arbeiten, bekommen jeden Monat ihr Gehalt &ndash; und sichern damit ihren Lebensstandard: Miete, Auto, Einkauf.',
+  2: '<b>Kategorie 2:</b> So viel Kapital geerbt, gewonnen, angespart oder erwirtschaftet, dass allein die Zinsen bzw. die Rendite den Lebensstandard tragen. &mdash; <i>&bdquo;Lieber Kunde, zu welcher Kategorie geh&ouml;rst du?&ldquo;</i>',
+  3: '<b>Und was passiert, wenn dir das passiert?</b> Die Arbeitskraft f&auml;llt aus &ndash; durch Unfall, schwere Krankheit, Schlaganfall, Krebs. Dann ist auch das Gehalt weg, und der Lebensstandard ist zumindest sehr stark eingeschr&auml;nkt.',
+  4: 'Genau daf&uuml;r ist die <b>Arbeitskraftabsicherung</b> da: Tritt dieser Fall ein, wechselst du in die zweite Kategorie.',
+  5: 'Nur eben nicht &uuml;ber Kapital und Zinsen &ndash; sondern &uuml;ber <b>zwei Ma&szlig;nahmen</b>.',
+  6: '<b>Erstens:</b> eine einmalige Kapitalauszahlung, eine hohe Summe aus der Unfallversicherung. Damit deckst du Kosten, die durch den Unfall entstehen &ndash; Umbauma&szlig;nahmen am Haus, barrierefreies Badezimmer, Treppenlift.',
+  7: '<b>Zweitens &ndash; fast noch wichtiger:</b> eine monatliche Auszahlung. Denn du hast nicht nur einmalige Ausgaben, sondern lebenslange: wohnen, essen, Auto, Energie &ndash; bis zum letzten Atemzug.',
+  8: '<b>Berufsunf&auml;higkeitsrente:</b> rund 60 % kommen aus der gesetzlichen Leistung, 40 % sichern wir &uuml;ber die private Berufsunf&auml;higkeitsversicherung ab &ndash; zusammen 100 % deines Einkommens.',
+  9: '<b>Dauerinvalidit&auml;tsrente:</b> f&uuml;r den schweren Unfall, bei dem du nicht als berufsunf&auml;hig eingestuft wirst. Hier ist keine gesetzliche Leistung zu ber&uuml;cksichtigen &ndash; du bekommst den Betrag fix, bis ans Lebensende.',
+  10:'<b>Egal ob</b> schwerer Unfall mit Dauerinvalidit&auml;t oder Berufsunf&auml;higkeit durch Krankheit, Krebs, Schlaganfall, Herzinfarkt: Du bist so abgesichert, dass du deinen Lebensstandard weiterhin bestreiten kannst.'
+};
+
+let ebSchritt = 0, ebOffen = false, ebGebaut = false, ebDruckTemp = false, ebSchrittMerk = 0;
+
+function ebBauen(){
+  if(ebGebaut) return;
+  const lage = $('#ebLage'), defs = $('#ebDefs'), wege = $('#ebWege'), oben = $('#ebWegeOben');
+  if(!lage) return;
+
+  defs.innerHTML = Object.keys(EB_FARBE).map(k=>
+    '<marker id="ebP'+k+'" viewBox="0 0 10 10" refX="8.6" refY="5" markerWidth="5.2" markerHeight="5.2" orient="auto-start-reverse">'+
+      '<path d="M 0 0.6 L 10 5 L 0 9.4 z" fill="'+EB_FARBE[k]+'"/></marker>').join('');
+
+  const weg = w =>
+    '<path class="eb-weg" data-s="'+w.s+'" d="'+w.d+'" pathLength="1" stroke="'+EB_FARBE[w.k]+'" '+
+    'stroke-width="'+(w.k==='strich'?7:6)+'"'+
+    (w.k==='strich' ? '' : ' marker-end="url(#ebP'+w.k+')"')+'/>';
+  wege.innerHTML =
+    EB_WEGE.filter(w=>w.k!=='strich').map(weg).join('')+
+    '<line class="eb-unterstrich" data-s="10" x1="466" y1="396" x2="714" y2="396" '+
+      'stroke="'+EB_FARBE.gruen+'" stroke-width="8" stroke-linecap="round"/>';
+  // Streichungen liegen über den Kästen
+  oben.innerHTML = EB_WEGE.filter(w=>w.k==='strich').map(weg).join('');
+
+  lage.innerHTML = EB_HTML.map(t=>
+    '<div class="eb-el '+t.c+'" data-s="'+t.s+'"'+(t.id?' id="'+t.id+'"':'')+' style="'+ebPos(t.g)+'">'+t.h+'</div>').join('');
+
+  EB_GELD.concat(EB_PROZ).forEach(id=>{
+    const e = $('#'+id);
+    if(!e) return;
+    e.addEventListener('input', ()=>{ S.eb[id] = e.value; ebRechnen(); sichern(); });
+    e.addEventListener('click', ev=>ev.stopPropagation());
+  });
+
+  ebGebaut = true;
+  ebWerteSetzen();
+}
+
+function ebWerteSetzen(){
+  EB_GELD.concat(EB_PROZ).forEach(id=>{
+    const e = $('#'+id);
+    if(!e) return;
+    const v = S.eb[id];
+    e.value = (v==null || v==='') ? (EB_STD[id]||'') : v;
+  });
+  ebRechnen();
+}
+
+function ebRechnen(){
+  const z = id => { const e=$('#'+id); return e ? (parseFloat(e.value)||0) : 0; };
+  const su = z('ebBuGes') + z('ebBuPriv');
+  const di = z('ebDi');
+  const ps = z('ebBuPGes') + z('ebBuPPriv');
+  if($('#ebBuSum'))  $('#ebBuSum').textContent  = su ? eur(su) : '–';
+  if($('#ebDiSum'))  $('#ebDiSum').textContent  = di ? eur(di) : '–';
+  if($('#ebBuPSum')) $('#ebBuPSum').textContent = ps || 100;
+}
+
+function ebHatWerte(){
+  return EB_GELD.some(id => (S.eb[id]||'').toString().trim() !== '' && parseFloat(S.eb[id]) > 0);
+}
+
+function ebZeigen(n){
+  ebBauen();
+  ebSchritt = Math.max(0, Math.min(EB_MAX, n));
+  $$('#ebBuehne [data-s]').forEach(e=>{
+    e.classList.toggle('da', +e.dataset.s <= ebSchritt);
+  });
+  const l1 = $('#ebLs1'), l2 = $('#ebLs2');
+  if(l1) l1.classList.toggle('rot',   ebSchritt >= 3);
+  if(l2) l2.classList.toggle('gruen', ebSchritt >= 10);
+  const z = $('#ebZaehler'); if(z) z.textContent = ebSchritt + ' / ' + EB_MAX;
+  const r = $('#ebRegie');   if(r) r.innerHTML = EB_REGIE[ebSchritt] || '';
+  const bz = $('#ebZur'), bv = $('#ebVor');
+  if(bz) bz.disabled = ebSchritt === 0;
+  if(bv) bv.disabled = ebSchritt === EB_MAX;
+}
+
+function ebOeffnen(){
+  ebBauen();
+  $('#ebKarte').classList.add('sichtbar','vollbild');
+  document.body.style.overflow = 'hidden';
+  ebOffen = true;
+  ebZeigen(ebSchritt);
+  $('#ebKarte').scrollTop = 0;
+}
+
+function ebSchliessen(){
+  $('#ebKarte').classList.remove('sichtbar','vollbild');
+  document.body.style.overflow = '';
+  ebOffen = false;
+}
+
+/* Wird beim Drucken der ganzen Beratung mit ausgegeben, sobald Beträge eingetragen sind */
+function ebDruckVor(){
+  if(ebOffen || !ebGebaut || !ebHatWerte()) return;
+  ebDruckTemp = true; ebSchrittMerk = ebSchritt;
+  $('#ebKarte').classList.add('sichtbar');
+  ebZeigen(EB_MAX);
+}
+function ebDruckNach(){
+  if(!ebDruckTemp) return;
+  ebDruckTemp = false;
+  $('#ebKarte').classList.remove('sichtbar');
+  ebZeigen(ebSchrittMerk);
+}
+
+(function ebStart(){
+  const b = $('#ebBuehne');
+  if(!b) return;
+  ebBauen();
+  ebZeigen(0);
+
+  b.addEventListener('click', e=>{
+    if(e.target.closest('input,select,textarea,button,a')) return;
+    ebZeigen(ebSchritt + 1);
+  });
+
+  $$('.eb-leiste button[data-eb]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ if(btn.dataset.eb==='akw') ebOeffnen(); });
+  });
+  $('#ebVor').addEventListener('click', ()=>ebZeigen(ebSchritt+1));
+  $('#ebZur').addEventListener('click', ()=>ebZeigen(ebSchritt-1));
+  $('#ebVorn').addEventListener('click', ()=>ebZeigen(0));
+  $('#ebAlle').addEventListener('click', ()=>ebZeigen(EB_MAX));
+  $('#ebZu').addEventListener('click', ebSchliessen);
+  $('#ebDruck').addEventListener('click', ()=>{
+    const merk = ebSchritt;
+    ebZeigen(EB_MAX);
+    document.body.classList.add('nur-erklaer');
+    window.print();
+    setTimeout(()=>{ document.body.classList.remove('nur-erklaer'); ebZeigen(merk); }, 500);
+  });
+
+  document.addEventListener('keydown', e=>{
+    if(!ebOffen) return;
+    const imFeld = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName||'');
+    if(e.key === 'Escape'){ ebSchliessen(); return; }
+    if(imFeld) return;
+    if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); ebZeigen(ebSchritt+1); }
+    else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); ebZeigen(ebSchritt-1); }
+  });
+})();
+
+
+/* =========================================================
    Zwischenspeicher im Browser
    (dieselbe Struktur wandert in Stufe 2 nach Supabase)
    ========================================================= */
@@ -1571,7 +1995,7 @@ function zustandSammeln(){
   return {
     v:1, felder:f, personB:S.personB, zweiKonten:S.zweiKonten, offen:S.offen, pfeilAn:S.pfeilAn, betrag:S.betrag,
     notiz:S.notiz, notizOffen:S.notizOffen, sparte:S.sparte,
-    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross,
+    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross, eb:S.eb,
     pyrMalen:{striche:S.pyrMalen.striche},
     seiten:S.seiten.map(s=>({striche:s.striche, farbe:s.farbe}))
   };
@@ -1587,7 +2011,7 @@ function zustandSetzen(d){
   S.offen = d.offen||{}; S.pfeilAn = d.pfeilAn||{};
   S.notiz = d.notiz||{}; S.notizOffen = d.notizOffen||{}; S.sparte = d.sparte||{};
   S.pyrText = d.pyrText||{}; S.konten = d.konten||[];
-  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||'';
+  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||''; S.eb = d.eb||{};
   BEREICHE.forEach(b=>{ if(d.betrag && d.betrag[b.id]) S.betrag[b.id]=d.betrag[b.id]; });
   if(d.pyrMalen && d.pyrMalen.striche) S.pyrMalen.striche = d.pyrMalen.striche;
   (d.seiten||[]).forEach(s=>{ S.seiten.push({striche:s.striche||[], farbe:s.farbe, radierer:false}); });
@@ -1602,7 +2026,7 @@ function zustandLeeren(){
   S.personB=false; $('#personB').style.display='none'; $('#btnBdazu').style.display='block';
   S.zweiKonten=true;
   S.offen={}; S.pfeilAn={}; S.notiz={}; S.notizOffen={}; S.sparte={};
-  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross='';
+  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross=''; S.eb={};
   if($('#zielFrei')) $('#zielFrei').value='';
   BEREICHE.forEach(b=>S.betrag[b.id]={A:0,B:0});
   S.pyrMalen.striche=[];
@@ -1612,7 +2036,7 @@ function zustandLeeren(){
 
 function allesZeichnen(){
   overlayZeichnen(); pfeileZeichnen(); absTabellen(); restAktualisieren();
-  zielRasterZeichnen(); stufenZeichnen();
+  zielRasterZeichnen(); stufenZeichnen(); ebWerteSetzen(); ebZeigen(0);
   if(window.pyrNeuMalen) pyrNeuMalen();
   window.dispatchEvent(new Event('resize'));
 }
@@ -1884,6 +2308,7 @@ function druckVorbereiten(){
     const t = k.querySelector('.ziel-notiz textarea');
     k.classList.toggle('ohne-notiz', !t || !t.value.trim());
   });
+  ebDruckVor();
 }
 function druckAufraeumen(){
   $$('textarea').forEach(t=>{ t.style.height=t.dataset.h||''; });
@@ -1892,6 +2317,7 @@ function druckAufraeumen(){
     druckVorherZu = [];
     zielRasterZeichnen();
   }
+  ebDruckNach();
 }
 window.addEventListener('beforeprint', druckVorbereiten);
 window.addEventListener('afterprint', druckAufraeumen);
