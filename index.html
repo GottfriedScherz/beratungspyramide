@@ -545,6 +545,56 @@
   .eb-buehne .ec-punkt{opacity:0; transition:opacity .45s ease .1s;}
   .eb-buehne .ec-punkt.da{opacity:1;}
 
+
+  /* ---------- Erklärbild 3: Der Weg des Geldes ---------- */
+  .wg-titel{font:900 2.3cqw 'Lato',sans-serif; color:var(--accent); line-height:1.15;}
+  .eb-buehne .wg-form{opacity:0; transition:opacity .45s ease;}
+  .eb-buehne .wg-form.da{opacity:1;}
+
+  .wg-kreis{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; box-sizing:border-box;
+  }
+  .wg-kreis b{font:900 2.0cqw 'Lato',sans-serif; color:var(--accent); line-height:1.1;}
+  .wg-kreis span{font:400 0.95cqw 'Lato',sans-serif; color:var(--muted); margin-top:0.25cqw; line-height:1.25;}
+
+  .wg-mini{
+    font:700 1.02cqw 'Lato',sans-serif; color:var(--accent); text-align:center; line-height:1.3;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .wg-mini.gruen{color:#1e7d46;}
+
+  .wg-proz{
+    border:2px solid #c2680a; border-radius:7px; background:#fdf3e9; box-sizing:border-box;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.2cqw;
+    padding:0.4cqw 0.5cqw; text-align:center;
+  }
+  .wg-proz .lbl{font:700 0.92cqw 'Lato',sans-serif; color:#a1560a; letter-spacing:.03em; line-height:1.2;}
+  .wg-proz .wert{font:900 1.7cqw 'Lato',sans-serif; color:#c2680a; display:flex; align-items:baseline; gap:0.2cqw;}
+  .wg-buehne input.wg-p{
+    width:3.6cqw; border:1px solid #e0c3a0; border-radius:4px; background:#fff;
+    padding:0.05cqw 0.2cqw; font:900 1.55cqw 'Lato',sans-serif; color:#c2680a; text-align:right;
+    font-family:'Lato',sans-serif; box-sizing:border-box;
+  }
+  .wg-buehne input.wg-p:focus{outline:none; border-color:#c2680a;}
+
+  .wg-diff{
+    border:2px dashed #c2680a; border-radius:8px; background:#fdf3e9; box-sizing:border-box;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.4cqw;
+    padding:0.8cqw; text-align:center;
+  }
+  .wg-diff b{font:900 1.25cqw 'Lato',sans-serif; color:#a1560a; line-height:1.2;}
+  .wg-diff .gross{font:900 2.0cqw 'Lato',sans-serif; color:#c2680a;}
+  .wg-diff .klein{font:400 0.92cqw 'Lato',sans-serif; color:#8c5a22; line-height:1.3;}
+
+  .wg-band{
+    background:var(--good-bg); border:2px solid var(--good); border-radius:8px; box-sizing:border-box;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.3cqw;
+    padding:0.7cqw 1.2cqw; text-align:center;
+  }
+  .wg-band b{font:900 1.5cqw 'Lato',sans-serif; color:#1e7d46;}
+  .wg-band p{margin:0; font:400 1.1cqw 'Lato',sans-serif; color:#1a5c36; line-height:1.35;}
+
   /* ---------- Druck ---------- */
   @page{size:A4 portrait; margin:10mm 10mm;}
   .nur-druck{display:none;}
@@ -752,6 +802,7 @@
   <div class="eb-leiste nicht-drucken">
     <span class="eb-leiste-titel">Erkl&auml;rbilder</span>
     <button type="button" data-eb="akw">Arbeitskraftabsicherung</button>
+    <button type="button" data-eb="wdg">Der Weg des Geldes</button>
     <button type="button" data-eb="cae">Cost-Average-Effekt</button>
   </div>
   </div>
@@ -813,6 +864,32 @@
     </div>
     <div class="eb-regie" id="ecRegie"></div>
     <p class="eb-fuss nicht-drucken">Ein Klick ins Bild &ndash; oder Leertaste bzw. Pfeiltasten &ndash; zeigt den n&auml;chsten Monat. Sparbetrag und Kurse kannst du frei ver&auml;ndern; die Anteile, der Depotwert und der Einstandskurs rechnen sich mit.</p>
+  </div>
+
+
+  <!-- ======== Erklärbild: Der Weg des Geldes ======== -->
+  <div class="card erklaer-karte" id="wgKarte">
+    <h2 class="nur-druck" style="margin:0 0 8px;">7. Der Weg des Geldes</h2>
+    <div class="eb-kopf nicht-drucken">
+      <h2>Der Weg des Geldes</h2>
+      <button type="button" id="wgVorn">Von vorn</button>
+      <button type="button" id="wgZur">&#8592; Zur&uuml;ck</button>
+      <span class="eb-zaehler" id="wgZaehler">0 / 8</span>
+      <button type="button" class="haupt" id="wgVor">Weiter &#8594;</button>
+      <button type="button" id="wgAlle">Alles zeigen</button>
+      <button type="button" id="wgDruck">Drucken</button>
+      <button type="button" id="wgZu">Schlie&szlig;en</button>
+    </div>
+    <div class="eb-buehne wg-buehne" id="wgBuehne">
+      <svg viewBox="0 0 1240 780" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs id="wgDefs"></defs>
+        <g id="wgFormen"></g>
+        <g id="wgWege"></g>
+      </svg>
+      <div class="eb-lage" id="wgLage"></div>
+    </div>
+    <div class="eb-regie" id="wgRegie"></div>
+    <p class="eb-fuss nicht-drucken">Ein Klick ins Bild &ndash; oder Leertaste bzw. Pfeiltasten &ndash; zeigt den n&auml;chsten Schritt. Die beiden Prozentspannen kannst du frei anpassen; die Differenz rechnet sich mit.</p>
   </div>
 
 </div>
@@ -883,6 +960,7 @@ const S = {
   stufe:null,               // gewählte Vermögensstufe
   eb:{},                    // Erklärbild Arbeitskraftabsicherung: eingetragene Leistungen
   ec:{},                    // Erklärbild Cost-Average: Sparbetrag und Kurse
+  wg:{},                    // Erklärbild Weg des Geldes: Prozentspannen
   notizGross:'',            // großes Notizfeld in der Bühne                // weitere Konten links: {id,name,richtung,partner,betrag:{A,B}}
   notizOffen:{},            // bereichId -> true
   sparte:{},                // 'absV.EH' -> {an:true, A:zahl, B:zahl}
@@ -2365,6 +2443,221 @@ function ecDruckNach(){
 
 
 /* =========================================================
+   Erklärbild: Der Weg des Geldes
+   Sparer -> Bank -> Wirtschaft und zurück, daneben der
+   direkte Weg beim Vorsparen. Jeder Klick ein Schritt.
+   ========================================================= */
+const WGW = 1240, WGH = 780, WG_MAX = 8;
+const wgx = v => (v/WGW*100).toFixed(4)+'%';
+const wgy = v => (v/WGH*100).toFixed(4)+'%';
+const wgPos = g => 'left:'+wgx(g[0])+';top:'+wgy(g[1])+';width:'+wgx(g[2])+';height:'+wgy(g[3])+';';
+
+const WG_FARBE = {blau:'#355f8f', orange:'#c2680a', gruen:'#27ae60'};
+const WG_STD = {wv:2, wb:15, sv:0, sb:1};
+
+let wgSchritt = 0, wgOffen = false, wgGebaut = false, wgDruckTemp = false, wgSchrittMerk = 0;
+S.wgBenutzt = false;
+
+function wgWerte(){
+  const z = (v,std) => { const x = parseFloat(v); return isFinite(x) ? Math.max(0,x) : std; };
+  const wv = z(S.wg.wv, WG_STD.wv), wb = z(S.wg.wb, WG_STD.wb);
+  const sv = z(S.wg.sv, WG_STD.sv), sb = z(S.wg.sb, WG_STD.sb);
+  return {wv, wb, sv, sb, dVon: Math.max(0, wv - sb), dBis: Math.max(0, wb - sv)};
+}
+const wgP = n => nfA.format(n) + ' %';
+
+/* Ellipsen: cx, cy, rx, ry */
+const WG_KREIS = [
+  {s:1, id:'sparer', c:[400,245,150,94]},
+  {s:1, id:'bank',   c:[880,230,135,94]},
+  {s:2, id:'wirt',   c:[790,588,170,88]}
+];
+
+const WG_WEGE = [
+  {s:1, k:'blau',   d:'M 552 248 L 740 234'},                                  // Sparer -> Bank
+  {s:2, k:'blau',   d:'M 874 330 L 802 492'},                                  // Bank -> Wirtschaft
+  {s:3, k:'orange', d:'M 914 522 C 1030 490, 1044 356, 974 296'},              // Wirtschaft -> Bank
+  {s:4, k:'orange', d:'M 786 163 C 742 116, 578 112, 512 172'},                  // Bank -> Sparer
+  {s:6, k:'gruen',  d:'M 508 313 L 664 522'},                                  // Sparer -> Wirtschaft
+  {s:7, k:'gruen',  d:'M 664 654 C 520 706, 402 648, 396 340'}                 // Wirtschaft -> Sparer
+];
+
+function wgBauen(){
+  if(wgGebaut) return;
+  const lage = $('#wgLage');
+  if(!lage) return;
+
+  $('#wgDefs').innerHTML = Object.keys(WG_FARBE).map(k=>
+    '<marker id="wgP'+k+'" viewBox="0 0 10 10" refX="9.4" refY="5" markerUnits="userSpaceOnUse" '+
+    'markerWidth="17" markerHeight="17" orient="auto-start-reverse">'+
+    '<path d="M 0.6 1.2 L 9.8 5 L 0.6 8.8 z" fill="'+WG_FARBE[k]+'"/></marker>').join('');
+
+  $('#wgFormen').innerHTML = WG_KREIS.map(e=>
+    '<ellipse class="wg-form" data-s="'+e.s+'" cx="'+e.c[0]+'" cy="'+e.c[1]+'" rx="'+e.c[2]+'" ry="'+e.c[3]+'" '+
+    'fill="#fff" stroke="'+WG_FARBE.blau+'" stroke-width="3.5"/>').join('');
+
+  $('#wgWege').innerHTML = WG_WEGE.map(w=>
+    '<path class="eb-weg" data-s="'+w.s+'" pathLength="1" d="'+w.d+'" stroke="'+WG_FARBE[w.k]+'" '+
+    'stroke-width="4.2" marker-end="url(#wgP'+w.k+')"/>').join('');
+
+  const teile = [
+    {s:0, c:'wg-titel', g:[40,30,300,100], h:'Der Weg<br>des Geldes'},
+
+    {s:1, c:'wg-kreis', g:[260,215,280,60],  h:'<b>Sparer</b>'},
+    {s:1, c:'wg-kreis', g:[760,200,240,60],  h:'<b>Bank</b>'},
+    {s:1, c:'wg-mini',  g:[578,192,150,34],  h:'<span>Ihr Geld</span>'},
+
+    {s:2, c:'wg-kreis', g:[630,552,320,76],  h:'<b>Wirtschaft</b><span>Unternehmen &middot; Kredite &middot; Beteiligungen</span>'},
+    {s:2, c:'wg-mini',  g:[596,372,196,64],  h:'<span>vergibt Kredite,<br>beteiligt sich an Unternehmen</span>'},
+
+    {s:3, c:'wg-proz',  g:[1050,368,170,86],
+     h:'<span class="lbl">Gewinn der Bank</span><span class="wert">'+
+       '<input type="number" class="wg-p" id="wgWv" min="0" step="1"> &ndash; '+
+       '<input type="number" class="wg-p" id="wgWb" min="0" step="1"> %</span>'},
+
+    {s:4, c:'wg-proz',  g:[556,22,252,80],
+     h:'<span class="lbl">Ihr Zins auf dem Sparkonto</span><span class="wert">'+
+       '<input type="number" class="wg-p" id="wgSv" min="0" step="1"> &ndash; '+
+       '<input type="number" class="wg-p" id="wgSb" min="0" step="1"> %</span>'},
+
+    {s:5, c:'wg-diff',  g:[40,614,330,146],
+     h:'<b>Die Differenz bleibt bei der Bank</b><span class="gross" id="wgDiff">&ndash;</span>'+
+       '<span class="klein">Ihr Geld arbeitet in der Wirtschaft &ndash; der Ertrag daraus aber gr&ouml;&szlig;tenteils nicht f&uuml;r Sie.</span>'},
+
+    {s:6, c:'wg-mini gruen', g:[390,436,200,56], h:'<span><b>Vorsparen:</b><br>direkt investiert</span>'},
+    {s:7, c:'wg-mini gruen', g:[408,552,200,56], h:'<span>Gewinne direkt<br>zu Ihnen</span>'},
+
+    {s:8, c:'wg-band',  g:[420,698,800,72],
+     h:'<b>Ohne Umweg &uuml;ber die Bank.</b><p>Beim Vorsparen investieren Sie direkt in die Wirtschaft '+
+       '&ndash; und holen sich die Gewinne auch direkt zu sich.</p>'}
+  ];
+
+  lage.innerHTML = teile.map(t =>
+    '<div class="eb-el '+t.c+'" data-s="'+t.s+'"'+(t.id?' id="'+t.id+'"':'')+' style="'+wgPos(t.g)+'">'+t.h+'</div>'
+  ).join('');
+
+  ['wv','wb','sv','sb'].forEach(k=>{
+    const e = $('#wg'+k.charAt(0).toUpperCase()+k.slice(1));
+    if(!e) return;
+    e.addEventListener('input', ()=>{ S.wg[k] = e.value; wgRechnen(); sichern(); });
+    e.addEventListener('click', ev=>ev.stopPropagation());
+  });
+
+  wgGebaut = true;
+  wgWerteSetzen();
+}
+
+function wgWerteSetzen(){
+  if(!wgGebaut) return;
+  ['wv','wb','sv','sb'].forEach(k=>{
+    const e = $('#wg'+k.charAt(0).toUpperCase()+k.slice(1));
+    if(!e) return;
+    const v = S.wg[k];
+    e.value = (v==null || v==='') ? WG_STD[k] : v;
+  });
+  wgRechnen();
+}
+
+function wgRechnen(){
+  const w = wgWerte();
+  const d = $('#wgDiff');
+  if(d) d.textContent = nfA.format(w.dVon) + ' – ' + nfA.format(w.dBis) + ' Prozentpunkte';
+  const r = $('#wgRegie');
+  if(r) r.innerHTML = wgRegieText(wgSchritt);
+}
+
+function wgRegieText(n){
+  const w = wgWerte();
+  const t = {
+    0: 'Wie das Vorsparen funktioniert &ndash; der Weg des Geldes. Ein Klick ins Bild startet.',
+    1: 'Normalerweise ist es so: <b>Sie als Sparer geben Ihr Geld der Bank.</b>',
+    2: 'Und was macht die Bank damit? L&auml;sst sie es im Tresor liegen? Nein &ndash; sie <b>investiert es in die Wirtschaft</b>, vergibt Kredite, beteiligt sich an Unternehmen und so weiter.',
+    3: 'Und holt sich so aus der Wirtschaft ihre Gewinne &ndash; je nachdem <b>zwischen '+wgP(w.wv)+' und '+wgP(w.wb)+'</b>.',
+    4: 'Und wie viel bekommen Sie als Sparer auf Ihrem Sparbuch oder Sparkonto? Genau: <b>zwischen '+wgP(w.sv)+' und '+wgP(w.sb)+'</b>.',
+    5: 'Die Spanne dazwischen &ndash; <b>'+nfA.format(w.dVon)+' bis '+nfA.format(w.dBis)+' Prozentpunkte</b> &ndash; bleibt bei der Bank.',
+    6: '<b>Beim Vorsparen investieren Sie direkt in die Wirtschaft.</b>',
+    7: 'Und holen sich die Gewinne auch <b>direkt zu sich &ndash; ohne die Bank</b>.',
+    8: '<i>&bdquo;Wie gef&auml;llt Ihnen das?&ldquo;</i>'
+  };
+  return t[n] || '';
+}
+
+function wgZeigen(n, vomNutzer){
+  wgBauen();
+  wgSchritt = Math.max(0, Math.min(WG_MAX, n));
+  if(vomNutzer && wgSchritt > 0 && !S.wgBenutzt){ S.wgBenutzt = true; sichern(); }
+  $$('#wgBuehne [data-s]').forEach(e=>{ e.classList.toggle('da', +e.dataset.s <= wgSchritt); });
+  const z = $('#wgZaehler'); if(z) z.textContent = wgSchritt + ' / ' + WG_MAX;
+  const r = $('#wgRegie');   if(r) r.innerHTML = wgRegieText(wgSchritt);
+  const bz = $('#wgZur'), bv = $('#wgVor');
+  if(bz) bz.disabled = wgSchritt === 0;
+  if(bv) bv.disabled = wgSchritt === WG_MAX;
+}
+
+function wgOeffnen(){
+  wgBauen();
+  $('#wgKarte').classList.add('sichtbar','vollbild');
+  document.body.style.overflow = 'hidden';
+  wgOffen = true;
+  wgZeigen(wgSchritt);
+  $('#wgKarte').scrollTop = 0;
+}
+function wgSchliessen(){
+  $('#wgKarte').classList.remove('sichtbar','vollbild');
+  document.body.style.overflow = '';
+  wgOffen = false;
+}
+function wgGehoertDazu(){ return !!S.wgBenutzt; }
+function wgDruckVor(){
+  if(wgOffen || !wgGebaut || !wgGehoertDazu()) return;
+  if(document.body.classList.contains('nur-erklaer')) return;   // Einzeldruck eines anderen Bildes
+  wgDruckTemp = true; wgSchrittMerk = wgSchritt;
+  $('#wgKarte').classList.add('sichtbar');
+  wgZeigen(WG_MAX);
+}
+function wgDruckNach(){
+  if(!wgDruckTemp) return;
+  wgDruckTemp = false;
+  $('#wgKarte').classList.remove('sichtbar');
+  wgZeigen(wgSchrittMerk);
+}
+
+(function wgStart(){
+  const b = $('#wgBuehne');
+  if(!b) return;
+  wgBauen();
+  wgZeigen(0);
+
+  b.addEventListener('click', e=>{
+    if(e.target.closest('input,select,textarea,button,a')) return;
+    wgZeigen(wgSchritt + 1, true);
+  });
+  $$('.eb-leiste button[data-eb="wdg"]').forEach(btn=>btn.addEventListener('click', wgOeffnen));
+  $('#wgVor').addEventListener('click',  ()=>wgZeigen(wgSchritt+1, true));
+  $('#wgZur').addEventListener('click',  ()=>wgZeigen(wgSchritt-1, true));
+  $('#wgVorn').addEventListener('click', ()=>wgZeigen(0));
+  $('#wgAlle').addEventListener('click', ()=>wgZeigen(WG_MAX, true));
+  $('#wgZu').addEventListener('click', wgSchliessen);
+  $('#wgDruck').addEventListener('click', ()=>{
+    const merk = wgSchritt;
+    wgZeigen(WG_MAX);
+    document.body.classList.add('nur-erklaer');
+    window.print();
+    setTimeout(()=>{ document.body.classList.remove('nur-erklaer'); wgZeigen(merk); }, 500);
+  });
+
+  document.addEventListener('keydown', e=>{
+    if(!wgOffen) return;
+    const imFeld = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName||'');
+    if(e.key === 'Escape'){ wgSchliessen(); return; }
+    if(imFeld) return;
+    if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); wgZeigen(wgSchritt+1, true); }
+    else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); wgZeigen(wgSchritt-1, true); }
+  });
+})();
+
+
+/* =========================================================
    Zwischenspeicher im Browser
    (dieselbe Struktur wandert in Stufe 2 nach Supabase)
    ========================================================= */
@@ -2376,7 +2669,7 @@ function zustandSammeln(){
   return {
     v:1, felder:f, personB:S.personB, zweiKonten:S.zweiKonten, offen:S.offen, pfeilAn:S.pfeilAn, betrag:S.betrag,
     notiz:S.notiz, notizOffen:S.notizOffen, sparte:S.sparte,
-    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross, eb:S.eb, ebBenutzt:S.ebBenutzt, ec:S.ec, ecBenutzt:S.ecBenutzt,
+    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross, eb:S.eb, ebBenutzt:S.ebBenutzt, ec:S.ec, ecBenutzt:S.ecBenutzt, wg:S.wg, wgBenutzt:S.wgBenutzt,
     pyrMalen:{striche:S.pyrMalen.striche},
     seiten:S.seiten.map(s=>({striche:s.striche, farbe:s.farbe}))
   };
@@ -2392,7 +2685,7 @@ function zustandSetzen(d){
   S.offen = d.offen||{}; S.pfeilAn = d.pfeilAn||{};
   S.notiz = d.notiz||{}; S.notizOffen = d.notizOffen||{}; S.sparte = d.sparte||{};
   S.pyrText = d.pyrText||{}; S.konten = d.konten||[];
-  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||''; S.eb = d.eb||{}; S.ebBenutzt = !!d.ebBenutzt; S.ec = d.ec||{}; S.ecBenutzt = !!d.ecBenutzt;
+  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||''; S.eb = d.eb||{}; S.ebBenutzt = !!d.ebBenutzt; S.ec = d.ec||{}; S.ecBenutzt = !!d.ecBenutzt; S.wg = d.wg||{}; S.wgBenutzt = !!d.wgBenutzt;
   BEREICHE.forEach(b=>{ if(d.betrag && d.betrag[b.id]) S.betrag[b.id]=d.betrag[b.id]; });
   if(d.pyrMalen && d.pyrMalen.striche) S.pyrMalen.striche = d.pyrMalen.striche;
   (d.seiten||[]).forEach(s=>{ S.seiten.push({striche:s.striche||[], farbe:s.farbe, radierer:false}); });
@@ -2407,7 +2700,7 @@ function zustandLeeren(){
   S.personB=false; $('#personB').style.display='none'; $('#btnBdazu').style.display='block';
   S.zweiKonten=true;
   S.offen={}; S.pfeilAn={}; S.notiz={}; S.notizOffen={}; S.sparte={};
-  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross=''; S.eb={}; S.ebBenutzt=false; S.ec={}; S.ecBenutzt=false;
+  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross=''; S.eb={}; S.ebBenutzt=false; S.ec={}; S.ecBenutzt=false; S.wg={}; S.wgBenutzt=false;
   if($('#zielFrei')) $('#zielFrei').value='';
   BEREICHE.forEach(b=>S.betrag[b.id]={A:0,B:0});
   S.pyrMalen.striche=[];
@@ -2417,7 +2710,7 @@ function zustandLeeren(){
 
 function allesZeichnen(){
   overlayZeichnen(); pfeileZeichnen(); absTabellen(); restAktualisieren();
-  zielRasterZeichnen(); stufenZeichnen(); ebWerteSetzen(); ebZeigen(0); ecWerteSetzen(); ecZeigen(0);
+  zielRasterZeichnen(); stufenZeichnen(); ebWerteSetzen(); ebZeigen(0); ecWerteSetzen(); ecZeigen(0); wgWerteSetzen(); wgZeigen(0);
   if(window.pyrNeuMalen) pyrNeuMalen();
   window.dispatchEvent(new Event('resize'));
 }
@@ -2689,7 +2982,7 @@ function druckVorbereiten(){
     const t = k.querySelector('.ziel-notiz textarea');
     k.classList.toggle('ohne-notiz', !t || !t.value.trim());
   });
-  ebDruckVor(); ecDruckVor();
+  ebDruckVor(); ecDruckVor(); wgDruckVor();
 }
 function druckAufraeumen(){
   $$('textarea').forEach(t=>{ t.style.height=t.dataset.h||''; });
@@ -2698,7 +2991,7 @@ function druckAufraeumen(){
     druckVorherZu = [];
     zielRasterZeichnen();
   }
-  ebDruckNach(); ecDruckNach();
+  ebDruckNach(); ecDruckNach(); wgDruckNach();
 }
 window.addEventListener('beforeprint', druckVorbereiten);
 window.addEventListener('afterprint', druckAufraeumen);
