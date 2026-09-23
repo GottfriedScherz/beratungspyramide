@@ -2445,7 +2445,7 @@ function ecDruckNach(){
 /* =========================================================
    Erklärbild: Der Weg des Geldes
    Sparer -> Bank -> Wirtschaft und zurück, daneben der
-   direkte Weg beim Vorsparen. Jeder Klick ein Schritt.
+   direkte Weg beim Fondssparen. Jeder Klick ein Schritt.
    ========================================================= */
 const WGW = 1240, WGH = 780, WG_MAX = 8;
 const wgx = v => (v/WGW*100).toFixed(4)+'%';
@@ -2524,11 +2524,11 @@ function wgBauen(){
      h:'<b>Die Differenz bleibt bei der Bank</b><span class="gross" id="wgDiff">&ndash;</span>'+
        '<span class="klein">Ihr Geld arbeitet in der Wirtschaft &ndash; der Ertrag daraus aber gr&ouml;&szlig;tenteils nicht f&uuml;r Sie.</span>'},
 
-    {s:6, c:'wg-mini gruen', g:[390,436,200,56], h:'<span><b>Vorsparen:</b><br>direkt investiert</span>'},
+    {s:6, c:'wg-mini gruen', g:[390,436,200,56], h:'<span><b>Fondssparen:</b><br>direkt investiert</span>'},
     {s:7, c:'wg-mini gruen', g:[408,552,200,56], h:'<span>Gewinne direkt<br>zu Ihnen</span>'},
 
     {s:8, c:'wg-band',  g:[420,698,800,72],
-     h:'<b>Ohne Umweg &uuml;ber die Bank.</b><p>Beim Vorsparen investieren Sie direkt in die Wirtschaft '+
+     h:'<b>Ohne Umweg &uuml;ber die Bank.</b><p>Beim Fondssparen investieren Sie direkt in die Wirtschaft '+
        '&ndash; und holen sich die Gewinne auch direkt zu sich.</p>'}
   ];
 
@@ -2569,13 +2569,13 @@ function wgRechnen(){
 function wgRegieText(n){
   const w = wgWerte();
   const t = {
-    0: 'Wie das Vorsparen funktioniert &ndash; der Weg des Geldes. Ein Klick ins Bild startet.',
+    0: 'Wie das Fondssparen funktioniert &ndash; der Weg des Geldes. Ein Klick ins Bild startet.',
     1: 'Normalerweise ist es so: <b>Sie als Sparer geben Ihr Geld der Bank.</b>',
     2: 'Und was macht die Bank damit? L&auml;sst sie es im Tresor liegen? Nein &ndash; sie <b>investiert es in die Wirtschaft</b>, vergibt Kredite, beteiligt sich an Unternehmen und so weiter.',
     3: 'Und holt sich so aus der Wirtschaft ihre Gewinne &ndash; je nachdem <b>zwischen '+wgP(w.wv)+' und '+wgP(w.wb)+'</b>.',
     4: 'Und wie viel bekommen Sie als Sparer auf Ihrem Sparbuch oder Sparkonto? Genau: <b>zwischen '+wgP(w.sv)+' und '+wgP(w.sb)+'</b>.',
     5: 'Die Spanne dazwischen &ndash; <b>'+nfA.format(w.dVon)+' bis '+nfA.format(w.dBis)+' Prozentpunkte</b> &ndash; bleibt bei der Bank.',
-    6: '<b>Beim Vorsparen investieren Sie direkt in die Wirtschaft.</b>',
+    6: '<b>Beim Fondssparen investieren Sie direkt in die Wirtschaft.</b>',
     7: 'Und holen sich die Gewinne auch <b>direkt zu sich &ndash; ohne die Bank</b>.',
     8: '<i>&bdquo;Wie gef&auml;llt Ihnen das?&ldquo;</i>'
   };
