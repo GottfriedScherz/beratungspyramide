@@ -491,6 +491,52 @@
   .eb-regie b{color:var(--accent);}
   .eb-fuss{font-size:12px; color:var(--muted); margin:9px 0 0;}
 
+
+  /* ---------- Erklärbild 2: Cost-Average-Effekt ---------- */
+  .ec-titel{
+    font:400 1.35cqw 'Lato',sans-serif; color:var(--text); text-align:center;
+    display:flex; align-items:center; justify-content:center; gap:0.4cqw; flex-wrap:wrap;
+  }
+  .ec-buehne input.ec-spar{
+    width:6.2cqw; border:1px solid var(--line); border-radius:4px; background:#f7fafd;
+    padding:0.15cqw 0.35cqw; font:900 1.5cqw 'Lato',sans-serif; color:var(--accent);
+    text-align:right; font-family:'Lato',sans-serif; box-sizing:border-box;
+  }
+  .ec-buehne input.ec-kurs{
+    width:100%; border:1.5px solid var(--line); border-radius:5px; background:#f7fafd;
+    padding:0.25cqw 0.5cqw; font:900 1.45cqw 'Lato',sans-serif; color:var(--accent);
+    text-align:center; font-family:'Lato',sans-serif; box-sizing:border-box;
+  }
+  .ec-buehne input:focus{outline:none; border-color:var(--accent); background:#fff;}
+  .ec-monat{font:700 1.0cqw 'Lato',sans-serif; letter-spacing:.14em; text-transform:uppercase;
+            color:var(--muted); text-align:center;}
+  .ec-kursfeld{display:flex; align-items:center; gap:0.3cqw; justify-content:center;}
+  .ec-kursfeld .eur{font:900 1.2cqw 'Lato',sans-serif; color:var(--muted);}
+  .ec-anteile{font:900 1.25cqw 'Lato',sans-serif; color:var(--accent); text-align:center;}
+
+  .ec-panel{
+    border:2px solid var(--accent); border-radius:7px; background:#fff; box-sizing:border-box;
+    padding:0.8cqw 1.0cqw; display:flex; flex-direction:column; justify-content:center; gap:0.35cqw;
+  }
+  .ec-zeile{display:flex; align-items:baseline; justify-content:space-between; gap:0.5cqw;}
+  .ec-zeile .l{font:400 1.05cqw 'Lato',sans-serif; color:var(--muted);}
+  .ec-zeile .w{font:900 1.25cqw 'Lato',sans-serif; color:var(--accent); white-space:nowrap;}
+  .ec-zeile.gross .l{font-weight:900; color:#1e7d46; font-size:1.15cqw;}
+  .ec-zeile.gross .w{color:#1e7d46; font-size:1.6cqw;}
+  .ec-trenn{border-top:2px solid var(--good); margin:0.35cqw 0;}
+
+  .ec-band{
+    background:var(--good-bg); border:2px solid var(--good); border-radius:8px; box-sizing:border-box;
+    padding:0.9cqw 1.2cqw; display:flex; flex-direction:column; align-items:center; gap:0.5cqw; text-align:center;
+  }
+  .ec-band .zahlen{display:flex; align-items:baseline; gap:2.2cqw; flex-wrap:wrap; justify-content:center;}
+  .ec-band .zahlen div{font:400 1.05cqw 'Lato',sans-serif; color:#1e7d46;}
+  .ec-band .zahlen b{display:block; font:900 1.9cqw 'Lato',sans-serif; color:#1e7d46;}
+  .ec-band p{margin:0; font:400 1.12cqw 'Lato',sans-serif; color:#1a5c36; line-height:1.4; max-width:62cqw;}
+
+  .eb-buehne .ec-punkt{opacity:0; transition:opacity .45s ease .1s;}
+  .eb-buehne .ec-punkt.da{opacity:1;}
+
   /* ---------- Druck ---------- */
   @page{size:A4 portrait; margin:10mm 10mm;}
   .nur-druck{display:none;}
@@ -548,9 +594,9 @@
     .eb-buehne{border:1px solid #ccc !important; break-inside:avoid;}
     .eb-buehne input{border:1px solid #d8e2ec !important; background:#fff !important; padding:0.28cqw 0.45cqw !important; text-align:right !important;}
     .eb-regie{display:none !important;}
-    body:not(.nur-erklaer) #ebKarte{break-before:page;}
-    body.nur-erklaer .wrap > *:not(#ebKarte){display:none !important;}
-    body.nur-erklaer #ebKarte{display:block !important;}
+    body:not(.nur-erklaer) .erklaer-karte{break-before:page;}
+    body.nur-erklaer .wrap > *{display:none !important;}
+    body.nur-erklaer .wrap > .erklaer-karte.sichtbar{display:block !important;}
     *{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
   }
 </style>
@@ -698,6 +744,7 @@
   <div class="eb-leiste nicht-drucken">
     <span class="eb-leiste-titel">Erkl&auml;rbilder</span>
     <button type="button" data-eb="akw">Arbeitskraftabsicherung</button>
+    <button type="button" data-eb="cae">Cost-Average-Effekt</button>
   </div>
   </div>
 
@@ -733,6 +780,31 @@
     </div>
     <div class="eb-regie" id="ebRegie"></div>
     <p class="eb-fuss nicht-drucken">Ein Klick ins Bild &ndash; oder Leertaste bzw. Pfeiltasten &ndash; blendet den n&auml;chsten Schritt ein. Esc schlie&szlig;t. Die Betr&auml;ge kannst du jederzeit eintragen; sie werden mit der Beratung gespeichert und beim Drucken mit ausgegeben.</p>
+  </div>
+
+
+  <!-- ======== Erklärbild: Cost-Average-Effekt ======== -->
+  <div class="card erklaer-karte" id="ecKarte">
+    <h2 class="nur-druck" style="margin:0 0 8px;">6. Cost-Average-Effekt</h2>
+    <div class="eb-kopf nicht-drucken">
+      <h2>Cost-Average-Effekt</h2>
+      <button type="button" id="ecVorn">Von vorn</button>
+      <button type="button" id="ecZur">&#8592; Zur&uuml;ck</button>
+      <span class="eb-zaehler" id="ecZaehler">0 / 7</span>
+      <button type="button" class="haupt" id="ecVor">Weiter &#8594;</button>
+      <button type="button" id="ecAlle">Alles zeigen</button>
+      <button type="button" id="ecDruck">Drucken</button>
+      <button type="button" id="ecZu">Schlie&szlig;en</button>
+    </div>
+    <div class="eb-buehne ec-buehne" id="ecBuehne">
+      <svg viewBox="0 0 1240 780" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g id="ecRaster"></g>
+        <g id="ecKurve"></g>
+      </svg>
+      <div class="eb-lage" id="ecLage"></div>
+    </div>
+    <div class="eb-regie" id="ecRegie"></div>
+    <p class="eb-fuss nicht-drucken">Ein Klick ins Bild &ndash; oder Leertaste bzw. Pfeiltasten &ndash; zeigt den n&auml;chsten Monat. Sparbetrag und Kurse kannst du frei ver&auml;ndern; die Anteile, der Depotwert und der Einstandskurs rechnen sich mit.</p>
   </div>
 
 </div>
@@ -802,6 +874,7 @@ const S = {
   zielNotizOffen:{},        // themaKey -> true, wenn das Notizfeld offen ist
   stufe:null,               // gewählte Vermögensstufe
   eb:{},                    // Erklärbild Arbeitskraftabsicherung: eingetragene Leistungen
+  ec:{},                    // Erklärbild Cost-Average: Sparbetrag und Kurse
   notizGross:'',            // großes Notizfeld in der Bühne                // weitere Konten links: {id,name,richtung,partner,betrag:{A,B}}
   notizOffen:{},            // bereichId -> true
   sparte:{},                // 'absV.EH' -> {an:true, A:zahl, B:zahl}
@@ -1941,6 +2014,7 @@ function ebSchliessen(){
 /* Wird beim Drucken der ganzen Beratung mit ausgegeben, sobald Beträge eingetragen sind */
 function ebDruckVor(){
   if(ebOffen || !ebGebaut || !ebGehoertDazu()) return;
+  if(document.body.classList.contains('nur-erklaer')) return;   // Einzeldruck des anderen Bildes
   ebDruckTemp = true; ebSchrittMerk = ebSchritt;
   $('#ebKarte').classList.add('sichtbar');
   ebZeigen(EB_MAX);
@@ -1991,6 +2065,273 @@ function ebDruckNach(){
 
 
 /* =========================================================
+   Erklärbild: Cost-Average-Effekt
+   Gleichbleibende Sparrate, schwankender Kurs. Jeder Klick
+   zeigt einen weiteren Monat samt gekaufter Anteile.
+   ========================================================= */
+const ECW = 1240, ECH = 780, EC_MAX = 7, EC_N = 5;
+const ECG = {x0:200, x1:900, y0:150, y1:435};
+const ecx = v => (v/ECW*100).toFixed(4)+'%';
+const ecy = v => (v/ECH*100).toFixed(4)+'%';
+const ecPos = g => 'left:'+ecx(g[0])+';top:'+ecy(g[1])+';width:'+ecx(g[2])+';height:'+ecy(g[3])+';';
+const ecXAt = i => ECG.x0 + (ECG.x1 - ECG.x0) * i / (EC_N - 1);
+
+const nfA  = new Intl.NumberFormat('de-AT',{maximumFractionDigits:2});
+const nf2  = new Intl.NumberFormat('de-AT',{minimumFractionDigits:2, maximumFractionDigits:2});
+const eur2 = n => nf2.format(n||0) + ' €';
+
+const EC_STD = {spar:300, kurse:[100,150,100,50,100]};
+
+let ecSchritt = 0, ecOffen = false, ecGebaut = false, ecDruckTemp = false, ecSchrittMerk = 0;
+S.ecBenutzt = false;
+
+function ecWerte(){
+  const z = (v,std) => { const x = parseFloat(v); return (isFinite(x) && x > 0) ? x : std; };
+  const spar  = z(S.ec.spar, EC_STD.spar);
+  const kurse = EC_STD.kurse.map((std,i) => z((S.ec.kurse||[])[i], std));
+  const anteile = kurse.map(k => spar / k);
+  const summe = anteile.reduce((a,b)=>a+b, 0);
+  const endkurs = kurse[EC_N-1];
+  const depot = summe * endkurs;
+  const eingezahlt = spar * EC_N;
+  return {
+    spar, kurse, anteile, summe, endkurs, depot, eingezahlt,
+    diff: depot - eingezahlt,
+    einstand: eingezahlt / summe,
+    schnitt: kurse.reduce((a,b)=>a+b, 0) / EC_N
+  };
+}
+
+function ecSkala(kurse){
+  const min = Math.min.apply(null, kurse), max = Math.max.apply(null, kurse);
+  const stufen = [1,2,5,10,25,50,100,250,500,1000,2500,5000,10000];
+  const spanne = Math.max(max - min, max * 0.2, 1);
+  const st = stufen.find(x => spanne / x <= 3) || 10000;
+  let lo = Math.floor(min/st)*st, hi = Math.ceil(max/st)*st;
+  if(hi <= lo) hi = lo + st;
+  return {lo, hi, st};
+}
+const ecY = (p, sk) => ECG.y1 - (p - sk.lo) / (sk.hi - sk.lo) * (ECG.y1 - ECG.y0);
+
+const EC_PANEL =
+  '<div class="ec-zeile"><span class="l">Anteile gesamt</span><span class="w" id="ecSumme">&ndash;</span></div>'+
+  '<div class="ec-zeile"><span class="l">Kurs am Ende</span><span class="w" id="ecEndkurs">&ndash;</span></div>'+
+  '<div class="ec-trenn"></div>'+
+  '<div class="ec-zeile gross"><span class="l">Depotwert</span><span class="w" id="ecDepot">&ndash;</span></div>'+
+  '<div class="ec-zeile"><span class="l">eingezahlt</span><span class="w" id="ecEin">&ndash;</span></div>'+
+  '<div class="ec-zeile"><span class="l">Ergebnis</span><span class="w" id="ecDiff">&ndash;</span></div>';
+
+const EC_BAND =
+  '<div class="zahlen">'+
+    '<div>&#216; Einstandskurs<b id="ecEinstand">&ndash;</b></div>'+
+    '<div>&#216; Kurs<b id="ecSchnitt">&ndash;</b></div>'+
+  '</div>'+
+  '<p>Bei gleichbleibender Sparrate kaufst du bei niedrigen Kursen automatisch mehr Anteile und bei hohen weniger. '+
+  'Dein durchschnittlicher Einstandskurs liegt deshalb unter dem durchschnittlichen Kurs &ndash; das ist der Cost-Average-Effekt.</p>';
+
+function ecBauen(){
+  if(ecGebaut) return;
+  const lage = $('#ecLage');
+  if(!lage) return;
+
+  const teile = [
+    {s:0, c:'ec-titel', g:[60,26,1120,50],
+     h:'Beispiel: monatlicher Sparbetrag <input type="number" class="ec-spar" id="ecSpar" min="1" step="50"> &euro; '+
+       'bei nachfolgend angenommener Kursentwicklung'},
+    {s:6, c:'ec-panel', g:[975,178,235,196], h:EC_PANEL},
+    {s:7, c:'ec-band',  g:[170,596,1040,138], h:EC_BAND}
+  ];
+  for(let i=0;i<EC_N;i++){
+    const x = ecXAt(i) - 65;
+    teile.push({s:i+1, c:'ec-monat',    g:[x,466,130,24], h:'Monat '+(i+1)});
+    teile.push({s:i+1, c:'ec-kursfeld', g:[x,494,130,38],
+                h:'<input type="number" class="ec-kurs" id="ecK'+i+'" min="1" step="5"><span class="eur">&euro;</span>'});
+    teile.push({s:i+1, c:'ec-anteile',  g:[x,540,130,28], id:'ecA'+i, h:'&ndash;'});
+  }
+  lage.innerHTML = teile.map(t =>
+    '<div class="eb-el '+t.c+'" data-s="'+t.s+'"'+(t.id?' id="'+t.id+'"':'')+' style="'+ecPos(t.g)+'">'+t.h+'</div>'
+  ).join('');
+
+  const melden = (e, setz) => {
+    e.addEventListener('input', ()=>{ setz(e.value); ecZeichnen(); sichern(); });
+    e.addEventListener('click', ev=>ev.stopPropagation());
+  };
+  melden($('#ecSpar'), v => { S.ec.spar = v; });
+  for(let i=0;i<EC_N;i++){
+    melden($('#ecK'+i), (function(k){ return function(v){ S.ec.kurse = S.ec.kurse || []; S.ec.kurse[k] = v; }; })(i));
+  }
+
+  ecGebaut = true;
+  ecWerteSetzen();
+}
+
+function ecWerteSetzen(){
+  if(!ecGebaut) return;
+  const sp = $('#ecSpar');
+  if(sp) sp.value = (S.ec.spar==null || S.ec.spar==='') ? EC_STD.spar : S.ec.spar;
+  for(let i=0;i<EC_N;i++){
+    const e = $('#ecK'+i);
+    if(!e) continue;
+    const v = (S.ec.kurse||[])[i];
+    e.value = (v==null || v==='') ? EC_STD.kurse[i] : v;
+  }
+  ecZeichnen();
+}
+
+function ecZeichnen(){
+  if(!ecGebaut) return;
+  const w  = ecWerte();
+  const sk = ecSkala(w.kurse);
+  const pts = w.kurse.map((p,i)=>({x:ecXAt(i), y:ecY(p,sk)}));
+
+  /* Raster, Achse, Hintergrund */
+  let g = '<rect x="'+ECG.x0+'" y="'+ECG.y0+'" width="'+(ECG.x1-ECG.x0)+'" height="'+(ECG.y1-ECG.y0)+'" fill="#e9f0f8"/>';
+  for(let v=sk.lo; v<=sk.hi+0.0001; v+=sk.st){
+    const y = ecY(v,sk);
+    g += '<line x1="'+ECG.x0+'" y1="'+y+'" x2="'+ECG.x1+'" y2="'+y+'" stroke="#b9cbe0" stroke-width="1.6"/>'+
+         '<text x="'+(ECG.x0-36)+'" y="'+(y+8)+'" text-anchor="end" fill="#1a2a3a" '+
+         'font-family="Lato,Arial,sans-serif" font-size="21" font-weight="700">'+nf.format(v)+',&#8211; &#8364;</text>';
+  }
+  pts.forEach(p => {
+    g += '<line x1="'+p.x+'" y1="'+ECG.y0+'" x2="'+p.x+'" y2="'+ECG.y1+'" stroke="#b9cbe0" stroke-width="1.6"/>';
+  });
+  g += '<text x="'+(ECG.x0+20)+'" y="'+(ECG.y1-16)+'" fill="#4a6d8f" font-family="Lato,Arial,sans-serif" font-size="22">'+
+       'Anlage mit Kursschwankungen</text>';
+  $('#ecRaster').innerHTML = g;
+
+  /* Kurve (je Abschnitt ein Pfad) und Anteilspunkte */
+  let k = '';
+  for(let i=0;i<pts.length-1;i++){
+    const p0 = pts[i-1]||pts[i], p1 = pts[i], p2 = pts[i+1], p3 = pts[i+2]||pts[i+1];
+    const c1x = p1.x + (p2.x-p0.x)/6, c1y = p1.y + (p2.y-p0.y)/6;
+    const c2x = p2.x - (p3.x-p1.x)/6, c2y = p2.y - (p3.y-p1.y)/6;
+    k += '<path class="eb-weg" data-s="'+(i+2)+'" pathLength="1" stroke="#355f8f" stroke-width="7" '+
+         'd="M '+p1.x.toFixed(1)+' '+p1.y.toFixed(1)+' C '+c1x.toFixed(1)+' '+c1y.toFixed(1)+', '+
+         c2x.toFixed(1)+' '+c2y.toFixed(1)+', '+p2.x.toFixed(1)+' '+p2.y.toFixed(1)+'"/>';
+  }
+  pts.forEach((p,i)=>{
+    const txt = nfA.format(w.anteile[i]);
+    const fs  = txt.length <= 2 ? 23 : (txt.length <= 4 ? 18 : 15);
+    k += '<g class="ec-punkt" data-s="'+(i+1)+'">'+
+         '<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="22" fill="#355f8f" stroke="#fff" stroke-width="3.5"/>'+
+         '<text x="'+p.x.toFixed(1)+'" y="'+(p.y + fs*0.36).toFixed(1)+'" text-anchor="middle" fill="#fff" '+
+         'font-family="Lato,Arial,sans-serif" font-size="'+fs+'" font-weight="900">'+txt+'</text></g>';
+  });
+  $('#ecKurve').innerHTML = k;
+
+  /* Zahlen */
+  for(let i=0;i<EC_N;i++){
+    const e = $('#ecA'+i);
+    if(e) e.innerHTML = '= <b>'+nfA.format(w.anteile[i])+'</b> Anteile';
+  }
+  const setz = (id, txt) => { const e = $('#'+id); if(e) e.textContent = txt; };
+  setz('ecSumme',   nfA.format(w.summe) + ' Anteile');
+  setz('ecEndkurs', eur(w.endkurs));
+  setz('ecDepot',   eur(w.depot));
+  setz('ecEin',     eur(w.eingezahlt));
+  setz('ecDiff',    (w.diff >= 0 ? '+ ' : '− ') + eur(Math.abs(w.diff)));
+  setz('ecEinstand', eur2(w.einstand));
+  setz('ecSchnitt',  eur2(w.schnitt));
+
+  ecStufeSetzen();
+}
+
+function ecRegieText(n){
+  const w = ecWerte();
+  const a = i => nfA.format(w.anteile[i]) + ' Anteile';
+  const t = {
+    0: 'Du sparst jeden Monat denselben Betrag &ndash; <b>'+eur(w.spar)+'</b>. Der Kurs schwankt. Schauen wir, was dabei herauskommt.',
+    1: '<b>Monat 1:</b> Der Kurs steht bei '+eur(w.kurse[0])+'. F&uuml;r deine '+eur(w.spar)+' bekommst du <b>'+a(0)+'</b>.',
+    2: '<b>Monat 2:</b> Der Kurs ist auf '+eur(w.kurse[1])+' gestiegen. F&uuml;r dieselben '+eur(w.spar)+' bekommst du jetzt nur <b>'+a(1)+'</b>.',
+    3: '<b>Monat 3:</b> Kurs '+eur(w.kurse[2])+' &ndash; <b>'+a(2)+'</b>.',
+    4: '<b>Monat 4:</b> Der Kurs ist auf '+eur(w.kurse[3])+' gefallen. Jetzt bekommst du f&uuml;r denselben Betrag <b>'+a(3)+'</b>. Genau hier arbeitet der Effekt f&uuml;r dich.',
+    5: '<b>Monat 5:</b> Kurs '+eur(w.kurse[4])+' &ndash; <b>'+a(4)+'</b>.',
+    6: 'Der Kurs steht am Ende bei '+eur(w.endkurs)+'. Du hast <b>'+nfA.format(w.summe)+' Anteile</b>: eingezahlt '+eur(w.eingezahlt)+', Depotwert <b>'+eur(w.depot)+'</b>.',
+    7: 'Dein durchschnittlicher Einstandskurs liegt bei <b>'+eur2(w.einstand)+'</b> &ndash; der durchschnittliche Kurs bei '+eur2(w.schnitt)+'. Du hast g&uuml;nstiger gekauft, als der Kurs im Schnitt stand.'
+  };
+  return t[n] || '';
+}
+
+function ecStufeSetzen(){
+  $$('#ecBuehne [data-s]').forEach(e=>{ e.classList.toggle('da', +e.dataset.s <= ecSchritt); });
+}
+
+function ecZeigen(n, vomNutzer){
+  ecBauen();
+  ecSchritt = Math.max(0, Math.min(EC_MAX, n));
+  if(vomNutzer && ecSchritt > 0 && !S.ecBenutzt){ S.ecBenutzt = true; sichern(); }
+  ecStufeSetzen();
+  const z = $('#ecZaehler'); if(z) z.textContent = ecSchritt + ' / ' + EC_MAX;
+  const r = $('#ecRegie');   if(r) r.innerHTML = ecRegieText(ecSchritt);
+  const bz = $('#ecZur'), bv = $('#ecVor');
+  if(bz) bz.disabled = ecSchritt === 0;
+  if(bv) bv.disabled = ecSchritt === EC_MAX;
+}
+
+function ecOeffnen(){
+  ecBauen();
+  $('#ecKarte').classList.add('sichtbar','vollbild');
+  document.body.style.overflow = 'hidden';
+  ecOffen = true;
+  ecZeigen(ecSchritt);
+  $('#ecKarte').scrollTop = 0;
+}
+function ecSchliessen(){
+  $('#ecKarte').classList.remove('sichtbar','vollbild');
+  document.body.style.overflow = '';
+  ecOffen = false;
+}
+function ecGehoertDazu(){ return !!S.ecBenutzt; }
+function ecDruckVor(){
+  if(ecOffen || !ecGebaut || !ecGehoertDazu()) return;
+  if(document.body.classList.contains('nur-erklaer')) return;   // Einzeldruck des anderen Bildes
+  ecDruckTemp = true; ecSchrittMerk = ecSchritt;
+  $('#ecKarte').classList.add('sichtbar');
+  ecZeigen(EC_MAX);
+}
+function ecDruckNach(){
+  if(!ecDruckTemp) return;
+  ecDruckTemp = false;
+  $('#ecKarte').classList.remove('sichtbar');
+  ecZeigen(ecSchrittMerk);
+}
+
+(function ecStart(){
+  const b = $('#ecBuehne');
+  if(!b) return;
+  ecBauen();
+  ecZeigen(0);
+
+  b.addEventListener('click', e=>{
+    if(e.target.closest('input,select,textarea,button,a')) return;
+    ecZeigen(ecSchritt + 1, true);
+  });
+  $$('.eb-leiste button[data-eb="cae"]').forEach(btn=>btn.addEventListener('click', ecOeffnen));
+  $('#ecVor').addEventListener('click',  ()=>ecZeigen(ecSchritt+1, true));
+  $('#ecZur').addEventListener('click',  ()=>ecZeigen(ecSchritt-1, true));
+  $('#ecVorn').addEventListener('click', ()=>ecZeigen(0));
+  $('#ecAlle').addEventListener('click', ()=>ecZeigen(EC_MAX, true));
+  $('#ecZu').addEventListener('click', ecSchliessen);
+  $('#ecDruck').addEventListener('click', ()=>{
+    const merk = ecSchritt;
+    ecZeigen(EC_MAX);
+    document.body.classList.add('nur-erklaer');
+    window.print();
+    setTimeout(()=>{ document.body.classList.remove('nur-erklaer'); ecZeigen(merk); }, 500);
+  });
+
+  document.addEventListener('keydown', e=>{
+    if(!ecOffen) return;
+    const imFeld = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName||'');
+    if(e.key === 'Escape'){ ecSchliessen(); return; }
+    if(imFeld) return;
+    if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); ecZeigen(ecSchritt+1, true); }
+    else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); ecZeigen(ecSchritt-1, true); }
+  });
+})();
+
+
+/* =========================================================
    Zwischenspeicher im Browser
    (dieselbe Struktur wandert in Stufe 2 nach Supabase)
    ========================================================= */
@@ -2002,7 +2343,7 @@ function zustandSammeln(){
   return {
     v:1, felder:f, personB:S.personB, zweiKonten:S.zweiKonten, offen:S.offen, pfeilAn:S.pfeilAn, betrag:S.betrag,
     notiz:S.notiz, notizOffen:S.notizOffen, sparte:S.sparte,
-    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross, eb:S.eb, ebBenutzt:S.ebBenutzt,
+    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross, eb:S.eb, ebBenutzt:S.ebBenutzt, ec:S.ec, ecBenutzt:S.ecBenutzt,
     pyrMalen:{striche:S.pyrMalen.striche},
     seiten:S.seiten.map(s=>({striche:s.striche, farbe:s.farbe}))
   };
@@ -2018,7 +2359,7 @@ function zustandSetzen(d){
   S.offen = d.offen||{}; S.pfeilAn = d.pfeilAn||{};
   S.notiz = d.notiz||{}; S.notizOffen = d.notizOffen||{}; S.sparte = d.sparte||{};
   S.pyrText = d.pyrText||{}; S.konten = d.konten||[];
-  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||''; S.eb = d.eb||{}; S.ebBenutzt = !!d.ebBenutzt;
+  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||''; S.eb = d.eb||{}; S.ebBenutzt = !!d.ebBenutzt; S.ec = d.ec||{}; S.ecBenutzt = !!d.ecBenutzt;
   BEREICHE.forEach(b=>{ if(d.betrag && d.betrag[b.id]) S.betrag[b.id]=d.betrag[b.id]; });
   if(d.pyrMalen && d.pyrMalen.striche) S.pyrMalen.striche = d.pyrMalen.striche;
   (d.seiten||[]).forEach(s=>{ S.seiten.push({striche:s.striche||[], farbe:s.farbe, radierer:false}); });
@@ -2033,7 +2374,7 @@ function zustandLeeren(){
   S.personB=false; $('#personB').style.display='none'; $('#btnBdazu').style.display='block';
   S.zweiKonten=true;
   S.offen={}; S.pfeilAn={}; S.notiz={}; S.notizOffen={}; S.sparte={};
-  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross=''; S.eb={}; S.ebBenutzt=false;
+  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross=''; S.eb={}; S.ebBenutzt=false; S.ec={}; S.ecBenutzt=false;
   if($('#zielFrei')) $('#zielFrei').value='';
   BEREICHE.forEach(b=>S.betrag[b.id]={A:0,B:0});
   S.pyrMalen.striche=[];
@@ -2043,7 +2384,7 @@ function zustandLeeren(){
 
 function allesZeichnen(){
   overlayZeichnen(); pfeileZeichnen(); absTabellen(); restAktualisieren();
-  zielRasterZeichnen(); stufenZeichnen(); ebWerteSetzen(); ebZeigen(0);
+  zielRasterZeichnen(); stufenZeichnen(); ebWerteSetzen(); ebZeigen(0); ecWerteSetzen(); ecZeigen(0);
   if(window.pyrNeuMalen) pyrNeuMalen();
   window.dispatchEvent(new Event('resize'));
 }
@@ -2315,7 +2656,7 @@ function druckVorbereiten(){
     const t = k.querySelector('.ziel-notiz textarea');
     k.classList.toggle('ohne-notiz', !t || !t.value.trim());
   });
-  ebDruckVor();
+  ebDruckVor(); ecDruckVor();
 }
 function druckAufraeumen(){
   $$('textarea').forEach(t=>{ t.style.height=t.dataset.h||''; });
@@ -2324,7 +2665,7 @@ function druckAufraeumen(){
     druckVorherZu = [];
     zielRasterZeichnen();
   }
-  ebDruckNach();
+  ebDruckNach(); ecDruckNach();
 }
 window.addEventListener('beforeprint', druckVorbereiten);
 window.addEventListener('afterprint', druckAufraeumen);
