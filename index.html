@@ -684,8 +684,9 @@
     font:700 0.92cqw 'Lato',sans-serif; color:var(--warn); line-height:1.3;
   }
   .vsp-hinw{
-    font:700 0.92cqw 'Lato',sans-serif; color:var(--accent); line-height:1.3;
+    font:700 0.92cqw 'Lato',sans-serif; color:var(--accent); line-height:1.35;
   }
+  .vsp-hinw.gruen{color:var(--good);}
 
   .eb-buehne .fs-form{opacity:0; transition:opacity .45s ease;}
   .eb-buehne .fs-form.da{opacity:1;}
@@ -3781,8 +3782,22 @@ function vspBauen(){
   const strich = r => r.gestrichelt ? ' stroke-dasharray="11 8" ' : ' ';
   let w = '';
   VSP_REIHEN.forEach(r=>{
-    w += '<path class="eb-weg" data-s="' + r.s + '" pathLength="1" d="' + vspPfad(VSP_P, VSP_WERTE[r.k]) +
-         '" stroke="' + r.f + '" stroke-width="' + r.b + '"' + strich(r) + '/>';
+    const d = vspPfad(VSP_P, VSP_WERTE[r.k]);
+    if(!r.gestrichelt){
+      w += '<path class="eb-weg" data-s="' + r.s + '" pathLength="1" d="' + d +
+           '" stroke="' + r.f + '" stroke-width="' + r.b + '"/>';
+      return;
+    }
+    /* Strichlierte Linie: stroke-dasharray macht hier die Striche, kann also
+       nicht gleichzeitig die Linie entstehen lassen. Darum wandert die
+       Zeichen-Bewegung in eine Maske – ein dicker weißer Strich, der sich
+       aufzieht und die strichlierte Linie Stück für Stück freigibt. */
+    w += '<mask id="vspM_' + r.k + '" maskUnits="userSpaceOnUse" x="0" y="0" ' +
+         'width="' + VSPW + '" height="' + VSPH + '">' +
+         '<path class="eb-weg" data-s="' + r.s + '" pathLength="1" d="' + d +
+         '" stroke="#fff" stroke-width="' + (r.b + 12) + '"/></mask>' +
+         '<path d="' + d + '" fill="none" stroke="' + r.f + '" stroke-width="' + r.b + '"' +
+         strich(r) + 'mask="url(#vspM_' + r.k + ')"/>';
   });
   /* Führungslinien zu den Endwerten */
   const enden = vspEndKaesten();
@@ -3844,8 +3859,12 @@ function vspBauen(){
     teile.push({s:e.s, c:'vsp-ende', g:e.kasten, stil:'color:' + e.farbe + ';', h:e.text});
   });
   /* Hinweise zur Polizze und zur Lupe */
-  teile.push({s:4, c:'vsp-hinw', g:[196, 212, 330, 54],
-    h:'Alle ' + VSP.switchJahre + ' Jahre wird umgeschichtet &ndash;<br>jedes Mal kostet das KESt.'});
+  teile.push({s:4, c:'vsp-hinw', g:[196, 204, 372, 54],
+    h:'Beispiel: Fondswechsel alle ' + VSP.switchJahre + ' Jahre (Strategieanpassung, ' +
+      'Markt&auml;nderungen, etc.). Jedes Mal kostet es Geld f&uuml;r Kaufgeb&uuml;hren und KESt.'});
+  /* Der Gegensatz gehört zur Polizze und kommt deshalb mit ihr – in ihrer Farbe. */
+  teile.push({s:5, c:'vsp-hinw gruen', g:[196, 262, 372, 26],
+    h:'In der Fondspolizze: Keine Geb&uuml;hren und keine KESt!'});
   teile.push({s:6, c:'vsp-lupe-titel', g:[152, 622, 560, 24],
     h:'Die ersten ' + VSP_L.jahre + ' Jahre unter der Lupe'});
   teile.push({s:6, c:'vsp-minus', g:[192, 684, 266, 56],
