@@ -354,6 +354,7 @@
   .btn-plus:hover{border-color:var(--accent-light); color:var(--accent);}
 
 
+/* >>> SCHAUBILDER CSS ANFANG <<< */
   /* ---------- Erklärbilder ---------- */
   .eb-leiste{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:18px;}
   .eb-leiste .eb-leiste-titel{
@@ -738,6 +739,7 @@
   }
   .fs-band b{font:900 1.45cqw 'Lato',sans-serif; color:#1e7d46;}
   .fs-band p{margin:0; font:400 1.08cqw 'Lato',sans-serif; color:#1a5c36; line-height:1.35;}
+/* >>> SCHAUBILDER CSS ENDE <<< */
 
   /* ---------- Druck ---------- */
   @page{size:A4 portrait; margin:10mm 10mm;}
@@ -790,16 +792,18 @@
     .druck-kopf h1{color:var(--accent); font-size:20pt;}
     /* Erklärbild */
     .eb-leiste{display:none !important;}
-    .erklaer-karte.vollbild{position:static !important; overflow:visible !important; padding:0 !important;}
     .eb-kopf{display:none !important;}
     .eb-fuss{display:none !important;}
     .eb-buehne{border:1px solid #ccc !important; break-inside:avoid;}
     .eb-buehne input{border:1px solid #d8e2ec !important; background:#fff !important; padding:0.28cqw 0.45cqw !important; text-align:right !important;}
     .eb-regie{display:none !important;}
+/* >>> SCHAUBILDER DRUCKCSS ANFANG <<< */
+    .erklaer-karte.vollbild{position:static !important; overflow:visible !important; padding:0 !important;}
     body:not(.nur-erklaer) .erklaer-karte{break-before:page;}
     body.nur-erklaer .druck-firma{display:none !important;}
     body.nur-erklaer .wrap > *{display:none !important;}
     body.nur-erklaer .wrap > .erklaer-karte.sichtbar{display:block !important;}
+/* >>> SCHAUBILDER DRUCKCSS ENDE <<< */
     *{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
   }
 </style>
@@ -944,6 +948,7 @@
     </div>
   </div>
 
+<!-- >>> SCHAUBILDER LEISTE ANFANG <<< -->
   <div class="eb-leiste nicht-drucken">
     <span class="eb-leiste-titel">Erkl&auml;rbilder</span>
     <button type="button" data-eb="akw">Arbeitskraftabsicherung</button>
@@ -953,7 +958,7 @@
     <button type="button" data-eb="cae">Cost-Average-Effekt</button>
     <button type="button" data-eb="vsp">Vergleich Sparformen</button>
   </div>
-
+<!-- >>> SCHAUBILDER LEISTE ENDE <<< -->
   <!-- ======== Notizseiten ======== -->
   <div id="seiten"></div>
   <button type="button" class="btn-plus" id="btnSeite">+ Leere Seite zum Zeichnen</button>
@@ -961,6 +966,7 @@
 
 
 
+<!-- >>> SCHAUBILDER KARTEN ANFANG <<< -->
   <!-- ======== Erklärbild: Arbeitskraftabsicherung ======== -->
   <div class="card erklaer-karte" id="ebKarte">
     <h2 class="nur-druck" style="margin:0 0 8px;">5. Arbeitskraftabsicherung</h2>
@@ -1112,8 +1118,7 @@
     <div class="eb-regie" id="vspRegie"></div>
     <p class="eb-fuss nicht-drucken">Ein Klick ins Bild &ndash; oder Leertaste bzw. Pfeiltasten &ndash; zeichnet die n&auml;chste Linie. Esc schlie&szlig;t. Die Werte sind fest hinterlegt; es geht um den Verlauf, nicht um eine Berechnung f&uuml;r diesen Kunden.</p>
   </div>
-
-
+<!-- >>> SCHAUBILDER KARTEN ENDE <<< -->
 </div>
 
 <script>
@@ -2126,6 +2131,83 @@ S.pyrMalen = {striche:[], farbe:STIFTFARBEN[1], radierer:false, durchsichtig:tru
   window.pyrNeuMalen = ()=>neuMalen(cv,daten);
 })();
 
+/* Die Schaubilder fuehren ihren eigenen kleinen Stand im Beratungsstand mit. */
+window.EB_HOST = { stand: S, sichern: function(){ sichern(); } };
+/* >>> SCHAUBILDER JS ANFANG <<< */
+/* =========================================================
+   SCHAUBILDER – gemeinsamer Baustein
+   ---------------------------------------------------------
+   Dieser Block steckt wortgleich in der Beratung und im
+   Finanzupdate. Geändert wird er NUR in
+     scratchpad/eb/eb_modul.js
+   und mit
+     python3 scratchpad/eb/verteilen.py
+   in alle Tools geschrieben. Wer hier direkt in einer
+   Tool-Datei editiert, verliert die Änderung beim nächsten
+   Verteilen.
+
+   Was der Baustein vom Hosttool braucht:
+     $ , $$        Element suchen
+     eur , nf      Beträge formatieren
+     EB_HOST       { stand, sichern } – wo der eigene kleine
+                   Stand der Bilder liegt und wie gespeichert wird
+   ========================================================= */
+/* Eigener Zahlenformatierer – die Hosttools nennen ihren unterschiedlich. */
+const ebNf = new Intl.NumberFormat('de-AT', {minimumFractionDigits:0, maximumFractionDigits:0});
+
+const EBS = (window.EB_HOST && window.EB_HOST.stand) || {};
+/* Der Baustein legt seinen eigenen Stand an. So funktioniert er in jedem
+   Hosttool, egal wie dessen Stand aussieht – und auch in einem Termin,
+   der angelegt wurde, bevor es die Schaubilder gab. */
+['eb','ec','wg','inf','fs','vsp'].forEach(function(k){ EBS[k] = EBS[k] || {}; });
+function ebSichern(){
+  try{ if(window.EB_HOST && window.EB_HOST.sichern) window.EB_HOST.sichern(); }catch(e){}
+}
+/* Druckhaken für alle sechs Bilder auf einmal – das Hosttool ruft nur diese zwei. */
+function schaubilderDruckVor(){ ebDruckVor(); ecDruckVor(); wgDruckVor(); infDruckVor(); fsDruckVor(); vspDruckVor(); }
+function schaubilderDruckNach(){ ebDruckNach(); ecDruckNach(); wgDruckNach(); infDruckNach(); fsDruckNach(); vspDruckNach(); }
+/* Den eigenen Stand herausgeben und zurückspielen. Das braucht ein
+   Hosttool, das seine Akte beim Laden neu aufbaut: das Objekt bleibt
+   dasselbe, nur sein Inhalt wird getauscht. Sonst zeigt der Baustein
+   nach dem Öffnen einer Akte noch auf den alten Stand.
+   Die Beratung braucht das nicht – dort IST EBS der Beratungsstand. */
+function schaubilderStand(){ return EBS; }
+function schaubilderStandSetzen(d){
+  Object.keys(EBS).forEach(function(k){ delete EBS[k]; });
+  if(d && typeof d === 'object') Object.keys(d).forEach(function(k){ EBS[k] = d[k]; });
+  ['eb','ec','wg','inf','fs','vsp'].forEach(function(k){ EBS[k] = EBS[k] || {}; });
+}
+
+/* Die sechs Bilder und wie man sie öffnet. Kommt eines dazu: hier eintragen
+   UND den Knopf in eb_leiste.txt ergänzen – beides liegt im selben Ordner. */
+const SCHAUBILDER = [
+  {id:'akw', t:'Arbeitskraftabsicherung', oeffnen:function(){ ebOeffnen(); }},
+  {id:'inf', t:'Inflation',               oeffnen:function(){ infOeffnen(); }},
+  {id:'wdg', t:'Der Weg des Geldes',      oeffnen:function(){ wgOeffnen(); }},
+  {id:'fos', t:'Fondssparen',             oeffnen:function(){ fsOeffnen(); }},
+  {id:'cae', t:'Cost-Average-Effekt',     oeffnen:function(){ ecOeffnen(); }},
+  {id:'vsp', t:'Vergleich Sparformen',    oeffnen:function(){ vspOeffnen(); }}
+];
+/* Eine Knopfleiste, die erst später entsteht, muss von Hand verdrahtet werden.
+   In der Beratung steht sie von Anfang an da und ist schon verdrahtet. */
+function schaubilderLeisteVerdrahten(leiste){
+  if(!leiste) return;
+  SCHAUBILDER.forEach(function(s){
+    const b = leiste.querySelector('button[data-eb="' + s.id + '"]');
+    if(b && !b.dataset.verdrahtet){ b.dataset.verdrahtet = '1'; b.addEventListener('click', s.oeffnen); }
+  });
+  leiste.querySelectorAll('button[data-eb]').forEach(function(b){
+    if(!b.dataset.verdrahtet)
+      console.warn('Schaubild ohne Eintrag in SCHAUBILDER:', b.dataset.eb);
+  });
+}
+
+/* Wurde in diesem Termin überhaupt ein Bild benutzt? */
+function schaubilderBenutzt(){
+  return ebGehoertDazu() || ecGehoertDazu() || wgGehoertDazu() ||
+         infGehoertDazu() || fsGehoertDazu() || vspGehoertDazu();
+}
+
 /* =========================================================
    Erklärbild: Arbeitskraftabsicherung
    Die Elemente erscheinen Schritt für Schritt – ein Klick ins
@@ -2225,7 +2307,7 @@ const EB_REGIE = {
 };
 
 let ebSchritt = 0, ebOffen = false, ebGebaut = false, ebDruckTemp = false, ebSchrittMerk = 0;
-S.ebBenutzt = false;   // im Gespräch gezeigt -> wandert in den Ausdruck der Beratung
+EBS.ebBenutzt = false;   // im Gespräch gezeigt -> wandert in den Ausdruck der Beratung
 
 function ebBauen(){
   if(ebGebaut) return;
@@ -2255,7 +2337,7 @@ function ebBauen(){
   EB_GELD.concat(EB_PROZ).forEach(id=>{
     const e = $('#'+id);
     if(!e) return;
-    e.addEventListener('input', ()=>{ S.eb[id] = e.value; ebRechnen(); sichern(); });
+    e.addEventListener('input', ()=>{ EBS.eb[id] = e.value; ebRechnen(); ebSichern(); });
     e.addEventListener('click', ev=>ev.stopPropagation());
   });
 
@@ -2267,7 +2349,7 @@ function ebWerteSetzen(){
   EB_GELD.concat(EB_PROZ).forEach(id=>{
     const e = $('#'+id);
     if(!e) return;
-    const v = S.eb[id];
+    const v = EBS.eb[id];
     e.value = (v==null || v==='') ? (EB_STD[id]||'') : v;
   });
   ebRechnen();
@@ -2284,15 +2366,15 @@ function ebRechnen(){
 }
 
 function ebHatWerte(){
-  return EB_GELD.some(id => (S.eb[id]||'').toString().trim() !== '' && parseFloat(S.eb[id]) > 0);
+  return EB_GELD.some(id => (EBS.eb[id]||'').toString().trim() !== '' && parseFloat(EBS.eb[id]) > 0);
 }
 /* Im Ausdruck der Beratung erscheint das Bild, sobald es gezeigt oder befüllt wurde */
-function ebGehoertDazu(){ return !!S.ebBenutzt || ebHatWerte(); }
+function ebGehoertDazu(){ return !!EBS.ebBenutzt || ebHatWerte(); }
 
 function ebZeigen(n, vomNutzer){
   ebBauen();
   ebSchritt = Math.max(0, Math.min(EB_MAX, n));
-  if(vomNutzer && ebSchritt > 0 && !S.ebBenutzt){ S.ebBenutzt = true; sichern(); }
+  if(vomNutzer && ebSchritt > 0 && !EBS.ebBenutzt){ EBS.ebBenutzt = true; ebSichern(); }
   $$('#ebBuehne [data-s]').forEach(e=>{
     e.classList.toggle('da', +e.dataset.s <= ebSchritt);
   });
@@ -2393,13 +2475,13 @@ const eur2 = n => nf2.format(n||0) + ' €';
 const EC_STD = {spar:300, kurse:[100,150,100,50,100]};
 
 let ecSchritt = 0, ecOffen = false, ecGebaut = false, ecDruckTemp = false, ecSchrittMerk = 0;
-S.ecBenutzt = false;
+EBS.ecBenutzt = false;
 
 function ecWerte(){
   const z = (v,std) => { const x = parseFloat(v); return (isFinite(x) && x > 0) ? x : std; };
-  const spar   = z(S.ec.spar, EC_STD.spar);
-  const kurse  = EC_STD.kurse.map((std,i) => z((S.ec.kurse||[])[i], std));
-  const einmal = kurse.map((k,i) => z((S.ec.einmal||[])[i], 0));   // 0 = kein Einmalkauf
+  const spar   = z(EBS.ec.spar, EC_STD.spar);
+  const kurse  = EC_STD.kurse.map((std,i) => z((EBS.ec.kurse||[])[i], std));
+  const einmal = kurse.map((k,i) => z((EBS.ec.einmal||[])[i], 0));   // 0 = kein Einmalkauf
   const antSpar = kurse.map(k => spar / k);
   const antEin  = kurse.map((k,i) => einmal[i] / k);
   const anteile = antSpar.map((a,i) => a + antEin[i]);
@@ -2474,13 +2556,13 @@ function ecBauen(){
   ).join('');
 
   const melden = (e, setz) => {
-    e.addEventListener('input', ()=>{ setz(e.value); ecZeichnen(); sichern(); });
+    e.addEventListener('input', ()=>{ setz(e.value); ecZeichnen(); ebSichern(); });
     e.addEventListener('click', ev=>ev.stopPropagation());
   };
-  melden($('#ecSpar'), v => { S.ec.spar = v; });
+  melden($('#ecSpar'), v => { EBS.ec.spar = v; });
   for(let i=0;i<EC_N;i++){
-    melden($('#ecK'+i), (function(k){ return function(v){ S.ec.kurse  = S.ec.kurse  || []; S.ec.kurse[k]  = v; }; })(i));
-    melden($('#ecE'+i), (function(k){ return function(v){ S.ec.einmal = S.ec.einmal || []; S.ec.einmal[k] = v; }; })(i));
+    melden($('#ecK'+i), (function(k){ return function(v){ EBS.ec.kurse  = EBS.ec.kurse  || []; EBS.ec.kurse[k]  = v; }; })(i));
+    melden($('#ecE'+i), (function(k){ return function(v){ EBS.ec.einmal = EBS.ec.einmal || []; EBS.ec.einmal[k] = v; }; })(i));
   }
 
   ecGebaut = true;
@@ -2490,12 +2572,12 @@ function ecBauen(){
 function ecWerteSetzen(){
   if(!ecGebaut) return;
   const sp = $('#ecSpar');
-  if(sp) sp.value = (S.ec.spar==null || S.ec.spar==='') ? EC_STD.spar : S.ec.spar;
+  if(sp) sp.value = (EBS.ec.spar==null || EBS.ec.spar==='') ? EC_STD.spar : EBS.ec.spar;
   for(let i=0;i<EC_N;i++){
     const e = $('#ecK'+i);
-    if(e){ const v = (S.ec.kurse||[])[i]; e.value = (v==null || v==='') ? EC_STD.kurse[i] : v; }
+    if(e){ const v = (EBS.ec.kurse||[])[i]; e.value = (v==null || v==='') ? EC_STD.kurse[i] : v; }
     const g = $('#ecE'+i);
-    if(g){ const v = (S.ec.einmal||[])[i]; g.value = (v==null) ? '' : v; }
+    if(g){ const v = (EBS.ec.einmal||[])[i]; g.value = (v==null) ? '' : v; }
   }
   ecZeichnen();
 }
@@ -2512,7 +2594,7 @@ function ecZeichnen(){
     const y = ecY(v,sk);
     g += '<line x1="'+ECG.x0+'" y1="'+y+'" x2="'+ECG.x1+'" y2="'+y+'" stroke="#b9cbe0" stroke-width="1.6"/>'+
          '<text x="'+(ECG.x0-36)+'" y="'+(y+8)+'" text-anchor="end" fill="#1a2a3a" '+
-         'font-family="Lato,Arial,sans-serif" font-size="21" font-weight="700">'+nf.format(v)+',&#8211; &#8364;</text>';
+         'font-family="Lato,Arial,sans-serif" font-size="21" font-weight="700">'+ebNf.format(v)+',&#8211; &#8364;</text>';
   }
   pts.forEach(p => {
     g += '<line x1="'+p.x+'" y1="'+ECG.y0+'" x2="'+p.x+'" y2="'+ECG.y1+'" stroke="#b9cbe0" stroke-width="1.6"/>';
@@ -2594,7 +2676,7 @@ function ecStufeSetzen(){
 function ecZeigen(n, vomNutzer){
   ecBauen();
   ecSchritt = Math.max(0, Math.min(EC_MAX, n));
-  if(vomNutzer && ecSchritt > 0 && !S.ecBenutzt){ S.ecBenutzt = true; sichern(); }
+  if(vomNutzer && ecSchritt > 0 && !EBS.ecBenutzt){ EBS.ecBenutzt = true; ebSichern(); }
   ecStufeSetzen();
   const z = $('#ecZaehler'); if(z) z.textContent = ecSchritt + ' / ' + EC_MAX;
   const r = $('#ecRegie');   if(r) r.innerHTML = ecRegieText(ecSchritt);
@@ -2616,7 +2698,7 @@ function ecSchliessen(){
   document.body.style.overflow = '';
   ecOffen = false;
 }
-function ecGehoertDazu(){ return !!S.ecBenutzt; }
+function ecGehoertDazu(){ return !!EBS.ecBenutzt; }
 function ecDruckVor(){
   if(ecOffen || !ecGebaut || !ecGehoertDazu()) return;
   if(document.body.classList.contains('nur-erklaer')) return;   // Einzeldruck des anderen Bildes
@@ -2680,12 +2762,12 @@ const WG_FARBE = {blau:'#355f8f', orange:'#c2680a', gruen:'#27ae60'};
 const WG_STD = {wv:2, wb:15, sv:0, sb:1};
 
 let wgSchritt = 0, wgOffen = false, wgGebaut = false, wgDruckTemp = false, wgSchrittMerk = 0;
-S.wgBenutzt = false;
+EBS.wgBenutzt = false;
 
 function wgWerte(){
   const z = (v,std) => { const x = parseFloat(v); return isFinite(x) ? Math.max(0,x) : std; };
-  const wv = z(S.wg.wv, WG_STD.wv), wb = z(S.wg.wb, WG_STD.wb);
-  const sv = z(S.wg.sv, WG_STD.sv), sb = z(S.wg.sb, WG_STD.sb);
+  const wv = z(EBS.wg.wv, WG_STD.wv), wb = z(EBS.wg.wb, WG_STD.wb);
+  const sv = z(EBS.wg.sv, WG_STD.sv), sb = z(EBS.wg.sb, WG_STD.sb);
   return {wv, wb, sv, sb, dVon: Math.max(0, wv - sb), dBis: Math.max(0, wb - sv)};
 }
 const wgP = n => nfA.format(n) + ' %';
@@ -2763,7 +2845,7 @@ function wgBauen(){
   ['wv','wb','sv','sb'].forEach(k=>{
     const e = $('#wg'+k.charAt(0).toUpperCase()+k.slice(1));
     if(!e) return;
-    e.addEventListener('input', ()=>{ S.wg[k] = e.value; wgRechnen(); sichern(); });
+    e.addEventListener('input', ()=>{ EBS.wg[k] = e.value; wgRechnen(); ebSichern(); });
     e.addEventListener('click', ev=>ev.stopPropagation());
   });
 
@@ -2776,7 +2858,7 @@ function wgWerteSetzen(){
   ['wv','wb','sv','sb'].forEach(k=>{
     const e = $('#wg'+k.charAt(0).toUpperCase()+k.slice(1));
     if(!e) return;
-    const v = S.wg[k];
+    const v = EBS.wg[k];
     e.value = (v==null || v==='') ? WG_STD[k] : v;
   });
   wgRechnen();
@@ -2809,7 +2891,7 @@ function wgRegieText(n){
 function wgZeigen(n, vomNutzer){
   wgBauen();
   wgSchritt = Math.max(0, Math.min(WG_MAX, n));
-  if(vomNutzer && wgSchritt > 0 && !S.wgBenutzt){ S.wgBenutzt = true; sichern(); }
+  if(vomNutzer && wgSchritt > 0 && !EBS.wgBenutzt){ EBS.wgBenutzt = true; ebSichern(); }
   $$('#wgBuehne [data-s]').forEach(e=>{ e.classList.toggle('da', +e.dataset.s <= wgSchritt); });
   const z = $('#wgZaehler'); if(z) z.textContent = wgSchritt + ' / ' + WG_MAX;
   const r = $('#wgRegie');   if(r) r.innerHTML = wgRegieText(wgSchritt);
@@ -2831,7 +2913,7 @@ function wgSchliessen(){
   document.body.style.overflow = '';
   wgOffen = false;
 }
-function wgGehoertDazu(){ return !!S.wgBenutzt; }
+function wgGehoertDazu(){ return !!EBS.wgBenutzt; }
 function wgDruckVor(){
   if(wgOffen || !wgGebaut || !wgGehoertDazu()) return;
   if(document.body.classList.contains('nur-erklaer')) return;   // Einzeldruck eines anderen Bildes
@@ -2895,7 +2977,7 @@ const infy = v => (v/INFH*100).toFixed(4)+'%';
 const infPos = g => 'left:'+infx(g[0])+';top:'+infy(g[1])+';width:'+infx(g[2])+';height:'+infy(g[3])+';';
 
 let infSchritt = 0, infOffen = false, infGebaut = false, infDruckTemp = false, infSchrittMerk = 0;
-S.infBenutzt = false;
+EBS.infBenutzt = false;
 
 const INF_ZEILEN = [
   {m:'VW Golf GTI 1 (1976)', p:'&euro; 7.000,&ndash;', ps:'(96.300,&ndash; Schilling)',
@@ -2955,7 +3037,7 @@ function infRegieText(n){
 function infZeigen(n, vomNutzer){
   infBauen();
   infSchritt = Math.max(0, Math.min(INF_MAX, n));
-  if(vomNutzer && infSchritt > 0 && !S.infBenutzt){ S.infBenutzt = true; sichern(); }
+  if(vomNutzer && infSchritt > 0 && !EBS.infBenutzt){ EBS.infBenutzt = true; ebSichern(); }
   $$('#infBuehne [data-s]').forEach(e=>{ e.classList.toggle('da', +e.dataset.s <= infSchritt); });
   const z = $('#infZaehler'); if(z) z.textContent = infSchritt + ' / ' + INF_MAX;
   const r = $('#infRegie');   if(r) r.innerHTML = infRegieText(infSchritt);
@@ -2977,7 +3059,7 @@ function infSchliessen(){
   document.body.style.overflow = '';
   infOffen = false;
 }
-function infGehoertDazu(){ return !!S.infBenutzt; }
+function infGehoertDazu(){ return !!EBS.infBenutzt; }
 function infDruckVor(){
   if(infOffen || !infGebaut || !infGehoertDazu()) return;
   if(document.body.classList.contains('nur-erklaer')) return;
@@ -3040,7 +3122,7 @@ const FS_HAUPT = '#355f8f', FS_ROT = '#c0392b', FS_DUNKEL = '#1a2a3a';
 const FS_STD_BETRAG = 10000;
 
 let fsSchritt = 0, fsOffen = false, fsGebaut = false, fsDruckTemp = false, fsSchrittMerk = 0;
-S.fsBenutzt = false;
+EBS.fsBenutzt = false;
 
 /* ---- Strich-Icons ---------------------------------------------------- */
 function fsFenster(x0, y0, sp, re, bx, by, dx, dy){
@@ -3173,7 +3255,7 @@ function fsBauen(){
 
   const e = $('#fsB');
   if(e){
-    e.addEventListener('input', ()=>{ S.fs.betrag = e.value; fsRegie(); sichern(); });
+    e.addEventListener('input', ()=>{ EBS.fs.betrag = e.value; fsRegie(); ebSichern(); });
     e.addEventListener('click', ev=>ev.stopPropagation());
   }
 
@@ -3184,12 +3266,12 @@ function fsBauen(){
 function fsWerteSetzen(){
   if(!fsGebaut) return;
   const e = $('#fsB');
-  if(e) e.value = (S.fs.betrag==null || S.fs.betrag==='') ? FS_STD_BETRAG : S.fs.betrag;
+  if(e) e.value = (EBS.fs.betrag==null || EBS.fs.betrag==='') ? FS_STD_BETRAG : EBS.fs.betrag;
   fsRegie();
 }
 
 function fsBetrag(){
-  const x = parseFloat(S.fs.betrag);
+  const x = parseFloat(EBS.fs.betrag);
   return (isFinite(x) && x > 0) ? x : FS_STD_BETRAG;
 }
 
@@ -3214,7 +3296,7 @@ function fsRegie(){ const r = $('#fsRegie'); if(r) r.innerHTML = fsRegieText(fsS
 function fsZeigen(n, vomNutzer){
   fsBauen();
   fsSchritt = Math.max(0, Math.min(FS_MAX, n));
-  if(vomNutzer && fsSchritt > 0 && !S.fsBenutzt){ S.fsBenutzt = true; sichern(); }
+  if(vomNutzer && fsSchritt > 0 && !EBS.fsBenutzt){ EBS.fsBenutzt = true; ebSichern(); }
   $$('#fsBuehne [data-s]').forEach(e=>{ e.classList.toggle('da', +e.dataset.s <= fsSchritt); });
   const xy = $('#fsXY'), bt = $('#fsBetrag');
   if(xy) xy.classList.toggle('aus', fsSchritt >= 2);
@@ -3239,7 +3321,7 @@ function fsSchliessen(){
   document.body.style.overflow = '';
   fsOffen = false;
 }
-function fsGehoertDazu(){ return !!S.fsBenutzt; }
+function fsGehoertDazu(){ return !!EBS.fsBenutzt; }
 function fsDruckVor(){
   if(fsOffen || !fsGebaut || !fsGehoertDazu()) return;
   if(document.body.classList.contains('nur-erklaer')) return;
@@ -3287,6 +3369,386 @@ function fsDruckNach(){
   });
 })();
 
+/* =========================================================
+   Erklärbild: Vergleich Sparformen
+   Fünf Linien über 50 Jahre, die nacheinander entstehen:
+   Einzahlung, Sparkonto, Inflation, Fonds im Depot, Fondspolizze.
+   Zum Schluss die Lupe auf die ersten 20 Jahre – dort sieht man,
+   dass die Polizze wegen der Abschlusskosten zuerst unter der
+   Einzahlung liegt und erst danach davonzieht.
+
+   Die Werte sind fest. Sie stammen aus Gottfrieds Vergleichsblatt
+   „Vergleich FLV / Sparbuch / Fonds“ und sind hier nachgerechnet,
+   nicht abgetippt – die Linien entstehen aus den Vorgaben unten.
+   ========================================================= */
+const VSPW = 1240, VSPH = 980, VSP_MAX = 6;
+const vspX   = v => (v / VSPW * 100).toFixed(4) + '%';
+const vspY   = v => (v / VSPH * 100).toFixed(4) + '%';
+const vspPos = g => 'left:' + vspX(g[0]) + ';top:' + vspY(g[1]) +
+                    ';width:' + vspX(g[2]) + ';height:' + vspY(g[3]) + ';';
+
+let vspSchritt = 0, vspOffen = false, vspGebaut = false, vspDruckTemp = false, vspSchrittMerk = 0;
+EBS.vspBenutzt = false;
+
+/* ---------- Die Vorgaben des Vergleichsblattes ----------
+   Die vier Prozentsätze oben stehen so auf dem Blatt. Die beiden
+   Netto-Renditen darunter sind daraus abgeleitet: Sie sind so gewählt,
+   dass nach 50 Jahren genau die Endwerte des Blattes herauskommen
+   (118.586 € im Depot, 280.431 € in der Polizze). Der Abstand zu den
+   6,0 % Fondsperformance ist das, was die Kosten fressen – beim Depot
+   Ausgabeaufschlag, Fonds- und Depotkosten, bei der Polizze die
+   laufenden Kosten. Wer andere Kostenannahmen hat, dreht hier. */
+const VSP = {
+  rate:100, jahre:50,
+  fonds:6.0, sparbuch:0.125, inflation:2.0,
+  kest:27.5,          // auf realisierte Kursgewinne im Depot
+  kestZins:25,        // auf Sparbuchzinsen
+  switchJahre:6,      // alle sechs Jahre wird im Depot umgeschichtet
+  depotAufschlag:5,   // Ausgabeaufschlag je Rate, in Prozent
+  depotNetto:3.563,   // 6,0 % minus Fonds- und Depotkosten
+  polVstr:4,          // Versicherungssteuer auf jede Prämie
+  polAbschluss:45,    // Anteil der Prämie für Abschlusskosten …
+  polAbschlussJahre:5,// … in den ersten fünf Jahren
+  polNetto:5.619      // 6,0 % minus laufende Kosten der Polizze
+};
+
+const VSP_P = {x0:150, x1:1000, y0:190, y1:560, max:300000, jahre:50};   // großes Bild
+const VSP_L = {x0:150, x1:1000, y0:672, y1:896, max:45000,  jahre:20};   // Lupen-Ausschnitt
+const VSP_RAHMEN = {oben:652, unten:920};                                // Kasten um die Lupe
+
+const VSP_REIHEN = [
+  {k:'praemien',  n:'Einzahlung',     f:'#a8873f', b:3.4, s:1},
+  {k:'sparbuch',  n:'Sparkonto',      f:'#1a2a3a', b:3.0, s:2},
+  {k:'inflation', n:'Inflation',      f:'#c0392b', b:3.4, s:3, gestrichelt:true},
+  {k:'depot',     n:'Fonds im Depot', f:'#355f8f', b:3.4, s:4},
+  {k:'polizze',   n:'Fondspolizze',   f:'#27ae60', b:4.0, s:5}
+];
+
+/* Monatliche Werte aller fünf Reihen */
+function vspReihen(){
+  const M = VSP.jahre * 12, r = VSP.rate;
+  const iSB = VSP.sparbuch / 100 * (1 - VSP.kestZins / 100) / 12;
+  const iIN = VSP.inflation / 100 / 12;
+  const iDP = VSP.depotNetto / 100 / 12;
+  const iPO = VSP.polNetto   / 100 / 12;
+  const praemien = [0], sparbuch = [0], inflation = [0], depot = [0], polizze = [0];
+  let vSB = 0, vIN = 0, vDP = 0, eDP = 0, vPO = 0;
+  for(let m = 1; m <= M; m++){
+    vSB = vSB * (1 + iSB) + r;
+    vIN = vIN * (1 + iIN) + r;
+
+    /* Depot: vom Beitrag geht der Ausgabeaufschlag weg, und bei jeder
+       Umschichtung wird der aufgelaufene Gewinn versteuert. */
+    const netto = r * (1 - VSP.depotAufschlag / 100);
+    vDP = vDP * (1 + iDP) + netto; eDP += netto;
+    if(m % (VSP.switchJahre * 12) === 0){
+      vDP -= Math.max(0, vDP - eDP) * VSP.kest / 100;
+      eDP = vDP;
+    }
+
+    /* Polizze: Versicherungssteuer auf jede Prämie, dazu in den ersten
+       fünf Jahren die Abschlusskosten. Dafür keine KESt. */
+    let pr = r * (1 - VSP.polVstr / 100);
+    if(m <= VSP.polAbschlussJahre * 12) pr *= (1 - VSP.polAbschluss / 100);
+    vPO = vPO * (1 + iPO) + pr;
+
+    praemien.push(r * m); sparbuch.push(vSB); inflation.push(vIN);
+    depot.push(vDP); polizze.push(vPO);
+  }
+  /* Beim Verkauf am Ende wird der Gewinn seit der letzten Umschichtung fällig */
+  depot[M] -= Math.max(0, depot[M] - eDP) * VSP.kest / 100;
+  return {praemien, sparbuch, inflation, depot, polizze};
+}
+let VSP_WERTE = null;
+
+/* Das Jahr, in dem die Polizze die Einzahlung einholt – gerechnet,
+   nicht behauptet. Wird im Text und als Marke im Ausschnitt verwendet. */
+function vspWende(){
+  const w = VSP_WERTE || (VSP_WERTE = vspReihen());
+  for(let m = 1; m < w.polizze.length; m++){
+    if(w.polizze[m] >= w.praemien[m]) return Math.round(m / 12);
+  }
+  return null;
+}
+
+const vspPx = (p, jahr) => p.x0 + (p.x1 - p.x0) * jahr / p.jahre;
+const vspPy = (p, w)    => p.y1 - (p.y1 - p.y0) * Math.min(w, p.max) / p.max;
+
+/* Linie als Pfad – monatlich, damit die Zacken der Umschichtung scharf bleiben */
+function vspPfad(p, reihe){
+  const bis = p.jahre * 12;
+  let d = '';
+  for(let m = 0; m <= bis; m++){
+    d += (m ? 'L' : 'M') + vspPx(p, m / 12).toFixed(1) + ' ' + vspPy(p, reihe[m]).toFixed(1);
+  }
+  return d;
+}
+
+function vspGitterBauen(p, jahrSchritt, wertSchritt){
+  let g = '';
+  for(let w = 0; w <= p.max; w += wertSchritt){
+    const y = vspPy(p, w).toFixed(1);
+    g += '<line x1="' + p.x0 + '" y1="' + y + '" x2="' + p.x1 + '" y2="' + y +
+         '" stroke="' + (w === 0 ? '#9aa7b4' : '#e4e9ef') + '" stroke-width="' + (w === 0 ? 1.4 : 1) + '"/>';
+  }
+  for(let j = 0; j <= p.jahre; j += jahrSchritt){
+    const x = vspPx(p, j).toFixed(1);
+    g += '<line x1="' + x + '" y1="' + p.y0 + '" x2="' + x + '" y2="' + p.y1 +
+         '" stroke="' + (j === 0 ? '#9aa7b4' : '#eef2f6') + '" stroke-width="' + (j === 0 ? 1.4 : 1) + '"/>';
+  }
+  return g;
+}
+
+/* Achsenbeschriftung als kleine SVG-Texte */
+function vspAchsen(p, jahrSchritt, wertSchritt, kurz){
+  let t = '';
+  for(let w = 0; w <= p.max; w += wertSchritt){
+    t += '<text x="' + (p.x0 - 10) + '" y="' + (vspPy(p, w) + 5).toFixed(1) +
+         '" text-anchor="end" font-family="Lato,sans-serif" font-size="15" font-weight="700" fill="#5f7b8c">' +
+         (kurz ? (w / 1000) + 'k' : ebNf.format(w)) + '</text>';
+  }
+  for(let j = 0; j <= p.jahre; j += jahrSchritt){
+    t += '<text x="' + vspPx(p, j).toFixed(1) + '" y="' + (p.y1 + 24) +
+         '" text-anchor="middle" font-family="Lato,sans-serif" font-size="15" font-weight="700" fill="#5f7b8c">' +
+         j + '</text>';
+  }
+  if(!kurz) t += '<text x="' + ((p.x0 + p.x1) / 2).toFixed(0) + '" y="' + (p.y1 + 46) +
+       '" text-anchor="middle" font-family="Lato,sans-serif" font-size="14" font-weight="700" ' +
+       'letter-spacing="1.6" fill="#8a9bab">JAHRE</text>';
+  return t;
+}
+
+/* Die Endwert-Kästchen rechts: an der Linie, aber so auseinandergeschoben,
+   dass sie einander nicht überdecken. */
+function vspEndKaesten(){
+  const M = VSP.jahre * 12;
+  const liste = VSP_REIHEN.map(r=>({
+    r:r, wert:VSP_WERTE[r.k][M], y:vspPy(VSP_P, VSP_WERTE[r.k][M])
+  })).sort((a, b)=>a.y - b.y);
+  const H = 30, LUFT = 5;
+  for(let i = 1; i < liste.length; i++){
+    if(liste[i].y - liste[i - 1].y < H + LUFT) liste[i].y = liste[i - 1].y + H + LUFT;
+  }
+  const ueber = liste[liste.length - 1].y + H - VSP_P.y1;
+  if(ueber > 0) liste.forEach(e=>{ e.y -= ueber; });
+  return liste.map(e=>({
+    s:e.r.s, farbe:e.r.f, text:eur(e.wert),
+    kasten:[1016, e.y - H / 2, 206, H],
+    fuehrung:'M' + VSP_P.x1 + ' ' + vspPy(VSP_P, e.wert).toFixed(1) +
+             ' L1010 ' + e.y.toFixed(1)
+  }));
+}
+
+function vspBauen(){
+  if(vspGebaut) return;
+  const lage = $('#vspLage'), gitter = $('#vspGitter'), wege = $('#vspWege');
+  if(!lage || !gitter || !wege) return;
+  VSP_WERTE = vspReihen();
+
+  /* ---- Gitter und Achsen ---- */
+  gitter.innerHTML =
+    vspGitterBauen(VSP_P, 2, 25000) + vspAchsen(VSP_P, 5, 50000, false) +
+    '<g class="vsp-g" data-s="6">' + vspGitterBauen(VSP_L, 1, 5000) +
+      vspAchsen(VSP_L, 2, 15000, true) + '</g>';
+
+  /* ---- Die fünf Linien, groß und im Ausschnitt ---- */
+  const strich = r => r.gestrichelt ? ' stroke-dasharray="11 8" ' : ' ';
+  let w = '';
+  VSP_REIHEN.forEach(r=>{
+    const d = vspPfad(VSP_P, VSP_WERTE[r.k]);
+    if(!r.gestrichelt){
+      w += '<path class="eb-weg" data-s="' + r.s + '" pathLength="1" d="' + d +
+           '" stroke="' + r.f + '" stroke-width="' + r.b + '"/>';
+      return;
+    }
+    /* Strichlierte Linie: stroke-dasharray macht hier die Striche, kann also
+       nicht gleichzeitig die Linie entstehen lassen. Darum wandert die
+       Zeichen-Bewegung in eine Maske – ein dicker weißer Strich, der sich
+       aufzieht und die strichlierte Linie Stück für Stück freigibt. */
+    w += '<mask id="vspM_' + r.k + '" maskUnits="userSpaceOnUse" x="0" y="0" ' +
+         'width="' + VSPW + '" height="' + VSPH + '">' +
+         '<path class="eb-weg" data-s="' + r.s + '" pathLength="1" d="' + d +
+         '" stroke="#fff" stroke-width="' + (r.b + 12) + '"/></mask>' +
+         '<path d="' + d + '" fill="none" stroke="' + r.f + '" stroke-width="' + r.b + '"' +
+         strich(r) + 'mask="url(#vspM_' + r.k + ')"/>';
+  });
+  /* Führungslinien zu den Endwerten */
+  const enden = vspEndKaesten();
+  enden.forEach(e=>{
+    w += '<path class="eb-weg" data-s="' + e.s + '" pathLength="1" d="' + e.fuehrung +
+         '" stroke="' + e.farbe + '" stroke-width="1.4" stroke-dasharray="4 4"/>';
+  });
+
+  /* ---- Die Lupe: Ring über den ersten Jahren und der Kegel nach unten ---- */
+  const rx = vspPx(VSP_P, 20), ry = VSP_P.y1;
+  w += '<g class="vsp-g" data-s="6">' +
+       '<rect x="' + (VSP_P.x0 - 4) + '" y="' + (vspPy(VSP_P, 45000) - 4).toFixed(1) + '" ' +
+       'width="' + (rx - VSP_P.x0 + 8).toFixed(1) + '" height="' + (ry - vspPy(VSP_P, 45000) + 8).toFixed(1) + '" ' +
+       'rx="10" fill="none" stroke="#5f7b8c" stroke-width="2.4" stroke-dasharray="7 5"/>' +
+       '<path d="M' + (VSP_P.x0 - 4) + ' ' + (ry + 4) + ' L' + VSP_L.x0 + ' ' + VSP_RAHMEN.oben + ' M' +
+       (rx + 4).toFixed(1) + ' ' + (ry + 4) + ' L' + VSP_L.x1 + ' ' + VSP_RAHMEN.oben + '" ' +
+       'stroke="#9aa7b4" stroke-width="1.6" stroke-dasharray="5 5" fill="none"/>' +
+       '<rect x="' + VSP_L.x0 + '" y="' + VSP_RAHMEN.oben + '" width="' + (VSP_L.x1 - VSP_L.x0) + '" ' +
+       'height="' + (VSP_RAHMEN.unten - VSP_RAHMEN.oben) + '" ' +
+       'rx="8" fill="none" stroke="#c9d4de" stroke-width="1.6"/>' +
+       '</g>';
+  /* und dieselben Linien noch einmal im Ausschnitt */
+  w += '<g class="vsp-g" data-s="6">';
+  VSP_REIHEN.forEach(r=>{
+    w += '<path d="' + vspPfad(VSP_L, VSP_WERTE[r.k]) + '" fill="none" stroke="' + r.f +
+         '" stroke-width="' + (r.b + 0.4) + '"' + strich(r) + '/>';
+  });
+  /* Marke am Wendepunkt */
+  const wj = vspWende();
+  if(wj != null && wj <= VSP_L.jahre){
+    const wx = vspPx(VSP_L, wj).toFixed(1);
+    w += '<line x1="' + wx + '" y1="' + VSP_L.y0 + '" x2="' + wx + '" y2="' + VSP_L.y1 + '" ' +
+         'stroke="#27ae60" stroke-width="1.6" stroke-dasharray="5 4"/>' +
+         '<text x="' + (+wx + 7) + '" y="' + (VSP_L.y1 - 8) + '" font-family="Lato,sans-serif" ' +
+         'font-size="15" font-weight="900" fill="#27ae60">Jahr ' + wj + '</text>';
+  }
+  w += '</g>';
+  wege.innerHTML = w;
+
+  /* ---- Texte und Kästchen ---- */
+  const teile = [
+    {s:0, c:'vsp-titel', g:[56, 16, 900, 66],
+     h:'Vergleich Sparformen<span>' + VSP.rate + ' &euro; im Monat, ' + VSP.jahre +
+       ' Jahre lang &ndash; f&uuml;nf Wege, ein Ergebnis</span>'},
+    {s:0, c:'vsp-vorgaben', g:[56, 92, 1128, 54],
+     h:'<div><i>Performance Fonds</i><b>' + VSP.fonds.toString().replace('.', ',') + ' %</b></div>' +
+       '<div><i>Zinsen Sparkonto</i><b>' + VSP.sparbuch.toString().replace('.', ',') + ' %</b></div>' +
+       '<div><i>Inflation</i><b>' + VSP.inflation.toString().replace('.', ',') + ' %</b></div>' +
+       '<div><i>Sparsumme pro Monat</i><b>' + eur(VSP.rate) + '</b></div>'}
+  ];
+  /* Legende – jeder Eintrag kommt mit seiner Linie */
+  VSP_REIHEN.forEach((r, i)=>{
+    teile.push({s:r.s, c:'vsp-leg', g:[160 + i * 178, 160, 172, 26],
+      h:'<s class="' + (r.gestrichelt ? 'strich' : '') + '" style="' +
+        (r.gestrichelt ? 'color:' + r.f : 'background:' + r.f) + '"></s><span>' + r.n + '</span>'});
+  });
+  /* Endwerte */
+  enden.forEach(e=>{
+    teile.push({s:e.s, c:'vsp-ende', g:e.kasten, stil:'color:' + e.farbe + ';', h:e.text});
+  });
+  /* Hinweise zur Polizze und zur Lupe */
+  teile.push({s:4, c:'vsp-hinw', g:[196, 204, 372, 54],
+    h:'Beispiel: Fondswechsel alle ' + VSP.switchJahre + ' Jahre (Strategieanpassung, ' +
+      'Markt&auml;nderungen, etc.). Jedes Mal kostet es Geld f&uuml;r Kaufgeb&uuml;hren und KESt.'});
+  /* Der Gegensatz gehört zur Polizze und kommt deshalb mit ihr – in ihrer Farbe. */
+  teile.push({s:5, c:'vsp-hinw gruen', g:[196, 262, 372, 26],
+    h:'In der Fondspolizze: Keine Geb&uuml;hren und keine KESt!'});
+  teile.push({s:6, c:'vsp-lupe-titel', g:[152, 622, 560, 24],
+    h:'Die ersten ' + VSP_L.jahre + ' Jahre unter der Lupe'});
+  teile.push({s:6, c:'vsp-minus', g:[192, 684, 266, 56],
+    h:'Abschlusskosten der ersten<br>f&uuml;nf Jahre: die Polizze liegt<br>zuerst unter der Einzahlung.'});
+  teile.push({s:6, c:'vsp-merk', g:[598, 678, 300, 58],
+    h:'Ab Jahr&nbsp;' + vspWende() + ' dreht es: Fondswechsel kosten nichts, und es f&auml;llt <b>keine KESt</b> an.'});
+
+  lage.innerHTML = teile.map(t =>
+    '<div class="eb-el ' + t.c + '" data-s="' + t.s + '" style="' + vspPos(t.g) + (t.stil || '') + '">' +
+    t.h + '</div>').join('');
+
+  vspGebaut = true;
+}
+
+function vspRegieText(n){
+  const M = VSP.jahre * 12, W = VSP_WERTE || {};
+  const e = k => W[k] ? eur(W[k][M]) : '';
+  const t = {
+    0: 'F&uuml;nf Wege f&uuml;r dasselbe Geld: ' + eur(VSP.rate) + ' im Monat, ' + VSP.jahre +
+       ' Jahre lang. Ein Klick ins Bild zeichnet die erste Linie.',
+    1: '<b>Die Einzahlung.</b> ' + VSP.jahre * 12 + ' mal ' + eur(VSP.rate) + ' &ndash; zusammen <b>' +
+       e('praemien') + '</b>. Das ist die Linie, an der sich alles andere messen muss.',
+    2: '<b>Das Sparkonto.</b> Bei ' + VSP.sparbuch.toString().replace('.', ',') +
+       ' % Zinsen kommen in f&uuml;nfzig Jahren <b>' + e('sparbuch') +
+       '</b> heraus &ndash; gut ' + eur(W.sparbuch ? W.sparbuch[M] - 60000 : 0) +
+       ' mehr als eingezahlt. Die Linie liegt praktisch auf der Einzahlung.',
+    3: '<b>Die Inflation.</b> Um die Kaufkraft Ihrer Einzahlungen zu halten, br&auml;uchten Sie <b>' +
+       e('inflation') + '</b>. Alles darunter ist real ein Verlust &ndash; auch das Sparkonto.',
+    4: '<b>Fonds im Depot.</b> Derselbe Fonds, aber im Depot: Ausgabeaufschlag, laufende Kosten, und alle ' +
+       VSP.switchJahre + ' Jahre beim Umschichten ' + VSP.kest.toString().replace('.', ',') +
+       ' % KESt auf den Gewinn. Das sind die Zacken in der Linie. Ergebnis: <b>' + e('depot') + '</b>.',
+    5: '<b>Die Fondspolizze.</b> Fondswechsel kosten nichts, und es f&auml;llt keine KESt an. Deshalb bleibt der Zinseszins ungest&ouml;rt &ndash; am Ende <b>' +
+       e('polizze') + '</b>, mehr als das Doppelte des Depots.',
+    6: 'Und der Anfang? In den ersten f&uuml;nf Jahren gehen die Abschlusskosten weg, die Polizze liegt unter der Einzahlung. Ab Jahr&nbsp;' + vspWende() + ' dreht sie ins Plus &ndash; und danach ist sie nicht mehr einzuholen. <b>Die Polizze braucht Zeit; wer sie nicht hat, nimmt eine andere Sparform.</b>'
+  };
+  return t[n] || '';
+}
+
+function vspZeigen(n, vomNutzer){
+  vspBauen();
+  vspSchritt = Math.max(0, Math.min(VSP_MAX, n));
+  if(vomNutzer && vspSchritt > 0 && !EBS.vspBenutzt){ EBS.vspBenutzt = true; ebSichern(); }
+  $$('#vspBuehne [data-s]').forEach(e=>{ e.classList.toggle('da', +e.dataset.s <= vspSchritt); });
+  const z = $('#vspZaehler'); if(z) z.textContent = vspSchritt + ' / ' + VSP_MAX;
+  const r = $('#vspRegie');   if(r) r.innerHTML = vspRegieText(vspSchritt);
+  const bz = $('#vspZur'), bv = $('#vspVor');
+  if(bz) bz.disabled = vspSchritt === 0;
+  if(bv) bv.disabled = vspSchritt === VSP_MAX;
+}
+
+function vspOeffnen(){
+  vspBauen();
+  $('#vspKarte').classList.add('sichtbar','vollbild');
+  document.body.style.overflow = 'hidden';
+  vspOffen = true;
+  vspZeigen(vspSchritt);
+  $('#vspKarte').scrollTop = 0;
+}
+function vspSchliessen(){
+  $('#vspKarte').classList.remove('sichtbar','vollbild');
+  document.body.style.overflow = '';
+  vspOffen = false;
+}
+function vspGehoertDazu(){ return !!EBS.vspBenutzt; }
+function vspDruckVor(){
+  if(vspOffen || !vspGebaut || !vspGehoertDazu()) return;
+  if(document.body.classList.contains('nur-erklaer')) return;
+  vspDruckTemp = true; vspSchrittMerk = vspSchritt;
+  $('#vspKarte').classList.add('sichtbar');
+  vspZeigen(VSP_MAX);
+}
+function vspDruckNach(){
+  if(!vspDruckTemp) return;
+  vspDruckTemp = false;
+  $('#vspKarte').classList.remove('sichtbar');
+  vspZeigen(vspSchrittMerk);
+}
+
+(function vspStart(){
+  const b = $('#vspBuehne');
+  if(!b) return;
+  vspBauen();
+  vspZeigen(0);
+
+  b.addEventListener('click', e=>{
+    if(e.target.closest('input,select,textarea,button,a')) return;
+    vspZeigen(vspSchritt + 1, true);
+  });
+  $$('.eb-leiste button[data-eb="vsp"]').forEach(btn=>btn.addEventListener('click', vspOeffnen));
+  $('#vspVor').addEventListener('click',  ()=>vspZeigen(vspSchritt+1, true));
+  $('#vspZur').addEventListener('click',  ()=>vspZeigen(vspSchritt-1, true));
+  $('#vspVorn').addEventListener('click', ()=>vspZeigen(0));
+  $('#vspAlle').addEventListener('click', ()=>vspZeigen(VSP_MAX, true));
+  $('#vspZu').addEventListener('click', vspSchliessen);
+  $('#vspDruck').addEventListener('click', ()=>{
+    const merk = vspSchritt;
+    vspZeigen(VSP_MAX);
+    document.body.classList.add('nur-erklaer');
+    window.print();
+    setTimeout(()=>{ document.body.classList.remove('nur-erklaer'); vspZeigen(merk); }, 500);
+  });
+
+  document.addEventListener('keydown', e=>{
+    if(!vspOffen) return;
+    if(e.key === 'Escape'){ vspSchliessen(); return; }
+    if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName||'')) return;
+    if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); vspZeigen(vspSchritt+1, true); }
+    else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); vspZeigen(vspSchritt-1, true); }
+  });
+})();
+/* >>> SCHAUBILDER JS ENDE <<< */
 
 /* =========================================================
    Zwischenspeicher im Browser
@@ -3597,387 +4059,6 @@ window.addEventListener('beforeunload', e=>{
 
 
 /* =========================================================
-   Erklärbild: Vergleich Sparformen
-   Fünf Linien über 50 Jahre, die nacheinander entstehen:
-   Einzahlung, Sparkonto, Inflation, Fonds im Depot, Fondspolizze.
-   Zum Schluss die Lupe auf die ersten 20 Jahre – dort sieht man,
-   dass die Polizze wegen der Abschlusskosten zuerst unter der
-   Einzahlung liegt und erst danach davonzieht.
-
-   Die Werte sind fest. Sie stammen aus Gottfrieds Vergleichsblatt
-   „Vergleich FLV / Sparbuch / Fonds“ und sind hier nachgerechnet,
-   nicht abgetippt – die Linien entstehen aus den Vorgaben unten.
-   ========================================================= */
-const VSPW = 1240, VSPH = 980, VSP_MAX = 6;
-const vspX   = v => (v / VSPW * 100).toFixed(4) + '%';
-const vspY   = v => (v / VSPH * 100).toFixed(4) + '%';
-const vspPos = g => 'left:' + vspX(g[0]) + ';top:' + vspY(g[1]) +
-                    ';width:' + vspX(g[2]) + ';height:' + vspY(g[3]) + ';';
-
-let vspSchritt = 0, vspOffen = false, vspGebaut = false, vspDruckTemp = false, vspSchrittMerk = 0;
-S.vspBenutzt = false;
-
-/* ---------- Die Vorgaben des Vergleichsblattes ----------
-   Die vier Prozentsätze oben stehen so auf dem Blatt. Die beiden
-   Netto-Renditen darunter sind daraus abgeleitet: Sie sind so gewählt,
-   dass nach 50 Jahren genau die Endwerte des Blattes herauskommen
-   (118.586 € im Depot, 280.431 € in der Polizze). Der Abstand zu den
-   6,0 % Fondsperformance ist das, was die Kosten fressen – beim Depot
-   Ausgabeaufschlag, Fonds- und Depotkosten, bei der Polizze die
-   laufenden Kosten. Wer andere Kostenannahmen hat, dreht hier. */
-const VSP = {
-  rate:100, jahre:50,
-  fonds:6.0, sparbuch:0.125, inflation:2.0,
-  kest:27.5,          // auf realisierte Kursgewinne im Depot
-  kestZins:25,        // auf Sparbuchzinsen
-  switchJahre:6,      // alle sechs Jahre wird im Depot umgeschichtet
-  depotAufschlag:5,   // Ausgabeaufschlag je Rate, in Prozent
-  depotNetto:3.563,   // 6,0 % minus Fonds- und Depotkosten
-  polVstr:4,          // Versicherungssteuer auf jede Prämie
-  polAbschluss:45,    // Anteil der Prämie für Abschlusskosten …
-  polAbschlussJahre:5,// … in den ersten fünf Jahren
-  polNetto:5.619      // 6,0 % minus laufende Kosten der Polizze
-};
-
-const VSP_P = {x0:150, x1:1000, y0:190, y1:560, max:300000, jahre:50};   // großes Bild
-const VSP_L = {x0:150, x1:1000, y0:672, y1:896, max:45000,  jahre:20};   // Lupen-Ausschnitt
-const VSP_RAHMEN = {oben:652, unten:920};                                // Kasten um die Lupe
-
-const VSP_REIHEN = [
-  {k:'praemien',  n:'Einzahlung',     f:'#a8873f', b:3.4, s:1},
-  {k:'sparbuch',  n:'Sparkonto',      f:'#1a2a3a', b:3.0, s:2},
-  {k:'inflation', n:'Inflation',      f:'#c0392b', b:3.4, s:3, gestrichelt:true},
-  {k:'depot',     n:'Fonds im Depot', f:'#355f8f', b:3.4, s:4},
-  {k:'polizze',   n:'Fondspolizze',   f:'#27ae60', b:4.0, s:5}
-];
-
-/* Monatliche Werte aller fünf Reihen */
-function vspReihen(){
-  const M = VSP.jahre * 12, r = VSP.rate;
-  const iSB = VSP.sparbuch / 100 * (1 - VSP.kestZins / 100) / 12;
-  const iIN = VSP.inflation / 100 / 12;
-  const iDP = VSP.depotNetto / 100 / 12;
-  const iPO = VSP.polNetto   / 100 / 12;
-  const praemien = [0], sparbuch = [0], inflation = [0], depot = [0], polizze = [0];
-  let vSB = 0, vIN = 0, vDP = 0, eDP = 0, vPO = 0;
-  for(let m = 1; m <= M; m++){
-    vSB = vSB * (1 + iSB) + r;
-    vIN = vIN * (1 + iIN) + r;
-
-    /* Depot: vom Beitrag geht der Ausgabeaufschlag weg, und bei jeder
-       Umschichtung wird der aufgelaufene Gewinn versteuert. */
-    const netto = r * (1 - VSP.depotAufschlag / 100);
-    vDP = vDP * (1 + iDP) + netto; eDP += netto;
-    if(m % (VSP.switchJahre * 12) === 0){
-      vDP -= Math.max(0, vDP - eDP) * VSP.kest / 100;
-      eDP = vDP;
-    }
-
-    /* Polizze: Versicherungssteuer auf jede Prämie, dazu in den ersten
-       fünf Jahren die Abschlusskosten. Dafür keine KESt. */
-    let pr = r * (1 - VSP.polVstr / 100);
-    if(m <= VSP.polAbschlussJahre * 12) pr *= (1 - VSP.polAbschluss / 100);
-    vPO = vPO * (1 + iPO) + pr;
-
-    praemien.push(r * m); sparbuch.push(vSB); inflation.push(vIN);
-    depot.push(vDP); polizze.push(vPO);
-  }
-  /* Beim Verkauf am Ende wird der Gewinn seit der letzten Umschichtung fällig */
-  depot[M] -= Math.max(0, depot[M] - eDP) * VSP.kest / 100;
-  return {praemien, sparbuch, inflation, depot, polizze};
-}
-let VSP_WERTE = null;
-
-/* Das Jahr, in dem die Polizze die Einzahlung einholt – gerechnet,
-   nicht behauptet. Wird im Text und als Marke im Ausschnitt verwendet. */
-function vspWende(){
-  const w = VSP_WERTE || (VSP_WERTE = vspReihen());
-  for(let m = 1; m < w.polizze.length; m++){
-    if(w.polizze[m] >= w.praemien[m]) return Math.round(m / 12);
-  }
-  return null;
-}
-
-const vspPx = (p, jahr) => p.x0 + (p.x1 - p.x0) * jahr / p.jahre;
-const vspPy = (p, w)    => p.y1 - (p.y1 - p.y0) * Math.min(w, p.max) / p.max;
-
-/* Linie als Pfad – monatlich, damit die Zacken der Umschichtung scharf bleiben */
-function vspPfad(p, reihe){
-  const bis = p.jahre * 12;
-  let d = '';
-  for(let m = 0; m <= bis; m++){
-    d += (m ? 'L' : 'M') + vspPx(p, m / 12).toFixed(1) + ' ' + vspPy(p, reihe[m]).toFixed(1);
-  }
-  return d;
-}
-
-function vspGitterBauen(p, jahrSchritt, wertSchritt){
-  let g = '';
-  for(let w = 0; w <= p.max; w += wertSchritt){
-    const y = vspPy(p, w).toFixed(1);
-    g += '<line x1="' + p.x0 + '" y1="' + y + '" x2="' + p.x1 + '" y2="' + y +
-         '" stroke="' + (w === 0 ? '#9aa7b4' : '#e4e9ef') + '" stroke-width="' + (w === 0 ? 1.4 : 1) + '"/>';
-  }
-  for(let j = 0; j <= p.jahre; j += jahrSchritt){
-    const x = vspPx(p, j).toFixed(1);
-    g += '<line x1="' + x + '" y1="' + p.y0 + '" x2="' + x + '" y2="' + p.y1 +
-         '" stroke="' + (j === 0 ? '#9aa7b4' : '#eef2f6') + '" stroke-width="' + (j === 0 ? 1.4 : 1) + '"/>';
-  }
-  return g;
-}
-
-/* Achsenbeschriftung als kleine SVG-Texte */
-function vspAchsen(p, jahrSchritt, wertSchritt, kurz){
-  let t = '';
-  for(let w = 0; w <= p.max; w += wertSchritt){
-    t += '<text x="' + (p.x0 - 10) + '" y="' + (vspPy(p, w) + 5).toFixed(1) +
-         '" text-anchor="end" font-family="Lato,sans-serif" font-size="15" font-weight="700" fill="#5f7b8c">' +
-         (kurz ? (w / 1000) + 'k' : nf.format(w)) + '</text>';
-  }
-  for(let j = 0; j <= p.jahre; j += jahrSchritt){
-    t += '<text x="' + vspPx(p, j).toFixed(1) + '" y="' + (p.y1 + 24) +
-         '" text-anchor="middle" font-family="Lato,sans-serif" font-size="15" font-weight="700" fill="#5f7b8c">' +
-         j + '</text>';
-  }
-  if(!kurz) t += '<text x="' + ((p.x0 + p.x1) / 2).toFixed(0) + '" y="' + (p.y1 + 46) +
-       '" text-anchor="middle" font-family="Lato,sans-serif" font-size="14" font-weight="700" ' +
-       'letter-spacing="1.6" fill="#8a9bab">JAHRE</text>';
-  return t;
-}
-
-/* Die Endwert-Kästchen rechts: an der Linie, aber so auseinandergeschoben,
-   dass sie einander nicht überdecken. */
-function vspEndKaesten(){
-  const M = VSP.jahre * 12;
-  const liste = VSP_REIHEN.map(r=>({
-    r:r, wert:VSP_WERTE[r.k][M], y:vspPy(VSP_P, VSP_WERTE[r.k][M])
-  })).sort((a, b)=>a.y - b.y);
-  const H = 30, LUFT = 5;
-  for(let i = 1; i < liste.length; i++){
-    if(liste[i].y - liste[i - 1].y < H + LUFT) liste[i].y = liste[i - 1].y + H + LUFT;
-  }
-  const ueber = liste[liste.length - 1].y + H - VSP_P.y1;
-  if(ueber > 0) liste.forEach(e=>{ e.y -= ueber; });
-  return liste.map(e=>({
-    s:e.r.s, farbe:e.r.f, text:eur(e.wert),
-    kasten:[1016, e.y - H / 2, 206, H],
-    fuehrung:'M' + VSP_P.x1 + ' ' + vspPy(VSP_P, e.wert).toFixed(1) +
-             ' L1010 ' + e.y.toFixed(1)
-  }));
-}
-
-function vspBauen(){
-  if(vspGebaut) return;
-  const lage = $('#vspLage'), gitter = $('#vspGitter'), wege = $('#vspWege');
-  if(!lage || !gitter || !wege) return;
-  VSP_WERTE = vspReihen();
-
-  /* ---- Gitter und Achsen ---- */
-  gitter.innerHTML =
-    vspGitterBauen(VSP_P, 2, 25000) + vspAchsen(VSP_P, 5, 50000, false) +
-    '<g class="vsp-g" data-s="6">' + vspGitterBauen(VSP_L, 1, 5000) +
-      vspAchsen(VSP_L, 2, 15000, true) + '</g>';
-
-  /* ---- Die fünf Linien, groß und im Ausschnitt ---- */
-  const strich = r => r.gestrichelt ? ' stroke-dasharray="11 8" ' : ' ';
-  let w = '';
-  VSP_REIHEN.forEach(r=>{
-    const d = vspPfad(VSP_P, VSP_WERTE[r.k]);
-    if(!r.gestrichelt){
-      w += '<path class="eb-weg" data-s="' + r.s + '" pathLength="1" d="' + d +
-           '" stroke="' + r.f + '" stroke-width="' + r.b + '"/>';
-      return;
-    }
-    /* Strichlierte Linie: stroke-dasharray macht hier die Striche, kann also
-       nicht gleichzeitig die Linie entstehen lassen. Darum wandert die
-       Zeichen-Bewegung in eine Maske – ein dicker weißer Strich, der sich
-       aufzieht und die strichlierte Linie Stück für Stück freigibt. */
-    w += '<mask id="vspM_' + r.k + '" maskUnits="userSpaceOnUse" x="0" y="0" ' +
-         'width="' + VSPW + '" height="' + VSPH + '">' +
-         '<path class="eb-weg" data-s="' + r.s + '" pathLength="1" d="' + d +
-         '" stroke="#fff" stroke-width="' + (r.b + 12) + '"/></mask>' +
-         '<path d="' + d + '" fill="none" stroke="' + r.f + '" stroke-width="' + r.b + '"' +
-         strich(r) + 'mask="url(#vspM_' + r.k + ')"/>';
-  });
-  /* Führungslinien zu den Endwerten */
-  const enden = vspEndKaesten();
-  enden.forEach(e=>{
-    w += '<path class="eb-weg" data-s="' + e.s + '" pathLength="1" d="' + e.fuehrung +
-         '" stroke="' + e.farbe + '" stroke-width="1.4" stroke-dasharray="4 4"/>';
-  });
-
-  /* ---- Die Lupe: Ring über den ersten Jahren und der Kegel nach unten ---- */
-  const rx = vspPx(VSP_P, 20), ry = VSP_P.y1;
-  w += '<g class="vsp-g" data-s="6">' +
-       '<rect x="' + (VSP_P.x0 - 4) + '" y="' + (vspPy(VSP_P, 45000) - 4).toFixed(1) + '" ' +
-       'width="' + (rx - VSP_P.x0 + 8).toFixed(1) + '" height="' + (ry - vspPy(VSP_P, 45000) + 8).toFixed(1) + '" ' +
-       'rx="10" fill="none" stroke="#5f7b8c" stroke-width="2.4" stroke-dasharray="7 5"/>' +
-       '<path d="M' + (VSP_P.x0 - 4) + ' ' + (ry + 4) + ' L' + VSP_L.x0 + ' ' + VSP_RAHMEN.oben + ' M' +
-       (rx + 4).toFixed(1) + ' ' + (ry + 4) + ' L' + VSP_L.x1 + ' ' + VSP_RAHMEN.oben + '" ' +
-       'stroke="#9aa7b4" stroke-width="1.6" stroke-dasharray="5 5" fill="none"/>' +
-       '<rect x="' + VSP_L.x0 + '" y="' + VSP_RAHMEN.oben + '" width="' + (VSP_L.x1 - VSP_L.x0) + '" ' +
-       'height="' + (VSP_RAHMEN.unten - VSP_RAHMEN.oben) + '" ' +
-       'rx="8" fill="none" stroke="#c9d4de" stroke-width="1.6"/>' +
-       '</g>';
-  /* und dieselben Linien noch einmal im Ausschnitt */
-  w += '<g class="vsp-g" data-s="6">';
-  VSP_REIHEN.forEach(r=>{
-    w += '<path d="' + vspPfad(VSP_L, VSP_WERTE[r.k]) + '" fill="none" stroke="' + r.f +
-         '" stroke-width="' + (r.b + 0.4) + '"' + strich(r) + '/>';
-  });
-  /* Marke am Wendepunkt */
-  const wj = vspWende();
-  if(wj != null && wj <= VSP_L.jahre){
-    const wx = vspPx(VSP_L, wj).toFixed(1);
-    w += '<line x1="' + wx + '" y1="' + VSP_L.y0 + '" x2="' + wx + '" y2="' + VSP_L.y1 + '" ' +
-         'stroke="#27ae60" stroke-width="1.6" stroke-dasharray="5 4"/>' +
-         '<text x="' + (+wx + 7) + '" y="' + (VSP_L.y1 - 8) + '" font-family="Lato,sans-serif" ' +
-         'font-size="15" font-weight="900" fill="#27ae60">Jahr ' + wj + '</text>';
-  }
-  w += '</g>';
-  wege.innerHTML = w;
-
-  /* ---- Texte und Kästchen ---- */
-  const teile = [
-    {s:0, c:'vsp-titel', g:[56, 16, 900, 66],
-     h:'Vergleich Sparformen<span>' + VSP.rate + ' &euro; im Monat, ' + VSP.jahre +
-       ' Jahre lang &ndash; f&uuml;nf Wege, ein Ergebnis</span>'},
-    {s:0, c:'vsp-vorgaben', g:[56, 92, 1128, 54],
-     h:'<div><i>Performance Fonds</i><b>' + VSP.fonds.toString().replace('.', ',') + ' %</b></div>' +
-       '<div><i>Zinsen Sparkonto</i><b>' + VSP.sparbuch.toString().replace('.', ',') + ' %</b></div>' +
-       '<div><i>Inflation</i><b>' + VSP.inflation.toString().replace('.', ',') + ' %</b></div>' +
-       '<div><i>Sparsumme pro Monat</i><b>' + eur(VSP.rate) + '</b></div>'}
-  ];
-  /* Legende – jeder Eintrag kommt mit seiner Linie */
-  VSP_REIHEN.forEach((r, i)=>{
-    teile.push({s:r.s, c:'vsp-leg', g:[160 + i * 178, 160, 172, 26],
-      h:'<s class="' + (r.gestrichelt ? 'strich' : '') + '" style="' +
-        (r.gestrichelt ? 'color:' + r.f : 'background:' + r.f) + '"></s><span>' + r.n + '</span>'});
-  });
-  /* Endwerte */
-  enden.forEach(e=>{
-    teile.push({s:e.s, c:'vsp-ende', g:e.kasten, stil:'color:' + e.farbe + ';', h:e.text});
-  });
-  /* Hinweise zur Polizze und zur Lupe */
-  teile.push({s:4, c:'vsp-hinw', g:[196, 204, 372, 54],
-    h:'Beispiel: Fondswechsel alle ' + VSP.switchJahre + ' Jahre (Strategieanpassung, ' +
-      'Markt&auml;nderungen, etc.). Jedes Mal kostet es Geld f&uuml;r Kaufgeb&uuml;hren und KESt.'});
-  /* Der Gegensatz gehört zur Polizze und kommt deshalb mit ihr – in ihrer Farbe. */
-  teile.push({s:5, c:'vsp-hinw gruen', g:[196, 262, 372, 26],
-    h:'In der Fondspolizze: Keine Geb&uuml;hren und keine KESt!'});
-  teile.push({s:6, c:'vsp-lupe-titel', g:[152, 622, 560, 24],
-    h:'Die ersten ' + VSP_L.jahre + ' Jahre unter der Lupe'});
-  teile.push({s:6, c:'vsp-minus', g:[192, 684, 266, 56],
-    h:'Abschlusskosten der ersten<br>f&uuml;nf Jahre: die Polizze liegt<br>zuerst unter der Einzahlung.'});
-  teile.push({s:6, c:'vsp-merk', g:[598, 678, 300, 58],
-    h:'Ab Jahr&nbsp;' + vspWende() + ' dreht es: Fondswechsel kosten nichts, und es f&auml;llt <b>keine KESt</b> an.'});
-
-  lage.innerHTML = teile.map(t =>
-    '<div class="eb-el ' + t.c + '" data-s="' + t.s + '" style="' + vspPos(t.g) + (t.stil || '') + '">' +
-    t.h + '</div>').join('');
-
-  vspGebaut = true;
-}
-
-function vspRegieText(n){
-  const M = VSP.jahre * 12, W = VSP_WERTE || {};
-  const e = k => W[k] ? eur(W[k][M]) : '';
-  const t = {
-    0: 'F&uuml;nf Wege f&uuml;r dasselbe Geld: ' + eur(VSP.rate) + ' im Monat, ' + VSP.jahre +
-       ' Jahre lang. Ein Klick ins Bild zeichnet die erste Linie.',
-    1: '<b>Die Einzahlung.</b> ' + VSP.jahre * 12 + ' mal ' + eur(VSP.rate) + ' &ndash; zusammen <b>' +
-       e('praemien') + '</b>. Das ist die Linie, an der sich alles andere messen muss.',
-    2: '<b>Das Sparkonto.</b> Bei ' + VSP.sparbuch.toString().replace('.', ',') +
-       ' % Zinsen kommen in f&uuml;nfzig Jahren <b>' + e('sparbuch') +
-       '</b> heraus &ndash; gut ' + eur(W.sparbuch ? W.sparbuch[M] - 60000 : 0) +
-       ' mehr als eingezahlt. Die Linie liegt praktisch auf der Einzahlung.',
-    3: '<b>Die Inflation.</b> Um die Kaufkraft Ihrer Einzahlungen zu halten, br&auml;uchten Sie <b>' +
-       e('inflation') + '</b>. Alles darunter ist real ein Verlust &ndash; auch das Sparkonto.',
-    4: '<b>Fonds im Depot.</b> Derselbe Fonds, aber im Depot: Ausgabeaufschlag, laufende Kosten, und alle ' +
-       VSP.switchJahre + ' Jahre beim Umschichten ' + VSP.kest.toString().replace('.', ',') +
-       ' % KESt auf den Gewinn. Das sind die Zacken in der Linie. Ergebnis: <b>' + e('depot') + '</b>.',
-    5: '<b>Die Fondspolizze.</b> Fondswechsel kosten nichts, und es f&auml;llt keine KESt an. Deshalb bleibt der Zinseszins ungest&ouml;rt &ndash; am Ende <b>' +
-       e('polizze') + '</b>, mehr als das Doppelte des Depots.',
-    6: 'Und der Anfang? In den ersten f&uuml;nf Jahren gehen die Abschlusskosten weg, die Polizze liegt unter der Einzahlung. Ab Jahr&nbsp;' + vspWende() + ' dreht sie ins Plus &ndash; und danach ist sie nicht mehr einzuholen. <b>Die Polizze braucht Zeit; wer sie nicht hat, nimmt eine andere Sparform.</b>'
-  };
-  return t[n] || '';
-}
-
-function vspZeigen(n, vomNutzer){
-  vspBauen();
-  vspSchritt = Math.max(0, Math.min(VSP_MAX, n));
-  if(vomNutzer && vspSchritt > 0 && !S.vspBenutzt){ S.vspBenutzt = true; sichern(); }
-  $$('#vspBuehne [data-s]').forEach(e=>{ e.classList.toggle('da', +e.dataset.s <= vspSchritt); });
-  const z = $('#vspZaehler'); if(z) z.textContent = vspSchritt + ' / ' + VSP_MAX;
-  const r = $('#vspRegie');   if(r) r.innerHTML = vspRegieText(vspSchritt);
-  const bz = $('#vspZur'), bv = $('#vspVor');
-  if(bz) bz.disabled = vspSchritt === 0;
-  if(bv) bv.disabled = vspSchritt === VSP_MAX;
-}
-
-function vspOeffnen(){
-  vspBauen();
-  $('#vspKarte').classList.add('sichtbar','vollbild');
-  document.body.style.overflow = 'hidden';
-  vspOffen = true;
-  vspZeigen(vspSchritt);
-  $('#vspKarte').scrollTop = 0;
-}
-function vspSchliessen(){
-  $('#vspKarte').classList.remove('sichtbar','vollbild');
-  document.body.style.overflow = '';
-  vspOffen = false;
-}
-function vspGehoertDazu(){ return !!S.vspBenutzt; }
-function vspDruckVor(){
-  if(vspOffen || !vspGebaut || !vspGehoertDazu()) return;
-  if(document.body.classList.contains('nur-erklaer')) return;
-  vspDruckTemp = true; vspSchrittMerk = vspSchritt;
-  $('#vspKarte').classList.add('sichtbar');
-  vspZeigen(VSP_MAX);
-}
-function vspDruckNach(){
-  if(!vspDruckTemp) return;
-  vspDruckTemp = false;
-  $('#vspKarte').classList.remove('sichtbar');
-  vspZeigen(vspSchrittMerk);
-}
-
-(function vspStart(){
-  const b = $('#vspBuehne');
-  if(!b) return;
-  vspBauen();
-  vspZeigen(0);
-
-  b.addEventListener('click', e=>{
-    if(e.target.closest('input,select,textarea,button,a')) return;
-    vspZeigen(vspSchritt + 1, true);
-  });
-  $$('.eb-leiste button[data-eb="vsp"]').forEach(btn=>btn.addEventListener('click', vspOeffnen));
-  $('#vspVor').addEventListener('click',  ()=>vspZeigen(vspSchritt+1, true));
-  $('#vspZur').addEventListener('click',  ()=>vspZeigen(vspSchritt-1, true));
-  $('#vspVorn').addEventListener('click', ()=>vspZeigen(0));
-  $('#vspAlle').addEventListener('click', ()=>vspZeigen(VSP_MAX, true));
-  $('#vspZu').addEventListener('click', vspSchliessen);
-  $('#vspDruck').addEventListener('click', ()=>{
-    const merk = vspSchritt;
-    vspZeigen(VSP_MAX);
-    document.body.classList.add('nur-erklaer');
-    window.print();
-    setTimeout(()=>{ document.body.classList.remove('nur-erklaer'); vspZeigen(merk); }, 500);
-  });
-
-  document.addEventListener('keydown', e=>{
-    if(!vspOffen) return;
-    if(e.key === 'Escape'){ vspSchliessen(); return; }
-    if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName||'')) return;
-    if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); vspZeigen(vspSchritt+1, true); }
-    else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); vspZeigen(vspSchritt-1, true); }
-  });
-})();
-
-
-/* =========================================================
    Drucken / Zurücksetzen
    ========================================================= */
 let druckVorherZu = [];
@@ -3995,7 +4076,7 @@ function druckVorbereiten(){
     const t = k.querySelector('.ziel-notiz textarea');
     k.classList.toggle('ohne-notiz', !t || !t.value.trim());
   });
-  ebDruckVor(); ecDruckVor(); wgDruckVor(); infDruckVor(); fsDruckVor(); vspDruckVor();
+  schaubilderDruckVor();
 }
 function druckAufraeumen(){
   $$('textarea').forEach(t=>{ t.style.height=t.dataset.h||''; });
@@ -4004,7 +4085,7 @@ function druckAufraeumen(){
     druckVorherZu = [];
     zielRasterZeichnen();
   }
-  ebDruckNach(); ecDruckNach(); wgDruckNach(); infDruckNach(); fsDruckNach(); vspDruckNach();
+  schaubilderDruckNach();
 }
 window.addEventListener('beforeprint', druckVorbereiten);
 window.addEventListener('afterprint', druckAufraeumen);
