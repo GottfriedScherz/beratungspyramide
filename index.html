@@ -366,6 +366,15 @@
     padding:8px 17px; font:700 13px 'Lato',sans-serif; cursor:pointer; letter-spacing:.02em;
   }
   .eb-leiste button:hover{background:var(--accent); color:#fff;}
+  /* Grün heißt: dieses Bild kommt in die Druckdatei */
+  .eb-leiste button.dabei{background:var(--good); border-color:var(--good); color:#fff;}
+  .eb-leiste button.dabei:hover{background:#1f8d4d; border-color:#1f8d4d; color:#fff;}
+  .eb-leiste button .eb-weg{
+    display:inline-block; margin:0 -5px 0 9px; width:18px; height:18px; line-height:17px;
+    border-radius:50%; background:rgba(255,255,255,.3); text-align:center;
+    font:700 14px 'Lato',sans-serif; vertical-align:-3px;
+  }
+  .eb-leiste button .eb-weg:hover{background:rgba(255,255,255,.62);}
 
   .erklaer-karte{display:none;}
   .erklaer-karte.sichtbar{display:block;}
@@ -2159,9 +2168,12 @@ const EBS = (window.EB_HOST && window.EB_HOST.stand) || {};
 /* Der Baustein legt seinen eigenen Stand an. So funktioniert er in jedem
    Hosttool, egal wie dessen Stand aussieht – und auch in einem Termin,
    der angelegt wurde, bevor es die Schaubilder gab. */
-['eb','ec','wg','inf','fs','vsp'].forEach(function(k){ EBS[k] = EBS[k] || {}; });
+const EB_KUERZEL = ['eb','ec','wg','inf','fs','vsp'];
+EB_KUERZEL.forEach(function(k){ EBS[k] = EBS[k] || {}; });
 function ebSichern(){
   try{ if(window.EB_HOST && window.EB_HOST.sichern) window.EB_HOST.sichern(); }catch(e){}
+  /* Die Leiste zeigt immer den aktuellen Stand: grün = kommt in den Ausdruck */
+  try{ schaubilderKnoepfeMarkieren(); }catch(e){}
 }
 /* Druckhaken für alle sechs Bilder auf einmal – das Hosttool ruft nur diese zwei. */
 function schaubilderDruckVor(){ ebDruckVor(); ecDruckVor(); wgDruckVor(); infDruckVor(); fsDruckVor(); vspDruckVor(); }
@@ -2175,8 +2187,31 @@ function schaubilderStand(){ return EBS; }
 function schaubilderStandSetzen(d){
   Object.keys(EBS).forEach(function(k){ delete EBS[k]; });
   if(d && typeof d === 'object') Object.keys(d).forEach(function(k){ EBS[k] = d[k]; });
-  ['eb','ec','wg','inf','fs','vsp'].forEach(function(k){ EBS[k] = EBS[k] || {}; });
+  EB_KUERZEL.forEach(function(k){ EBS[k] = EBS[k] || {}; });
+  try{ schaubilderKnoepfeMarkieren(); }catch(e){}
 }
+/* Für ein Hosttool, dessen Stand die Bilder mittraegt (Beratung,
+   Kundenstrecke): Schlüssel hinein und heraus, über EB_KUERZEL. Vorher
+   stand die Liste dort von Hand – darin fehlten Bilder, und was fehlte,
+   ging beim Speichern verloren. */
+function ebStandRaus(S){
+  const d = {};
+  EB_KUERZEL.forEach(function(k){
+    d[k] = S[k] || {};
+    d[k + 'Benutzt'] = !!S[k + 'Benutzt'];
+    if(S[k + 'Aus']) d[k + 'Aus'] = true;
+  });
+  return d;
+}
+function ebStandRein(S, d){
+  d = d || {};
+  EB_KUERZEL.forEach(function(k){
+    S[k] = d[k] || {};
+    S[k + 'Benutzt'] = !!d[k + 'Benutzt'];
+    if(d[k + 'Aus']) S[k + 'Aus'] = true; else delete S[k + 'Aus'];
+  });
+}
+function ebStandLeeren(S){ ebStandRein(S, {}); }
 
 /* Die sechs Bilder und wie man sie öffnet. Kommt eines dazu: hier eintragen
    UND den Knopf in eb_leiste.txt ergänzen – beides liegt im selben Ordner. */
@@ -2200,12 +2235,63 @@ function schaubilderLeisteVerdrahten(leiste){
     if(!b.dataset.verdrahtet)
       console.warn('Schaubild ohne Eintrag in SCHAUBILDER:', b.dataset.eb);
   });
+  schaubilderKnoepfeMarkieren();
 }
 
 /* Wurde in diesem Termin überhaupt ein Bild benutzt? */
 function schaubilderBenutzt(){
   return ebGehoertDazu() || ecGehoertDazu() || wgGehoertDazu() ||
          infGehoertDazu() || fsGehoertDazu() || vspGehoertDazu();
+}
+
+/* =========================================================
+   Was kommt in die Druckdatei?
+   ---------------------------------------------------------
+   Ein Bild wandert hinein, sobald es im Gespräch geöffnet
+   wurde – bei der Arbeitskraftabsicherung auch dann, wenn
+   nur Beträge eingetragen sind. Der Knopf in der Leiste wird
+   dafür grün. Ein Klick auf das × im grünen Knopf nimmt das
+   Bild wieder heraus; ein erneutes Öffnen holt es zurück.
+   ========================================================= */
+/* Knopf in der Leiste -> Kürzel des Bildes */
+const EB_KNOPF = {akw:'eb', cae:'ec', wdg:'wg', inf:'inf', fos:'fs', vsp:'vsp'};
+
+function schaubildBenutzen(k){
+  EBS[k + 'Benutzt'] = true;
+  delete EBS[k + 'Aus'];
+  ebSichern();
+}
+function schaubildHeraus(k){
+  EBS[k + 'Aus'] = true;
+  ebSichern();
+}
+/* Gehört das Bild hinter diesem Knopf in den Ausdruck? */
+function schaubildKnopfDazu(id){
+  const k = EB_KNOPF[id];
+  if(!k) return false;
+  const f = window[k + 'GehoertDazu'];
+  return typeof f === 'function' ? !!f() : false;
+}
+function schaubilderKnoepfeMarkieren(){
+  $$('.eb-leiste button[data-eb]').forEach(function(b){
+    const dazu = schaubildKnopfDazu(b.dataset.eb);
+    b.classList.toggle('dabei', dazu);
+    b.title = dazu ? 'Kommt in die Druckdatei – das × nimmt es wieder heraus'
+                   : 'Bild öffnen';
+    let x = b.querySelector('.eb-weg');
+    if(dazu && !x){
+      x = document.createElement('span');
+      x.className = 'eb-weg';
+      x.textContent = '×';
+      x.addEventListener('click', function(e){
+        e.stopPropagation();
+        schaubildHeraus(EB_KNOPF[b.dataset.eb]);
+      });
+      b.appendChild(x);
+    }else if(!dazu && x){
+      x.remove();
+    }
+  });
 }
 
 /* =========================================================
@@ -2369,7 +2455,7 @@ function ebHatWerte(){
   return EB_GELD.some(id => (EBS.eb[id]||'').toString().trim() !== '' && parseFloat(EBS.eb[id]) > 0);
 }
 /* Im Ausdruck der Beratung erscheint das Bild, sobald es gezeigt oder befüllt wurde */
-function ebGehoertDazu(){ return !!EBS.ebBenutzt || ebHatWerte(); }
+function ebGehoertDazu(){ return !EBS.ebAus && (!!EBS.ebBenutzt || ebHatWerte()); }
 
 function ebZeigen(n, vomNutzer){
   ebBauen();
@@ -2393,6 +2479,7 @@ function ebOeffnen(){
   $('#ebKarte').classList.add('sichtbar','vollbild');
   document.body.style.overflow = 'hidden';
   ebOffen = true;
+  schaubildBenutzen('eb');   /* geöffnet = kommt in die Druckdatei */
   ebZeigen(ebSchritt);
   $('#ebKarte').scrollTop = 0;
 }
@@ -2690,6 +2777,7 @@ function ecOeffnen(){
   $('#ecKarte').classList.add('sichtbar','vollbild');
   document.body.style.overflow = 'hidden';
   ecOffen = true;
+  schaubildBenutzen('ec');   /* geöffnet = kommt in die Druckdatei */
   ecZeigen(ecSchritt);
   $('#ecKarte').scrollTop = 0;
 }
@@ -2698,7 +2786,7 @@ function ecSchliessen(){
   document.body.style.overflow = '';
   ecOffen = false;
 }
-function ecGehoertDazu(){ return !!EBS.ecBenutzt; }
+function ecGehoertDazu(){ return !EBS.ecAus && !!EBS.ecBenutzt; }
 function ecDruckVor(){
   if(ecOffen || !ecGebaut || !ecGehoertDazu()) return;
   if(document.body.classList.contains('nur-erklaer')) return;   // Einzeldruck des anderen Bildes
@@ -2905,6 +2993,7 @@ function wgOeffnen(){
   $('#wgKarte').classList.add('sichtbar','vollbild');
   document.body.style.overflow = 'hidden';
   wgOffen = true;
+  schaubildBenutzen('wg');   /* geöffnet = kommt in die Druckdatei */
   wgZeigen(wgSchritt);
   $('#wgKarte').scrollTop = 0;
 }
@@ -2913,7 +3002,7 @@ function wgSchliessen(){
   document.body.style.overflow = '';
   wgOffen = false;
 }
-function wgGehoertDazu(){ return !!EBS.wgBenutzt; }
+function wgGehoertDazu(){ return !EBS.wgAus && !!EBS.wgBenutzt; }
 function wgDruckVor(){
   if(wgOffen || !wgGebaut || !wgGehoertDazu()) return;
   if(document.body.classList.contains('nur-erklaer')) return;   // Einzeldruck eines anderen Bildes
@@ -3051,6 +3140,7 @@ function infOeffnen(){
   $('#infKarte').classList.add('sichtbar','vollbild');
   document.body.style.overflow = 'hidden';
   infOffen = true;
+  schaubildBenutzen('inf');   /* geöffnet = kommt in die Druckdatei */
   infZeigen(infSchritt);
   $('#infKarte').scrollTop = 0;
 }
@@ -3059,7 +3149,7 @@ function infSchliessen(){
   document.body.style.overflow = '';
   infOffen = false;
 }
-function infGehoertDazu(){ return !!EBS.infBenutzt; }
+function infGehoertDazu(){ return !EBS.infAus && !!EBS.infBenutzt; }
 function infDruckVor(){
   if(infOffen || !infGebaut || !infGehoertDazu()) return;
   if(document.body.classList.contains('nur-erklaer')) return;
@@ -3313,6 +3403,7 @@ function fsOeffnen(){
   $('#fsKarte').classList.add('sichtbar','vollbild');
   document.body.style.overflow = 'hidden';
   fsOffen = true;
+  schaubildBenutzen('fs');   /* geöffnet = kommt in die Druckdatei */
   fsZeigen(fsSchritt);
   $('#fsKarte').scrollTop = 0;
 }
@@ -3321,7 +3412,7 @@ function fsSchliessen(){
   document.body.style.overflow = '';
   fsOffen = false;
 }
-function fsGehoertDazu(){ return !!EBS.fsBenutzt; }
+function fsGehoertDazu(){ return !EBS.fsAus && !!EBS.fsBenutzt; }
 function fsDruckVor(){
   if(fsOffen || !fsGebaut || !fsGehoertDazu()) return;
   if(document.body.classList.contains('nur-erklaer')) return;
@@ -3693,6 +3784,7 @@ function vspOeffnen(){
   $('#vspKarte').classList.add('sichtbar','vollbild');
   document.body.style.overflow = 'hidden';
   vspOffen = true;
+  schaubildBenutzen('vsp');   /* geöffnet = kommt in die Druckdatei */
   vspZeigen(vspSchritt);
   $('#vspKarte').scrollTop = 0;
 }
@@ -3701,7 +3793,7 @@ function vspSchliessen(){
   document.body.style.overflow = '';
   vspOffen = false;
 }
-function vspGehoertDazu(){ return !!EBS.vspBenutzt; }
+function vspGehoertDazu(){ return !EBS.vspAus && !!EBS.vspBenutzt; }
 function vspDruckVor(){
   if(vspOffen || !vspGebaut || !vspGehoertDazu()) return;
   if(document.body.classList.contains('nur-erklaer')) return;
@@ -3762,7 +3854,7 @@ function zustandSammeln(){
   return {
     v:1, felder:f, personB:S.personB, zweiKonten:S.zweiKonten, offen:S.offen, pfeilAn:S.pfeilAn, betrag:S.betrag,
     notiz:S.notiz, notizOffen:S.notizOffen, sparte:S.sparte,
-    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross, eb:S.eb, ebBenutzt:S.ebBenutzt, ec:S.ec, ecBenutzt:S.ecBenutzt, wg:S.wg, wgBenutzt:S.wgBenutzt, infBenutzt:S.infBenutzt, fs:S.fs, fsBenutzt:S.fsBenutzt,
+    pyrText:S.pyrText, konten:S.konten, ziele:S.ziele, zielNotiz:S.zielNotiz, zielNotizOffen:S.zielNotizOffen, stufe:S.stufe, notizGross:S.notizGross, ...ebStandRaus(S),
     pyrMalen:{striche:S.pyrMalen.striche},
     seiten:S.seiten.map(s=>({striche:s.striche, farbe:s.farbe}))
   };
@@ -3778,7 +3870,7 @@ function zustandSetzen(d){
   S.offen = d.offen||{}; S.pfeilAn = d.pfeilAn||{};
   S.notiz = d.notiz||{}; S.notizOffen = d.notizOffen||{}; S.sparte = d.sparte||{};
   S.pyrText = d.pyrText||{}; S.konten = d.konten||[];
-  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||''; S.eb = d.eb||{}; S.ebBenutzt = !!d.ebBenutzt; S.ec = d.ec||{}; S.ecBenutzt = !!d.ecBenutzt; S.wg = d.wg||{}; S.wgBenutzt = !!d.wgBenutzt; S.infBenutzt = !!d.infBenutzt; S.fs = d.fs||{}; S.fsBenutzt = !!d.fsBenutzt;
+  S.ziele = d.ziele||{}; S.zielNotiz = d.zielNotiz||{}; S.zielNotizOffen = d.zielNotizOffen||{}; S.stufe = (d.stufe==null?null:d.stufe); S.notizGross = d.notizGross||''; ebStandRein(S, d);
   BEREICHE.forEach(b=>{ if(d.betrag && d.betrag[b.id]) S.betrag[b.id]=d.betrag[b.id]; });
   if(d.pyrMalen && d.pyrMalen.striche) S.pyrMalen.striche = d.pyrMalen.striche;
   (d.seiten||[]).forEach(s=>{ S.seiten.push({striche:s.striche||[], farbe:s.farbe, radierer:false}); });
@@ -3793,7 +3885,7 @@ function zustandLeeren(){
   S.personB=false; $('#personB').style.display='none'; $('#btnBdazu').style.display='block';
   S.zweiKonten=true;
   S.offen={}; S.pfeilAn={}; S.notiz={}; S.notizOffen={}; S.sparte={};
-  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross=''; S.eb={}; S.ebBenutzt=false; S.ec={}; S.ecBenutzt=false; S.wg={}; S.wgBenutzt=false; S.infBenutzt=false; S.fs={}; S.fsBenutzt=false;
+  S.pyrText={}; S.konten=[]; S.ziele={}; S.zielNotiz={}; S.zielNotizOffen={}; S.stufe=null; S.notizGross=''; ebStandLeeren(S);
   if($('#zielFrei')) $('#zielFrei').value='';
   BEREICHE.forEach(b=>S.betrag[b.id]={A:0,B:0});
   S.pyrMalen.striche=[];
