@@ -639,7 +639,20 @@
 
 
   /* ---------- Erklärbild 5: Fondssparen ---------- */
-  .eb-buehne.fs-buehne{aspect-ratio:1240/1020;}
+  /* Die Fondssparen-Buehne ist mit 1240x1020 fast quadratisch: Auf einem
+     breiten Bildschirm wuerde sie ueber 1000 Pixel hoch und passte nicht mehr
+     aufs Bild. Deshalb wird nicht die Hoehe beschnitten - das wuerde das
+     Seitenverhaeltnis brechen und die Beschriftungen von der Zeichnung
+     loesen -, sondern die Breite so begrenzt, dass die daraus errechnete
+     Hoehe in den sichtbaren Bereich passt. */
+  .eb-buehne.fs-buehne{
+    aspect-ratio:1240/1020;
+    max-width:min(100%, calc((100dvh - 210px) * 1240 / 1020));
+    margin-inline:auto;
+  }
+  @media print{
+    .eb-buehne.fs-buehne{max-width:100%;}
+  }
 
   /* ---------- Erklärbild: Vergleich Sparformen ---------- */
   .eb-buehne.vsp-buehne{aspect-ratio:1240/980;}
