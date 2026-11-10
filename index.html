@@ -1239,6 +1239,34 @@ function pyramideZeichnen(){
   gp.appendChild(mk('polygon',{class:'pyr-umriss',
     points:`${G.apexX},${G.apexY} ${G.baseR},${G.baseY} ${G.baseL},${G.baseY}`}));
 
+  /* Farbige Flaechen der Ebenen (Vorgabe 10.11.2026).
+     Langfristig im Gruen der Analyse (Vorgabe 10.11.2026) - das ist der
+     Topf, auf den es ankommt. Kurzfristig dafuer im hellen Markenblau,
+     hier ohne die Querzeilen der Analyse. Mittelfristig ein
+     zurueckhaltendes Orange, die beiden Sockel im aufgehellten
+     Schutzengel-Gold (#a8873f). Die Flaechen liegen VOR den Ebenenlinien
+     und der Beschriftung, damit beides darauf sichtbar bleibt. */
+  const EBENEN_FARBE = {
+    mittel:'#fbead9',   // dezentes Orange
+    lang:  '#e4f1ea',   // Gruen - der Topf, auf den es ankommt
+    kurz:  '#dce9f5',   // Markenblau, hell
+    sockel:'#f3ead6'    // Schutzengel-Gold, aufgehellt
+  };
+  const ebeneFuellen = (farbe, punkte)=>
+    gp.appendChild(mk('polygon',{fill:farbe, stroke:'none', points:punkte}));
+
+  ebeneFuellen(EBENEN_FARBE.mittel,
+    `${G.apexX},${G.apexY} ${xR(G.y1)},${G.y1} ${xL(G.y1)},${G.y1}`);
+  ebeneFuellen(EBENEN_FARBE.lang,
+    `${xL(G.y1)},${G.y1} ${xR(G.y1)},${G.y1} ${xR(G.y2)},${G.y2} ${xL(G.y2)},${G.y2}`);
+  ebeneFuellen(EBENEN_FARBE.kurz,
+    `${xL(G.y2)},${G.y2} ${xR(G.y2)},${G.y2} ${xR(G.y3)},${G.y3} ${xL(G.y3)},${G.y3}`);
+  /* Beide Sockelhaelften gehoeren zur Absicherung und bekommen denselben Ton. */
+  ebeneFuellen(EBENEN_FARBE.sockel,
+    `${xL(G.y3)},${G.y3} ${G.apexX},${G.y3} ${G.apexX},${G.baseY} ${G.baseL},${G.baseY}`);
+  ebeneFuellen(EBENEN_FARBE.sockel,
+    `${G.apexX},${G.y3} ${xR(G.y3)},${G.y3} ${G.baseR},${G.baseY} ${G.apexX},${G.baseY}`);
+
   // Ebenenlinien
   [G.y1,G.y2,G.y3].forEach(y=>{
     gp.appendChild(mk('line',{class:'ebene-linie',x1:xL(y),y1:y,x2:xR(y),y2:y}));
