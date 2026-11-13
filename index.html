@@ -857,10 +857,10 @@
     <div class="card">
       <h2>Neue Beratung</h2>
       <div class="neu-zeile">
-        <input type="text" id="neuKunde" placeholder="Initialen, z. B. M.M." maxlength="10">
+        <input type="text" id="neuKunde" placeholder="Initialen, z. B. M.M. oder M.M., F.M." maxlength="22">
         <button type="button" class="btn-haupt" id="btnNeu">Beratung anlegen</button>
       </div>
-      <p class="hinweis-klein">Nur Initialen – keine Namen, keine Orte. Wofür sie stehen, hältst du in der Übersicht im Merkfeld fest; das bleibt nur auf diesem Gerät. Beratungen werden 6 Wochen nach der letzten Änderung automatisch gelöscht.</p>
+      <p class="hinweis-klein">Nur Initialen – keine Namen, keine Orte. Bei zwei Personen beide, mit Komma getrennt. Wofür sie stehen, hältst du in der Übersicht im Merkfeld fest; das bleibt nur auf diesem Gerät. Beratungen werden 6 Wochen nach der letzten Änderung automatisch gelöscht.</p>
     </div>
 
     <div class="card">
@@ -961,6 +961,7 @@
     <div class="buehne" id="buehne">
       <svg class="pyr" id="svgPyr" viewBox="0 0 1400 880" xmlns="http://www.w3.org/2000/svg" aria-label="Beratungspyramide">
         <defs id="pfeilDefs"></defs>
+        <g id="gFlaechen"></g>
         <g id="gPfeile"></g>
         <g id="gPyr"></g>
         <g id="gKlick"></g>
@@ -1240,32 +1241,39 @@ function pyramideZeichnen(){
     points:`${G.apexX},${G.apexY} ${G.baseR},${G.baseY} ${G.baseL},${G.baseY}`}));
 
   /* Farbige Flaechen der Ebenen (Vorgabe 10.11.2026).
-     Langfristig im Gruen der Analyse (Vorgabe 10.11.2026) - das ist der
-     Topf, auf den es ankommt. Kurzfristig dafuer im hellen Markenblau,
-     hier ohne die Querzeilen der Analyse. Mittelfristig ein
-     zurueckhaltendes Orange, die beiden Sockel im aufgehellten
-     Schutzengel-Gold (#a8873f). Die Flaechen liegen VOR den Ebenenlinien
-     und der Beschriftung, damit beides darauf sichtbar bleibt. */
-  const EBENEN_FARBE = {
-    mittel:'#fbead9',   // dezentes Orange
-    lang:  '#e4f1ea',   // Gruen - der Topf, auf den es ankommt
-    kurz:  '#dce9f5',   // Markenblau, hell
-    sockel:'#f3ead6'    // Schutzengel-Gold, aufgehellt
-  };
-  const ebeneFuellen = (farbe, punkte)=>
-    gp.appendChild(mk('polygon',{fill:farbe, stroke:'none', points:punkte}));
+     WICHTIG: Sie gehoeren in die eigene Gruppe gFlaechen, die im SVG VOR
+     gPfeile steht. Zeichnet man sie in gPyr, legen sie sich ueber die
+     Pfeile und verschlucken Spitzen und beim Schutzengel den ganzen Pfeil
+     - gPfeile liegt naemlich unter gPyr. Genau das ist am 10.11. passiert.
+     Langfristig im Gruen der Analyse, weil das der Topf ist, auf den es
+     ankommt; kurzfristig im hellen Markenblau, hier ohne die Querzeilen
+     der Analyse. Mittelfristig ein zurueckhaltendes Orange, beide
+     Sockelhaelften im aufgehellten Schutzengel-Gold.
+     Der Name ebeneFuellen statt flaeche ist Absicht: flaeche ist in dieser
+     Funktion schon vergeben. */
+  const gf = document.querySelector('#gFlaechen');
+  if(gf){
+    gf.innerHTML = '';
+    const EBENEN_FARBE = {
+      mittel:'#fbead9',   // dezentes Orange
+      lang:  '#e4f1ea',   // Gruen - der Topf, auf den es ankommt
+      kurz:  '#dce9f5',   // Markenblau, hell
+      sockel:'#f3ead6'    // Schutzengel-Gold, aufgehellt
+    };
+    const ebeneFuellen = (farbe, punkte)=>
+      gf.appendChild(mk('polygon',{fill:farbe, stroke:'none', points:punkte}));
 
-  ebeneFuellen(EBENEN_FARBE.mittel,
-    `${G.apexX},${G.apexY} ${xR(G.y1)},${G.y1} ${xL(G.y1)},${G.y1}`);
-  ebeneFuellen(EBENEN_FARBE.lang,
-    `${xL(G.y1)},${G.y1} ${xR(G.y1)},${G.y1} ${xR(G.y2)},${G.y2} ${xL(G.y2)},${G.y2}`);
-  ebeneFuellen(EBENEN_FARBE.kurz,
-    `${xL(G.y2)},${G.y2} ${xR(G.y2)},${G.y2} ${xR(G.y3)},${G.y3} ${xL(G.y3)},${G.y3}`);
-  /* Beide Sockelhaelften gehoeren zur Absicherung und bekommen denselben Ton. */
-  ebeneFuellen(EBENEN_FARBE.sockel,
-    `${xL(G.y3)},${G.y3} ${G.apexX},${G.y3} ${G.apexX},${G.baseY} ${G.baseL},${G.baseY}`);
-  ebeneFuellen(EBENEN_FARBE.sockel,
-    `${G.apexX},${G.y3} ${xR(G.y3)},${G.y3} ${G.baseR},${G.baseY} ${G.apexX},${G.baseY}`);
+    ebeneFuellen(EBENEN_FARBE.mittel,
+      `${G.apexX},${G.apexY} ${xR(G.y1)},${G.y1} ${xL(G.y1)},${G.y1}`);
+    ebeneFuellen(EBENEN_FARBE.lang,
+      `${xL(G.y1)},${G.y1} ${xR(G.y1)},${G.y1} ${xR(G.y2)},${G.y2} ${xL(G.y2)},${G.y2}`);
+    ebeneFuellen(EBENEN_FARBE.kurz,
+      `${xL(G.y2)},${G.y2} ${xR(G.y2)},${G.y2} ${xR(G.y3)},${G.y3} ${xL(G.y3)},${G.y3}`);
+    ebeneFuellen(EBENEN_FARBE.sockel,
+      `${xL(G.y3)},${G.y3} ${G.apexX},${G.y3} ${G.apexX},${G.baseY} ${G.baseL},${G.baseY}`);
+    ebeneFuellen(EBENEN_FARBE.sockel,
+      `${G.apexX},${G.y3} ${xR(G.y3)},${G.y3} ${G.baseR},${G.baseY} ${G.apexX},${G.baseY}`);
+  }
 
   // Ebenenlinien
   [G.y1,G.y2,G.y3].forEach(y=>{
@@ -3959,14 +3967,22 @@ async function api(action, extra){
 /* Nur Initialen als Kundenbezeichnung – keine Namen in der Datenbank */
 const AUFBEWAHRUNG_TAGE = 42, WARNUNG_AB_TAGE = 21;
 function initialenOk(t){
-  t = (t||'').trim();
+  /* Zwei Personen: beide Initialen, mit Komma getrennt - "M.M., F.M.".
+     Geprueft wird jeder Teil fuer sich, damit die Regel dieselbe bleibt:
+     keine Namen, keine Orte. */
+  const teile = String(t == null ? '' : t).split(',');
+  if(teile.length < 1 || teile.length > 2) return false;
+  return teile.every(initialenTeilOk);
+}
+function initialenTeilOk(t){
+  t = (t || '').trim();
   if(!t || t.length > 10) return false;
-  if(!/^[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß.\-  ]*$/.test(t)) return false;
-  return !/[A-Za-zÄÖÜäöüß]{3,}/.test(t);      // drei Buchstaben am Stück = vermutlich ein Name
+  if(!/^[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß.\- ]*$/.test(t)) return false;
+  return !/[A-Za-zÄÖÜäöüß]{3,}/.test(t);   // drei Buchstaben am Stueck = vermutlich ein Name
 }
 function initialenPruefen(t){
   if(initialenOk(t)) return true;
-  alert('Bitte nur Initialen eingeben, z. B. „M.M." oder „MM".\n\n'+
+  alert('Bitte nur Initialen eingeben, z. B. „M.M." oder „MM".\nZwei Personen mit Komma trennen: „M.M., F.M.".\n\n'+
         'Vollständige Namen dürfen hier nicht gespeichert werden. '+
         'Wofür die Initialen stehen, kannst du in der Übersicht im ausklappbaren Merkfeld festhalten – '+
         'das bleibt nur auf diesem Gerät.');
@@ -4084,7 +4100,7 @@ async function uebersichtLaden(){
 
     z.querySelector('[data-t=druckweg]').addEventListener('click', ()=>druckenUndLoeschen(b.id, b.kunde));
     z.querySelector('[data-t=kopie]').addEventListener('click', async ()=>{
-      const name = prompt('Bezeichnung der Kopie (nur Initialen, z. B. M.M.):', b.kunde);
+      const name = prompt('Bezeichnung der Kopie (nur Initialen, z. B. M.M. oder M.M., F.M.):', b.kunde);
       if(!name || !name.trim()) return;
       if(!initialenPruefen(name)) return;
       const g = await api('get', {id:b.id});
@@ -4095,7 +4111,7 @@ async function uebersichtLaden(){
       beratungOeffnen(r2.id);
     });
     z.querySelector('[data-t=um]').addEventListener('click', async ()=>{
-      const neu = prompt('Neue Bezeichnung (nur Initialen, z. B. M.M.):', b.kunde);
+      const neu = prompt('Neue Bezeichnung (nur Initialen, z. B. M.M. oder M.M., F.M.):', b.kunde);
       if(!neu || !neu.trim()) return;
       if(!initialenPruefen(neu)) return;
       const g = await api('get', {id:b.id});
